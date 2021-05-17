@@ -1,0 +1,61 @@
+.home {
+    padding: 40px;
+    padding-top: 20px;
+
+    .masonry-card-grid {
+        display: flex;
+        width: 100%;
+        float: left;
+        .nested-section {
+            width: 70%;
+            .create-post-nav {
+                margin-bottom: 30px;
+                .MenuItemPost {
+                    width: 75%;
+                }
+            }
+            .post-card {
+                .ant-card-head {
+                    background-color:rgb(246, 247, 248);
+                }
+                .ant-card-body {
+                    background-color:#DAE0E6;
+                }
+                .content {
+                    margin-bottom: 20px;
+                    .ant-card-head {
+                        background-color:#F3F3F3;
+                    }
+                    .ant-card-cover {
+                        background-color: white;
+                    }
+                    .ant-card-cover > img{
+                        display: block;
+                        margin-left: auto;
+                        margin-right: auto;
+                        max-width:100%;
+                        max-height:100%;
+                        height: auto;
+                        width:auto;
+                    }
+                    .ant-card-body {
+                        background-color: white;
+                    }
+                }
+            }
+        }
+        
+        .community-card {
+            width: 30%;
+            margin-left: 20px;
+            
+            .search-reset {
+                margin-bottom: 10px;
+                display: flex;
+                .search {
+                    margin-right: 10px;
+                }
+            }
+        }
+    }
+}

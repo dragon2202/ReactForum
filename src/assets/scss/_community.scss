@@ -1,0 +1,37 @@
+.community {
+    padding: 40px;
+    padding-top: 80px;
+
+    .card-grid {
+        display: flex;
+        .categories{
+            float: left;
+            margin-right: 20px;
+        }
+        .communities {
+            float: left;
+            margin-left: 20px;
+            width: 100%;
+            .search-reset {
+                margin-bottom: 20px;
+                display: flex;
+                .search {
+                    margin-right: 10px;
+                }
+            }
+            .ant-card-head {
+                background-color:rgb(246, 247, 248);
+            }
+            .ant-card-body {
+                .alignleft {
+                    float: left;
+                    width: 50%;
+                }
+                .alignright {
+                    float: right;
+                    width: 50%;
+                }
+            }
+        }
+    }
+}

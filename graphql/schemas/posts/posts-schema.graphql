@@ -1,0 +1,90 @@
+type Query {
+    getPost(id: ID!): Post
+    getPostsRecent(id: ID!): [Post]
+    getUser(id: ID!): User
+    checkUserEmail(email: String!): User
+    loginUser(email: String!, password: String!): User
+    getCommunity(id: ID!): Community
+    getAllCommunities(id: ID!): [Community]
+    getCommunity_Posts_Users_Category(id: ID!): Community
+    getPosts_CommunityPosts(id: ID!): [Post]
+    getCategoryCommunity(id: ID!):  [CategoryCommunity]
+    getCategory_CategoryCommunity(id: ID!): [Category]
+    getCommunityUserRole(id: ID!): [CommunityUserRole]
+}
+
+type Mutation {
+    createPost(post: PostInput!): Post
+    registerUser(user: UserInput!): User
+}
+
+input LoginInput {
+    email: String
+    password: String
+}
+
+input UserInput {
+    email: String
+    password: String
+    username: String
+}
+
+input PostInput {
+    author_id: Int
+    title: String
+    type: String
+    image: String
+    text: String
+    active: Int
+    community_id: Int
+}
+
+type Post {
+    id: ID!
+    author_id: Int
+    user: User
+    title: String
+    type: String
+    image: String
+    text: String
+    active: Int
+    community_id: Int
+    community: Community
+    updated_at: String
+    created_at: String
+}
+
+type Community {
+    id: Int
+    title: String
+    summary: String
+    category: [Category]
+    post: [Post]
+}
+
+type Category {
+    id: Int
+    label: String
+    description: String
+    community: [Community]
+}
+
+type User {
+    id: Int
+    email: String,
+    username: String,
+    password: String,
+}
+
+type CategoryCommunity {
+    id: Int
+    title: String
+    category: [Category]
+}
+
+type CommunityUserRole {
+    community_id: Int
+    user_id: Int
+    role_id: Int
+    community: Community
+}

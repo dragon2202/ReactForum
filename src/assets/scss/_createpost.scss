@@ -1,0 +1,42 @@
+.createpost {
+    padding: 40px;
+    padding-top: 80px;
+
+    .ant-card-head {
+        background-color:rgb(246, 247, 248);
+    }
+
+    .ant-card-body {
+        .ant-menu-horizontal {
+            margin-bottom: 20px;
+        }
+        .ant-input-affix-wrapper-textarea-with-clear-btn {
+            margin-bottom: 20px;
+            height:40vh;
+        }
+
+        .ant-input {
+            margin-bottom: 00px;
+        }
+
+        .ant-btn-primary {
+            float: right;
+        }
+
+        .image-item { 
+            .image-item__btn-wrapper {
+                .ant-btn {
+                    margin-right: 20px;
+                }
+            }
+        }
+
+        .ant-dropdown-button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        
+    }
+}
