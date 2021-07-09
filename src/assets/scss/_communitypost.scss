@@ -15,6 +15,24 @@
                 }
             }
             .post-card {
+                .ant-list-pagination {
+                    text-align: center;
+                    
+                }
+                padding-bottom: 40px;
+            }
+        }
+        
+        .about-card {
+            width: 30%;
+            
+            margin-left: 20px;
+        }
+    }
+}
+
+/* 
+
                 .ant-card-head {
                     background-color:rgb(246, 247, 248);
                 }
@@ -42,13 +60,4 @@
                         background-color: white;
                     }
                 }
-            }
-        }
-        
-        .about-card {
-            width: 30%;
-            
-            margin-left: 20px;
-        }
-    }
-}
+*/

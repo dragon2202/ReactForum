@@ -1,7 +1,6 @@
 const db = require('../../database/mysql')
 const { errorHandler } = require('../utils')
 const bcrypt = require('bcrypt');
-const { getDefaultNormalizer } = require('@testing-library/dom');
 const saltRounds = 10;
 
 module.exports = {
@@ -20,14 +19,46 @@ module.exports = {
         let qry = db.select('*')
             .from('forum_posts')
             .where({ active: 1 })
-            .orderBy('updated_at', 'desc')
-            .limit(5)
-
+            .orderBy('created_at', 'desc')
+            /* .limit(5) */
         return qry
         .catch(err => {
             console.log(err)
         })
 
+    },
+    getPostbyAuthorID: async (id) => {
+        let qry = db.select('*')
+            .from('forum_posts')
+            .where({ author_id: id })
+            .catch(errorHandler)
+
+        return qry
+        .catch(err => {
+            console.log(err)
+        })
+    },
+    getPost_Comments: async (id) => {
+        const posts = db.select('*')
+            .from('forum_posts')
+            .where({ id })
+            .catch(errorHandler)
+
+        let [post] = await posts
+        return {
+            ...post
+        }
+    },
+    getCommentsbyPostID: async (id) => {
+        let qry = db.select('*')
+            .from('forum_post_comments')
+            .where({ post_id: id })
+            .catch(errorHandler)
+
+        return qry
+        .catch(err => {
+            console.log(err)
+        })
     },
     getUser: async(id) => {
         const posts = db.select('*')
@@ -146,6 +177,29 @@ module.exports = {
             text: args.text,
             active: args.active,
             community_id: args.community_id
+        })
+        .then(res => {
+            return res
+        })
+    },
+    updatePost: async (args) => {
+        await db('forum_posts')
+        .where({id: args.id})
+        .update({
+            title: args.title,
+            image: args.image,
+            text: args.text
+        })
+        .then(res => {
+            return res
+        })
+    },
+    createComment: async (args) => {
+        await db('forum_post_comments').insert({
+            post_id: args.post_id,
+            author_id: args.author_id,
+            parent_comment_id: args.parent_comment_id,
+            comment: args.comment
         })
         .then(res => {
             return res

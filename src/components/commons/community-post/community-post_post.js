@@ -1,10 +1,12 @@
 import React from 'react'
 import { useHistory } from 'react-router-dom'
 import { Redirect } from 'react-router'
+import { Link } from 'react-router-dom'
 import moment from 'moment'
 import Card from 'antd/lib/card'
 import Empty from 'antd/lib/empty'
 import Modal from 'antd/lib/modal'
+import List from 'antd/lib/list'
 import EditOutlined from '@ant-design/icons/EditOutlined'
 import EllipsisOutlined from '@ant-design/icons/EllipsisOutlined'
 import MessageOutlined from '@ant-design/icons/MessageOutlined'
@@ -19,7 +21,7 @@ function DisplayModal(item) {
         title: `More Information on ${item.title}`,
         content: (
             <div style={{marginTop:"20px"}}>
-                <p><b>Author: </b>{ item.user.first_name + " " + item.user.last_name}</p>
+                <p><b>Author: </b>{ item.user.username + ` (${item.user.email})`}</p>
                 <p><b>Updated At: </b>{moment(parseInt(item.updated_at)).format('dddd, MMMM Do YYYY, h:mm:ss a')}</p>
                 <p><b>Created At: </b>{moment(parseInt(item.updated_at)).format('dddd, MMMM Do YYYY, h:mm:ss a')}</p>
             </div>
@@ -28,25 +30,44 @@ function DisplayModal(item) {
     });
 }
 
-function contentSwitch(value) {
-    switch (value.type) {
-        case 'Image': 
-            return(
-                <div className="post-community_post-image-content">
-                    <img alt="" src={value.image} />
-                </div>
+//Formats the post depending on which type it is
+function contentSwitch(item) {
+    switch (item.type) {
+        case 'Image':
+            return (
+                <Card key={item.id} className="content" type="inner" title={item.title} extra={<a onClick={() => DisplayModal(item)}>More Info</a>}
+                    actions={[
+                        <MessageOutlined key="message" />,
+                        <Link to={{ pathname:"/editpost"}}><EditOutlined key="edit" /> </Link>,
+                        <EllipsisOutlined key="ellipsis" />,
+                    ]}
+                >
+                    <img alt="" src={item.image} />
+                </Card>
             )
-        case 'Post': 
-            return(
-                <div className="post-community_post-post-content">
-                    <p>{value.text}</p>
-                </div>
+        case 'Post':
+            return (
+                <Card key={item.id} className="content" type="inner" title={item.title} extra={<a onClick={() => DisplayModal(item)}>More Info</a>}
+                    actions={[
+                        <MessageOutlined key="message" />,
+                        <Link to={{ pathname:"/editpost"}}><EditOutlined key="edit" /> </Link>,
+                        <EllipsisOutlined key="ellipsis" />,
+                    ]}
+                >
+                    <p>{item.text}</p>
+                </Card>
             )
-        case 'Link': 
-            return(
-                <div className="post-community_post-link-content">
-                     <a href={"" + `${value.text}`}>{value.text}</a> 
-                </div>
+        case 'Link':
+            return (
+                <Card key={item.id} className="content" type="inner" title={item.title} extra={<a onClick={() => DisplayModal(item)}>More Info</a>}
+                    actions={[
+                        <MessageOutlined key="message" />,
+                        <Link to={{ pathname:"/editpost"}}><EditOutlined key="edit" /> </Link>,
+                        <EllipsisOutlined key="ellipsis" />,
+                    ]}
+                >
+                    <a href={"" + `${item.text}`}>{item.text}</a>
+                </Card>
             )
     }
 }
@@ -60,19 +81,21 @@ const Posts = (data) => {
             item
         }
     })
-    return data.map(item => {
-        return (
-            <Card key={item.id} className="content" type="inner" title={item.title} extra={<a onClick={() => DisplayModal(item)}>More</a>}
-                actions={[
-                    <MessageOutlined key="message" />,
-                    <EditOutlined key="edit" onClick={() => {editpost(item)}}/>,
-                    <EllipsisOutlined key="ellipsis" />,
-                ]}
-            >
-                {contentSwitch(item)}
-            </Card>
-        )
-    })
+    return (
+        <List itemLayout="vertical" size="large" className="post-list" 
+            pagination={{
+                position: 'bottom',
+                pageSize: 5
+            }}
+            dataSource={data}
+            renderItem={item =>
+            (
+                <List.Item key={item.id}>
+                    {contentSwitch(item)}
+                </List.Item>
+            )}
+        />
+    )
 }
 
 //Exports a list of cards with posts in the cards for the page Community Post
@@ -89,9 +112,7 @@ export default function post(props) {
             )
         }
         return (
-            <Card className="content" type="inner" title="Posts">
-                {Posts(props.data.post)}
-            </Card>
+            Posts(props.data.post)
         )
     } else {
         return(

@@ -37,6 +37,57 @@ export const GET_POSTS_RECENT_QUERY = gql`
         }
     }
 `
+export const GET_POSTS_BY_AUTHOR_ID_QUERY = gql`
+    query getPostbyAuthorID($id: ID!) {
+        post: getPostbyAuthorID(id: $id) {
+            id
+            author_id
+            title
+            type
+            image
+            text
+            updated_at
+            created_at
+        }
+    }
+`
+export const GET_POST_COMMENTS_QUERY = gql`
+    query getPost_Comments($id: ID!) {
+        postcomment: getPost_Comments(id: $id) {
+            id
+            author_id
+            title
+            type
+            image
+            text
+            updated_at
+            created_at
+            comment {
+                id
+                post_id
+                author_id
+                parent_comment_id
+                comment
+                updated_at
+                created_at
+                user {
+                    email
+                    username
+                }
+            }
+        }
+    }
+`
+export const GET_COMMENTS_BY_POSTID = gql`
+    query getCommentsbyPostID($id: ID!) {
+        comment: getCommentsbyPostID(id: $id) {
+            id
+            post_id
+            author_id
+            comment
+        }
+    }
+`
 export const GET_USER_QUERY = gql`
     query getUser($id: ID!) {
         user: getUser(id: $id) {
@@ -158,6 +209,7 @@ export const GET_COMMUNITYUSERROLE_QUERY = gql`
         }
     }
 `
+//MUTATIONS--------------------------------------------------------------------------------------------------------------------->
 export const CREATE_POST_QUERY = gql`
     mutation createPost($post: PostInput!){
         createPost (post: $post) {
@@ -168,6 +220,26 @@ export const CREATE_POST_QUERY = gql`
             text
             active
             community_id
+        }
+    }
+`
+export const UPDATE_POST_QUERY = gql`
+    mutation updatePost($post: UpdatePostInput!){
+        updatePost (post: $post) {
+            id
+            title
+            image
+            text
+        }
+    }
+`
+export const CREATE_COMMENT_QUERY = gql`
+    mutation createComment($comment: CommentInput!){
+        createComment (comment: $comment) {
+            post_id
+            author_id
+            parent_comment_id
+            comment
         }
     }
 `

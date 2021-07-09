@@ -1,4 +1,5 @@
-import React, {useEffect, useState} from 'react'
+import React, { useEffect, useState } from 'react'
+import { useHistory } from "react-router-dom";
 import Button from 'antd/lib/button'
 import Form from 'antd/lib/form'
 import Input from 'antd/lib/input'
@@ -14,16 +15,14 @@ import { useMutation, useLazyQuery } from '@apollo/react-hooks'
 import { REGISTER_USER_QUERY, CHECK_USER_EMAIL_QUERY } from '../../queries/posts/index'
 
 export default function Register() {
-    
-    const [ cookies, set ] = useCookies(['userCookie'])
+    let history = useHistory();
+    const [ cookies ] = useCookies(['userCookie'])
     const [ queryUser, setUser ] = useState(null)
     const [ userObject, setObject ] = useState(null)
     const [ mutation ] = useMutation(REGISTER_USER_QUERY);
     const [ getUser] = useLazyQuery(CHECK_USER_EMAIL_QUERY, {
-        onCompleted: data => {setUser(data)}
+        onCompleted: data => {setUser(data)}//triggers useEffect
     })
-
-    const [form] = Form.useForm()
 
     //Checks if all form inputs are not blank
     function validateForm(object){
@@ -42,7 +41,7 @@ export default function Register() {
     }
 
     useEffect(() => {
-        if(queryUser) {//block until triggered with register button
+        if(queryUser) {//block until triggered with OnFinsh
             if(queryUser.user.email){
                 message.error('Email is already registered.', 20)
             } else {
@@ -53,8 +52,8 @@ export default function Register() {
                         }
                     }
                 )
-                message.success('Account has been successfully registered.', 10)
-                form.resetFields()
+                message.success({ content: 'Account has been successfully registered.', style: { marginTop: '5vh'}},10)
+                history.push("/login")
             }
         }
     }, [queryUser])
@@ -79,10 +78,10 @@ export default function Register() {
         }
     }
 
-    if(cookies.userCookie == undefined || cookies.userCookie == "undefined") {
+    if(cookies.userCookie == undefined) {
         return (
             <main className="register">
-                <Form form={form} name="normal_register" className="register-form" onFinish={OnFinish} noValidate>
+                <Form name="normal_register" className="register-form" onFinish={OnFinish} noValidate>
                     <h3 style={{textAlign:"center"}}><b>User Register</b></h3>
                     <Form.Item name="Email">
                         <Input prefix={<MailOutlined className="site-form-item-icon" />} placeholder="Please input your email!" />
@@ -96,7 +95,6 @@ export default function Register() {
                     <Form.Item name="ConfirmPassword">
                         <Input prefix={<LockOutlined className="site-form-item-icon" />} type="password" placeholder="Please confirm your Password!" />
                     </Form.Item>
-
                     <Form.Item>
                         <Button type="primary" htmlType="submit" className="login-form-button">
                             Sign Up

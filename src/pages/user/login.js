@@ -14,6 +14,7 @@ import { LOGIN_USER_QUERY } from '../../queries/posts'
 import { useCookies } from 'react-cookie'
 
 export default function Login() {
+    let history = useHistory()
     const [ cookies, set ] = useCookies(['userCookie'])
     const [ queryUser, setUser ] = useState(null)
     const [ loginUser ] = useLazyQuery(LOGIN_USER_QUERY, {
@@ -40,31 +41,43 @@ export default function Login() {
         }
     })
 
-    
-    let history = useHistory()
-    const home = () => history.push({
-        pathname: '/'
-    })
+    //Checks if all form inputs are not blank
+    function validateForm(object){
+        var count = 0
+        for (const property in object) {
+            if(object[property] === undefined || object[property] === "") {
+                message.warning('Please fill out ' + `${property}`, 10)
+                count++
+            }
+        }
+        if(count > 0) { 
+            return false
+        } else {
+            return true
+        }
+    }
 
     const onFinish = (values) => {
-        loginUser({
-            variables: {
-                email: values.email,
-                password: values.password
-            }
-        })
+        if(validateForm(values)) {//validates form before logging in
+            loginUser({
+                variables: {
+                    email: values.email,
+                    password: values.password
+                }
+            })
+        }
     }
 
     useEffect(() => {
         if(queryUser) {//block until triggered with login button
-            set('userCookie', queryUser, {path: '/', sameSite:'lax',secure: true, expires: 0})//Set cookiue for users
-            home()//redirect to home
+            set('userCookie', queryUser, {path: '/', sameSite:'lax',secure: true, expires: 0})//Set cookie for users
             message.success({
                 content: 'You successfully logged in.',
                 style: {
                     marginTop: '5vh',
                 },
             },10)
+            history.push("/")
         }
     }, [queryUser])
 

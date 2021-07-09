@@ -46,6 +46,5 @@ export default function CommunityPost() {
         </main>
     )
 }
-//https://www.youtube.com/watch?v=1SpgeTyADzY&list=RDCLAK5uy_k5n4srrEB1wgvIjPNTXS9G1ufE9WQxhnA&index=1
+//Resources
 //https://stackoverflow.com/questions/40752287/use-moment-js-to-convert-unix-epoch-time-to-human-readable-time/40752362
-// <Post data={GetGraphqlQueryID(id, GET_COMMUNITY_POSTS_QUERY).community.post} />

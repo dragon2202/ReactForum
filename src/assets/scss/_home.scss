@@ -15,6 +15,31 @@
                 }
             }
             .post-card {
+                .ant-list-pagination {
+                    text-align: center;
+                    
+                }
+                padding-bottom: 40px;
+            }
+        }
+        
+        .community-card {
+            width: 30%;
+            margin-left: 20px;
+            
+            .search-reset {
+                margin-bottom: 10px;
+                display: flex;
+                .search {
+                    margin-right: 10px;
+                }
+            }
+        }
+    }
+}
+
+/*
+
                 .ant-card-head {
                     background-color:rgb(246, 247, 248);
                 }
@@ -42,20 +67,4 @@
                         background-color: white;
                     }
                 }
-            }
-        }
-        
-        .community-card {
-            width: 30%;
-            margin-left: 20px;
-            
-            .search-reset {
-                margin-bottom: 10px;
-                display: flex;
-                .search {
-                    margin-right: 10px;
-                }
-            }
-        }
-    }
-}
+*/
