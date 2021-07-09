@@ -37,7 +37,7 @@ export default function Navigation() {
         pathname: '/register'
     })
     const home = () => history.push({
-        pathname: '/home'
+        pathname: '/'
     })
 
     //below is the same as componentDidMount and componentDidUnmount
@@ -62,7 +62,7 @@ export default function Navigation() {
                 <ul>                    {
                     navLink.map((link, index) => (
                         <li key={index}>
-                            <Link to={link.path}>{link.title}</Link>
+                            <a onClick={() => {window.location.href=`${link.path}`}}>{link.title}</a>
                         </li>
                     ))
                 }
@@ -87,7 +87,7 @@ export default function Navigation() {
                                     Account
                                 </Menu.Item>
                                 <Menu.Item key="1" onClick={() => {
-                                    set('userCookie',{ secure: true })//Sets current user cookie to null
+                                    set('userCookie', { path: '/', sameSite:'lax',secure: true })//Sets current user cookie to null
                                     message.success({
                                         content: 'You successfully logged out.',
                                         style: {

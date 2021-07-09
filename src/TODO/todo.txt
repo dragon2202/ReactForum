@@ -1,0 +1,5 @@
+https://www.youtube.com/watch?v=6JnGBs88sL0
+
+TODO:
+Allow author to edit comments
+Allow authors to delete posts and comments

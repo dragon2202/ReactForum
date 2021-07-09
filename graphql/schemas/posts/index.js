@@ -14,6 +14,18 @@ module.exports = {
                 const post = await PostService.getPostsRecent(id)
                 return post
             },
+            getPostbyAuthorID: async (parent, {id}) => {
+                const post = await PostService.getPostbyAuthorID(id)
+                return post
+            },
+            getPost_Comments: async (parent, {id}) => {
+                const post = await PostService.getPost_Comments(id)
+                return post
+            },
+            getCommentsbyPostID: async (parent, {id}) => {
+                const post = await PostService.getCommentbyPostID(id)
+                return post
+            },
             getUser: async (parent, {id}) => {
                 const post = await PostService.getUser(id)
                 return post
@@ -59,6 +71,12 @@ module.exports = {
             user: async (obj, args, context, info) => await PostService.getUser(obj.author_id),
             community: async (obj, args, context, info) => await PostService.getCommunity(obj.community_id)
         },
+        PostComment: {
+            comment: async (obj, args, context, info) => await PostService.getCommentsbyPostID(obj.id)
+        },
+        Comment: {
+            user: async (obj, args, context, info) => await PostService.getUser(obj.author_id)
+        },
         Community: {
             post: async (obj, args, context, info) => await PostService.getPosts_CommunityPosts(obj.id),
             category: async (obj, args, context, info) => await PostService.getCategory_CategoryCommunity(obj.id)
@@ -71,6 +89,8 @@ module.exports = {
         },
         Mutation: {
             createPost: async (parent, args) => await PostService.createPost(args.post),
+            updatePost: async (parent, args) => await PostService.updatePost(args.post),
+            createComment: async(parent, args) => await PostService.createComment(args.comment),
             registerUser: async (parent, args) => await PostService.registerUser(args.user)
         }
     },

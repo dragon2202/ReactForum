@@ -1,5 +1,5 @@
 import React, {useState} from 'react'
-import Post from '../components/commons/post/index'
+import Post from '../components/commons/home-post/index'
 import CreatePostNav from '../components/commons/navigation/create-post-nav'
 import { Link } from 'react-router-dom'
 
@@ -20,9 +20,9 @@ const communityGridStyle = {
 const CommunityMap = (data, searchParam) => {
     if (data == undefined) {
         return(
-            <Card.Grid key='0' style={communityGridStyle}>
+            <Card key='0' style={communityGridStyle}>
                 <Empty />
-            </Card.Grid>
+            </Card>
         )
     }
     return data.map((item, index) => {
@@ -79,9 +79,3 @@ export default function Home() {
         </main>
     )
 }
-
-//https://www.youtube.com/watch?v=IxxstCcJlsc
-//Find Communities page
-//@media scss
-//change icons on card
-//search cards using keys

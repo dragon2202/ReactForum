@@ -1,6 +1,9 @@
 type Query {
     getPost(id: ID!): Post
     getPostsRecent(id: ID!): [Post]
+    getPostbyAuthorID(id: ID!): [Post]
+    getPost_Comments(id: ID!): PostComment
+    getCommentsbyPostID(id: ID!): [Comment]
     getUser(id: ID!): User
     checkUserEmail(email: String!): User
     loginUser(email: String!, password: String!): User
@@ -15,6 +18,8 @@ type Query {
 
 type Mutation {
     createPost(post: PostInput!): Post
+    updatePost(post: UpdatePostInput!): Post
+    createComment(comment: CommentInput!): Comment
     registerUser(user: UserInput!): User
 }
 
@@ -29,6 +34,13 @@ input UserInput {
     username: String
 }
 
+input UpdatePostInput {
+    id: Int
+    title: String
+    image: String
+    text: String
+}
+
 input PostInput {
     author_id: Int
     title: String
@@ -37,6 +49,13 @@ input PostInput {
     text: String
     active: Int
     community_id: Int
+}
+
+input CommentInput {
+    post_id: Int
+    author_id: Int
+    parent_comment_id: Int
+    comment: String
 }
 
 type Post {
@@ -71,9 +90,20 @@ type Category {
 
 type User {
     id: Int
-    email: String,
-    username: String,
-    password: String,
+    email: String
+    username: String
+    password: String
+}
+
+type Comment {
+    id: Int
+    post_id: Int
+    author_id: Int
+    parent_comment_id: Int
+    updated_at: String
+    created_at: String
+    comment: String
+    user: User
 }
 
 type CategoryCommunity {
@@ -87,4 +117,20 @@ type CommunityUserRole {
     user_id: Int
     role_id: Int
     community: Community
+}
+
+type PostComment {
+    id: ID!
+    author_id: Int
+    user: User
+    title: String
+    type: String
+    image: String
+    text: String
+    active: Int
+    community_id: Int
+    community: Community
+    updated_at: String
+    created_at: String
+    comment: [Comment]
 }
