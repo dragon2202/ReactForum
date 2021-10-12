@@ -1,26 +1,50 @@
 type Query {
     getPost(id: ID!): Post
-    getPostsRecent(id: ID!): [Post]
-    getPostbyAuthorID(id: ID!): [Post]
+    getPostsbyAuthorID(post_id: ID, author_id: ID!): [Post]
+    getPostsRecent: [Post]
+    getPosts_CommunityPosts(id: ID!): [Post]
     getPost_Comments(id: ID!): PostComment
+    getCommunity(id: ID!): Community
+    getAllCommunities: [Community]
+    getCommunity_Posts_Users(id: ID!): Community
+    getCommunity_User(id: ID!): Community
+    checkCommunityName(name: String!): Community
+    getCommunityBans(id: ID!): [CommunityBan]
+    getCommunityUserRole(id: ID!): [CommunityUserRole]
+    getCommunityUserRoleByUser(id: ID!): [CommunityUserRole]
+    getCommunityUserRoleByCommunity(id: ID!): [CommunityUserRole]
+    getCommunityUserRoleAndUser(id: ID!): [CommunityUserRole]
+    getComment (id: ID!): Comment
     getCommentsbyPostID(id: ID!): [Comment]
+    getFamilyComments(id: ID!): CommentFamily
+    getChildComments (id: ID!): [Comment]
+    getRolesPermissions(id: ID!): [RolesPermissions]
+    getRole(id: ID!): Role
+    getPermission(id: ID!): Permission
     getUser(id: ID!): User
     checkUserEmail(email: String!): User
     loginUser(email: String!, password: String!): User
-    getCommunity(id: ID!): Community
-    getAllCommunities(id: ID!): [Community]
-    getCommunity_Posts_Users_Category(id: ID!): Community
-    getPosts_CommunityPosts(id: ID!): [Post]
-    getCategoryCommunity(id: ID!):  [CategoryCommunity]
-    getCategory_CategoryCommunity(id: ID!): [Category]
-    getCommunityUserRole(id: ID!): [CommunityUserRole]
+    checkCredentials(id: ID!, password: String!): User
 }
 
 type Mutation {
     createPost(post: PostInput!): Post
     updatePost(post: UpdatePostInput!): Post
+    deletePost(post: DeletePostInput!): Post
+    lockPost(post: LockPostInput!): Post
     createComment(comment: CommentInput!): Comment
+    updateComment(comment: UpdateCommentInput!): Comment
+    deleteComment(comment: DeleteCommentInput!): Comment
+    deleteParentComment(comment: DeleteCommentInput!): Comment
+    createCommunity(communityUser: CommunityUserInput!): Community_CommunityUserRole
+    updateCommunityUserRole(communityuserrole: CommunityUserRoleInput!): CommunityUserRole_Owner
+    updateCommunityDetails(community: CommunityInput!): Community
+    createUser_CommunityUserRole(communityuserrole: CommunityUserRoleInput!): CommunityUserRole
+    removeUser_CommunityUserRole(communityuserrole: CommunityUserRoleInput!): CommunityUserRole
+    banUser(communityban: CommunityBanInput!): CommunityBan
     registerUser(user: UserInput!): User
+    changeUserInfo(user: UserInput!): User
+    changeUserPassword(user: UserInput!): User
 }
 
 input LoginInput {
@@ -29,9 +53,10 @@ input LoginInput {
 }
 
 input UserInput {
+    id: Int
     email: String
-    password: String
     username: String
+    password: String
 }
 
 input UpdatePostInput {
@@ -39,6 +64,27 @@ input UpdatePostInput {
     title: String
     image: String
     text: String
+    updated_at: String
+}
+
+input UpdateCommentInput {
+    id: Int
+    comment: String
+    updated_at: String
+}
+
+input DeleteCommentInput {
+    id: Int
+}
+
+input DeletePostInput {
+    id: Int
+    commentLength: Int
+}
+
+input LockPostInput {
+    id: Int
+    active: Int
 }
 
 input PostInput {
@@ -56,6 +102,31 @@ input CommentInput {
     author_id: Int
     parent_comment_id: Int
     comment: String
+}
+
+input CommunityInput {
+    id: Int
+    title: String
+    summary: String
+}
+
+input CommunityUserInput {
+    title: String
+    summary: String
+    user_id: Int
+}
+
+input CommunityBanInput {
+    community_id: Int
+    user_id: Int
+}
+
+input CommunityUserRoleInput {
+    owner_id: Int
+    owner_role_id: Int
+    community_id: Int
+    user_id: Int
+    role_id: Int
 }
 
 type Post {
@@ -76,16 +147,42 @@ type Post {
 type Community {
     id: Int
     title: String
+    public: Int
     summary: String
-    category: [Category]
+    communityuserrole: [CommunityUserRole]
+    post: [Post]
+    communityban: [CommunityBan]
+}
+
+type CommunityBan {
+    community_id: Int
+    user_id: Int
+}
+
+type Community_CommunityUserRole {
+    title: String
+    summary: String    
+    community_id: Int
+    user_id: Int
+    role_id: Int
+}
+
+type CommunityUserRole {
+    community_id: Int
+    user_id: Int
+    role_id: Int
+    community: Community
+    user: User
+    role: Role
     post: [Post]
 }
 
-type Category {
-    id: Int
-    label: String
-    description: String
-    community: [Community]
+type CommunityUserRole_Owner {
+    owner_id: Int
+    owner_role_id: Int
+    community_id: Int
+    user_id: Int
+    role_id: Int
 }
 
 type User {
@@ -93,6 +190,23 @@ type User {
     email: String
     username: String
     password: String
+}
+
+type Role {
+    id: Int
+    title: String
+    rolespermissions: [RolesPermissions]
+}
+
+type RolesPermissions {
+    role_id: Int
+    permission_id: Int
+    permission: Permission
+}
+
+type Permission {
+    id: Int
+    action: String
 }
 
 type Comment {
@@ -104,19 +218,6 @@ type Comment {
     created_at: String
     comment: String
     user: User
-}
-
-type CategoryCommunity {
-    id: Int
-    title: String
-    category: [Category]
-}
-
-type CommunityUserRole {
-    community_id: Int
-    user_id: Int
-    role_id: Int
-    community: Community
 }
 
 type PostComment {
@@ -133,4 +234,16 @@ type PostComment {
     updated_at: String
     created_at: String
     comment: [Comment]
+}
+
+type CommentFamily {
+    id: Int
+    post_id: Int
+    author_id: Int
+    parent_comment_id: Int
+    updated_at: String
+    created_at: String
+    comment: String 
+    parent: Comment
+    child: [Comment]
 }

@@ -1,11 +1,17 @@
 import React from 'react'
+import { useHistory } from "react-router-dom"
 
 export default function Error() {
+    let history = useHistory();
     return (
         <main className="error">
-            <h3 style={{textAlign: "center"}}><b>Error Page</b></h3>
+            <h3 className="header"><b>Error Page</b></h3>
             <br />
-            <p style={{textAlign: "center"}}><b>Something Went Wrong</b></p>
+            <p className="text"><b>Something Went Wrong</b></p>
+            <br />
+            <div className="anchor">
+                <a  onClick={() => {history.goBack()}}>Go back a page</a>
+            </div>
         </main>
     )
 }

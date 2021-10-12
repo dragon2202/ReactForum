@@ -15,6 +15,11 @@
                 }
             }
             .post-card {
+                .ant-card-head-title {
+                    span {
+                        cursor: pointer;
+                    }
+                }
                 .ant-list-pagination {
                     text-align: center;
                     
@@ -38,33 +43,44 @@
     }
 }
 
-/*
+@media screen and (max-width: 900px) {
+    .home {
+        .masonry-card-grid {
+            display: inline;
+            position: relative;
+            float: left;
+            .nested-section {
+                width: 100%;
+                .create-post-nav {
+                    width: 100%;
+                    .MenuItemPost {
+                        width: 30%;
+                    }
+                    .MenuItemImage {
+                        width: 25%;
+                    }
+                    .MenuItemImage {
+                        width: 25%;
+                    }
+                }
+            }
+            
+            .community-card {
+                width: 100%;
+            }
+        }
+    }
+}
 
-                .ant-card-head {
-                    background-color:rgb(246, 247, 248);
+@media screen and (max-width: 600px) {
+    .home {
+        .masonry-card-grid {
+            .nested-section {
+                .create-post-nav {
+                    width: 50px;
                 }
-                .ant-card-body {
-                    background-color:#DAE0E6;
-                }
-                .content {
-                    margin-bottom: 20px;
-                    .ant-card-head {
-                        background-color:#F3F3F3;
-                    }
-                    .ant-card-cover {
-                        background-color: white;
-                    }
-                    .ant-card-cover > img{
-                        display: block;
-                        margin-left: auto;
-                        margin-right: auto;
-                        max-width:100%;
-                        max-height:100%;
-                        height: auto;
-                        width:auto;
-                    }
-                    .ant-card-body {
-                        background-color: white;
-                    }
-                }
-*/
+            }
+            
+        }
+    }
+}

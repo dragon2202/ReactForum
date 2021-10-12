@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import Button from 'antd/lib/button'
 import Form from 'antd/lib/form'
 import Input from 'antd/lib/input'
-import message from 'antd/lib/message'
+import Message from 'antd/lib/message'
 import MailOutlined from '@ant-design/icons/MailOutlined'
 import LockOutlined from '@ant-design/icons/LockOutlined'
 import { useHistory } from 'react-router-dom'
@@ -16,23 +16,29 @@ import { useCookies } from 'react-cookie'
 export default function Login() {
     let history = useHistory()
     const [ cookies, set ] = useCookies(['userCookie'])
-    const [ queryUser, setUser ] = useState(null)
     const [ loginUser ] = useLazyQuery(LOGIN_USER_QUERY, {
         onCompleted: data => 
         {
             if(data.user.id == null || data.user.email == null) {
-                message.error({
+                Message.error({
                     content: 'Wrong Password. Please try again.',
                     style: {
                         marginTop: '5vh',
                     },
                 },10)
             } else {
-                setUser(data)
+                set('userCookie', data.user, {path: '/', sameSite:'lax', secure: true, expires: 0})//Set cookie for users
+                Message.success({
+                    content: 'You successfully logged in.',
+                    style: {
+                        marginTop: '5vh',
+                    },
+                },10)
+                history.push("/account")
             }
         }, 
         onError: err => {
-            message.error({
+            Message.error({
                 content: 'Wrong Username. Please try again.',
                 style: {
                     marginTop: '5vh',
@@ -46,7 +52,7 @@ export default function Login() {
         var count = 0
         for (const property in object) {
             if(object[property] === undefined || object[property] === "") {
-                message.warning('Please fill out ' + `${property}`, 10)
+                Message.warning('Please fill out ' + `${property}`, 10)
                 count++
             }
         }
@@ -68,26 +74,13 @@ export default function Login() {
         }
     }
 
-    useEffect(() => {
-        if(queryUser) {//block until triggered with login button
-            set('userCookie', queryUser, {path: '/', sameSite:'lax',secure: true, expires: 0})//Set cookie for users
-            message.success({
-                content: 'You successfully logged in.',
-                style: {
-                    marginTop: '5vh',
-                },
-            },10)
-            history.push("/")
-        }
-    }, [queryUser])
-
-    if(cookies.userCookie == undefined || cookies.userCookie == "undefined") {
+    if(cookies.userCookie === undefined) {
         return (
             <main className="login">
-                <Form name="normal_login" className="login-form" initialValues={{ remember: true }} onFinish={onFinish}>
+                <Form name="normal_login" className="login-form" onFinish={onFinish}>
                     <h3 style={{textAlign:"center"}}><b>User Login</b></h3>
                     <Form.Item name="email">
-                        <Input prefix={<MailOutlined className="site-form-item-icon" />} placeholder="Email" />
+                        <Input prefix={<MailOutlined className="site-form-item-icon" />} placeholder="Email" type="email"/>
                     </Form.Item>
                     <Form.Item name="password" >
                         <Input prefix={<LockOutlined className="site-form-item-icon" />} type="password" placeholder="Password" />
@@ -113,7 +106,7 @@ export default function Login() {
                     <h1>You're already logged in.</h1> 
                 </div>
                 <div className="redirect">
-                    <Link to={"/home"}>Redirect to Home</Link>
+                    <Link to={"/"}>Redirect to Home</Link>
                 </div>
             </main>
         )

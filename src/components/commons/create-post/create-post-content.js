@@ -1,33 +1,22 @@
 import React, { useState } from 'react'
 import { useMutation } from '@apollo/react-hooks'
+import { useHistory } from 'react-router-dom'
 
-import ImageUploading from 'react-images-uploading'
 import Button from 'antd/lib/button'
 import Input from 'antd/lib/input'
 import Form from 'antd/lib/form'
 import Message from 'antd/lib/message'
 
-import UploadOutlined from '@ant-design/icons/UploadOutlined'
-import EditTwoTone from '@ant-design/icons/EditTwoTone'
-import DeleteTwoTone from '@ant-design/icons/DeleteTwoTone'
+import ImageUploadingComponent from '../functions/imageuploading'
 
 import { CREATE_POST_QUERY } from '../../../queries/posts'
 
 const { TextArea } = Input;
 //Serves Form for Create Post Content
 const CreatePostContent = ({ content, cookies, currentMenu, communityID, community }) => {
+    let history = useHistory()
     const [ form ] = Form.useForm() 
     const [images, setImages] = useState([])
-    const maxNumber = 1
-    const onChange = (imageList) => {
-        //data for submit
-        setImages(imageList)
-    }
-
-    const [formValue, setFormValues] = useState("")
-    function formChange(event) {
-        setFormValues(event.target.value)
-    }
 
     const [mutation] = useMutation(CREATE_POST_QUERY)
 
@@ -41,11 +30,11 @@ const CreatePostContent = ({ content, cookies, currentMenu, communityID, communi
                         style: {
                             marginTop: '5vh',
                         },
-                    },10)
+                    }, 10)
                     break
                 }
                 post = {
-                    author_id: cookies.userCookie.user.id,
+                    author_id: cookies.userCookie.id,
                     title: values.title,
                     type: currentMenu,
                     image: null,
@@ -54,20 +43,20 @@ const CreatePostContent = ({ content, cookies, currentMenu, communityID, communi
                     community_id: communityID
                 }
                 try {
-                    const mutate = await mutation(
-                        {
-                            variables: {
+                    await mutation({
+                        variables: {
                                 post
-                            }
                         }
-                    )
+                    })
+
                     Message.success({
                         content: 'You have successfully posted',
                         style: {
                             marginTop: '5vh',
                         },
-                    },10)
-                    form.resetFields()
+                    },15)
+
+                    history.push("/community/" + communityID)
                 } catch (error) {
                     console.log(error)
                 }
@@ -79,11 +68,11 @@ const CreatePostContent = ({ content, cookies, currentMenu, communityID, communi
                         style: {
                             marginTop: '5vh',
                         },
-                    },10)
+                    },15)
                     break
                 }
                 post = {
-                    author_id: cookies.userCookie.user.id,
+                    author_id: cookies.userCookie.id,
                     title: values.title,
                     type: currentMenu,
                     image: null,
@@ -92,28 +81,28 @@ const CreatePostContent = ({ content, cookies, currentMenu, communityID, communi
                     community_id: communityID
                 }
                 try {
-                    const mutate = await mutation(
-                        {
-                            variables: {
+                    await mutation({
+                        variables: {
                                 post
-                            }
                         }
-                    )
+                    })
+
                     Message.success({
                         content: 'You have successfully posted',
                         style: {
                             marginTop: '5vh',
                         },
-                    },10)
-                    form.resetFields()
+                    },15)
+
+                    history.push("/community/" + communityID)
                 } catch (error) {
                     console.log(error)
                 }
                 break
             case 'Image':
-                if(!values.title || !values.image || values.image.length == 0){
+                if(!values.title || images.length === 0){
                     Message.warning({
-                        content: 'Please fill out both title and insert image',
+                        content: "Please input both a title and an image",
                         style: {
                             marginTop: '5vh',
                         },
@@ -121,7 +110,7 @@ const CreatePostContent = ({ content, cookies, currentMenu, communityID, communi
                     break
                 }
                 post = {
-                    author_id: cookies.userCookie.user.id,
+                    author_id: cookies.userCookie.id,
                     title: values.title,
                     type: currentMenu,
                     image: images[0]['data_url'],
@@ -130,20 +119,20 @@ const CreatePostContent = ({ content, cookies, currentMenu, communityID, communi
                     community_id: communityID
                 }
                 try {
-                    const mutate = await mutation(
-                        {
-                            variables: {
+                    await mutation({
+                        variables: {
                                 post
-                            }
                         }
-                    )
+                    })
+                    
                     Message.success({
                         content: 'You have successfully posted',
                         style: {
                             marginTop: '5vh',
                         },
                     },10)
-                    form.resetFields()
+
+                    history.push("/community/" + communityID)
                 } catch (error) {
                     console.log(error)
                 }
@@ -157,10 +146,10 @@ const CreatePostContent = ({ content, cookies, currentMenu, communityID, communi
                 <div className="create-content-post">
                     <Form form={form} name="create_post" className="create-post_post" onFinish={onFinish}>
                         <Form.Item name="title" >
-                            <Input placeholder="Post Title" />
+                            <Input placeholder="Title" />
                         </Form.Item>
                         <Form.Item name="text">
-                            <TextArea allowClear placeholder="Post Description"/>
+                            <TextArea allowClear placeholder="Description"/>
                         </Form.Item>
                         <Form.Item>
                             {
@@ -179,10 +168,10 @@ const CreatePostContent = ({ content, cookies, currentMenu, communityID, communi
                 <div className="create-content-link">
                     <Form form={form} name="create_post" className="create-post_link" onFinish={onFinish} >
                         <Form.Item name="title">
-                            <Input placeholder="Post Title" />
+                            <Input placeholder="Title" />
                         </Form.Item>
-                        <Form.Item name="text">
-                            <Input placeholder="Post Link" />
+                        <Form.Item name="text" extra="Correct Format: www.google.com or google.com | Incorrect Format: https://google.com or http://google.com">
+                            <Input placeholder="Link" />
                         </Form.Item>
                         <Form.Item>
                             {
@@ -199,36 +188,12 @@ const CreatePostContent = ({ content, cookies, currentMenu, communityID, communi
         case 'Image':
             return (
                 <div className="create-content-image">
-                    <Form form={form} name="create_post" className="create-post_image" onFinish={onFinish} >
+                    <Form name="create_post" className="create-post_image" className="form" onFinish={onFinish} >
                         <Form.Item name="title">
-                            <Input placeholder="Post Title" />
+                            <Input placeholder="Title" />
                         </Form.Item>
                         <Form.Item name="image">
-                            <ImageUploading multiple value={images} onChange={onChange} maxNumber={maxNumber} dataURLKey="data_url" >
-                                {({
-                                    imageList,
-                                    onImageUpload,
-                                    onImageUpdate,
-                                    onImageRemove,
-                                }) => (
-                                    // write your building UI
-                                    <div className="upload_image-wrapper">
-                                        <Button className="upload" icon={<UploadOutlined />} onClick={onImageUpload} >
-                                            Upload Image
-                                        </Button>
-                                        &nbsp;
-                                        {imageList.map((image, index) => (
-                                            <div key={index} className="image-item">
-                                                <img className="image" src={image['data_url']} alt="" style={{ display: "block", margin: "0 auto", border: "2px solid grey", maxWidth: "100%" }} />
-                                                <div className="image-item__btn-wrapper">
-                                                    <Button icon={<EditTwoTone />} onClick={() => onImageUpdate(index)}>Update</Button>
-                                                    <Button icon={<DeleteTwoTone />} onClick={() => onImageRemove(index)}>Remove</Button>
-                                                </div>
-                                            </div>
-                                        ))}
-                                    </div>
-                                )}
-                            </ImageUploading>
+                            <ImageUploadingComponent imageState={images} setImageState={setImages}/>
                         </Form.Item>
                         <Form.Item>
                             {

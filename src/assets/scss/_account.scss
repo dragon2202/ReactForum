@@ -1,0 +1,94 @@
+.account {
+    padding: 40px;
+    padding-top: 20px;
+    .posts-list {
+        display: flex;
+        width: 100%;
+        float: left;
+        .posts {
+            width: 70%;
+            margin-right: 10px;
+            .create-post-nav {
+                margin-bottom: 30px;
+                .MenuItemPost {
+                    width: 75%;
+                }
+            }            
+            .post-list {
+                .card {
+                    background-color: #DAE0E6;
+                }
+                .ant-card-head-title {
+                    span {
+                        cursor: pointer;
+                    }
+                }
+                .ant-list-pagination {
+                    text-align: center;
+                    
+                }
+                padding-bottom: 40px;
+            }
+        }
+        .personal {
+            width: 30%;
+            margin-left: 10px;
+            .user-info {
+                margin-bottom: 20px;
+                .ant-card-body {
+                    padding-top: 12px;
+                    padding-bottom: 12px;
+                    .username {
+                        float: left;
+                    }
+                    .icon {
+                        float: right;
+                    }
+                }
+            }
+            .personal-post-card {
+                margin-bottom: 20px;
+                .ant-card-body {
+                    padding-top: 12px;
+                    padding-bottom: 12px;
+                }
+            }
+            .personal-community-card {
+                .ant-card-body {
+                    padding-top: 12px;
+                    padding-bottom: 12px;
+                }
+            }
+        }
+    }
+}
+
+@media screen and (max-width: 900px) {
+    .account {
+        .posts-list {
+            display: inline;
+            position: relative;
+            float: left;
+            .posts{
+                width: 100%;
+            }
+            
+            .personal {
+                width: 100%;
+            }
+        }
+    }
+}
+
+@media screen and (max-width: 600px) {
+    .account {
+        .posts-list {
+            .posts {
+                .create-post-nav {
+                    display: none;
+                }
+            }
+            
+        }
+    }
+}

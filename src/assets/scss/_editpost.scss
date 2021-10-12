@@ -2,6 +2,22 @@
     padding: 40px;
     padding-top: 80px;
 
+    .editpost-card {
+        .updated_at {
+            font-weight: bold;
+            float: left;
+            padding-top: 0px;
+        }
+        .community {
+            font-weight: bold;
+            float: right;
+            padding: 0px;
+        }
+        .clear {
+            clear: both;
+        }
+    }
+
     .ant-card-head {
         background-color:rgb(246, 247, 248);
     }
@@ -14,9 +30,11 @@
             margin-bottom: 20px;
             height:40vh;
         }
+        /*
         .ant-input {
-            margin-bottom: 20px;
+            margin-left: 5px;
         }
+        */
 
         .ant-btn-primary {
             float: right;
@@ -36,5 +54,17 @@
             justify-content: center;
             margin-bottom: 20px;
         }
+    }
+    
+    .logged-in {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .redirect {
+        display: flex;
+        justify-content: center;
+        align-items: center;
     }
 }

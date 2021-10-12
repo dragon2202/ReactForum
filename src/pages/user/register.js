@@ -7,7 +7,7 @@ import message from 'antd/lib/message'
 import UserOutlined from '@ant-design/icons/UserOutlined'
 import LockOutlined from '@ant-design/icons/LockOutlined'
 import MailOutlined from '@ant-design/icons/MailOutlined'
-import {Link} from 'react-router-dom'
+import { Link } from 'react-router-dom'
 
 import { useCookies } from 'react-cookie'
 
@@ -40,18 +40,13 @@ export default function Register() {
         }
     }
 
-    useEffect(() => {
+    useEffect(async () => {
         if(queryUser) {//block until triggered with OnFinsh
             if(queryUser.user.email){
-                message.error('Email is already registered.', 20)
+                message.warning('Email is already registered.', 20)
             } else {
-                const mutate = mutation(//GraphQL to add user
-                    {
-                        variables: {
-                            user: userObject
-                        }
-                    }
-                )
+                //GraphQL to add user
+                await mutation( { variables: { user: userObject } } )
                 message.success({ content: 'Account has been successfully registered.', style: { marginTop: '5vh'}},10)
                 history.push("/login")
             }
@@ -78,13 +73,13 @@ export default function Register() {
         }
     }
 
-    if(cookies.userCookie == undefined) {
+    if(cookies.userCookie === undefined) {
         return (
             <main className="register">
                 <Form name="normal_register" className="register-form" onFinish={OnFinish} noValidate>
                     <h3 style={{textAlign:"center"}}><b>User Register</b></h3>
                     <Form.Item name="Email">
-                        <Input prefix={<MailOutlined className="site-form-item-icon" />} placeholder="Please input your email!" />
+                        <Input prefix={<MailOutlined className="site-form-item-icon" />} type="email" placeholder="Please input your email!" />
                     </Form.Item>
                     <Form.Item name="Username">
                         <Input prefix={<UserOutlined className="site-form-item-icon" />} placeholder="Please input your Username" />
@@ -94,6 +89,12 @@ export default function Register() {
                     </Form.Item>
                     <Form.Item name="ConfirmPassword">
                         <Input prefix={<LockOutlined className="site-form-item-icon" />} type="password" placeholder="Please confirm your Password!" />
+                    </Form.Item>
+                    <Form.Item>
+                        <span><Link to={"/login"}>Login!</Link></span>
+                        <a className="login-form-forgot" href="" style={{ float: "right" }}>
+                            Forgot password
+                        </a>
                     </Form.Item>
                     <Form.Item>
                         <Button type="primary" htmlType="submit" className="login-form-button">
@@ -110,7 +111,7 @@ export default function Register() {
                     <h1>You're already logged in.</h1> 
                 </div>
                 <div className="redirect">
-                    <Link to={"/home"}>Redirect to Home</Link>
+                    <Link to={"/"}>Redirect to Home</Link>
                 </div>
             </main>
         )
