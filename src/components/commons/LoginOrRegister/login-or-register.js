@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom'
 import Card  from 'antd/lib/card'
 import Button from 'antd/lib/button'
 
-
 const LoginOrRegister = ({}) => {
     return (
         <Card className={"LoginOrRegister"}>

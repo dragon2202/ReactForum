@@ -1,0 +1,27 @@
+.editcommunity {
+    padding: 40px;
+    padding-top: 80px;
+    
+    .card-tab {
+        background-color: #9BB7D4;
+        .tab { 
+            background-color: #E0E0E0;
+            .search-bar {
+                padding-bottom: 15px;
+            }
+            .ant-tabs-tabpane-active {
+                .community-form {
+                    padding-left: 15px;
+                    padding-right: 15px;
+                    .description {
+                        height: 30vh;
+                    }
+                }
+                .search-bar {
+                    padding-left: 20px;
+                    padding-right: 20px;
+                }
+            }
+        }
+    }
+}

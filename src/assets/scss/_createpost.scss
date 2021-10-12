@@ -15,18 +15,36 @@
             height:40vh;
         }
 
+        /*
         .ant-input {
-            margin-bottom: 00px;
+            margin-left: 5px;
         }
+        */
 
         .ant-btn-primary {
             float: right;
         }
 
-        .image-item { 
-            .image-item__btn-wrapper {
-                .ant-btn {
-                    margin-right: 20px;
+        .form {
+            .uploadButton {
+                margin-bottom: 15px;
+            }
+            .image-item {
+                .image-item__btn-wrapper {
+                    margin-bottom: 15px;
+                    .update {
+                        margin-right: 10px;
+                    }
+                    .remove {
+                        margin-left: 10px;
+                    }
+                }
+                .preview-image {
+                    //display: "block", margin: "0 auto", border: "2px solid grey", maxWidth: "100%"
+                    display: block;
+                    margin: 0 auto;
+                    border: 2px solid grey;
+                    max-width: 100%;
                 }
             }
         }

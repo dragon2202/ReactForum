@@ -1,55 +1,33 @@
-import React, {useState} from 'react'
+import React, { useState } from 'react'
 import Post from '../components/commons/home-post/index'
 import CreatePostNav from '../components/commons/navigation/create-post-nav'
 import { Link } from 'react-router-dom'
 
 import Card from 'antd/lib/card'
-import Empty from 'antd/lib/empty'
-import Search from 'antd/lib/input/Search'
-import Button from 'antd/lib/button'
+import List from 'antd/lib/list'
+import Input from 'antd/lib/input'
 
-import { GetGraphqlQueryID } from '../components/commons/functions/getgraphqlquery'
+import { isLiteralObject } from '../components/commons/functions/isLiteralObject'
+import { GetGraphqlQuery } from '../components/commons/functions/getgraphqlquery'
 import { GET_POSTS_RECENT_QUERY, GET_ALL_COMMUNITIES_QUERY } from '../queries/posts'
 
-
-const communityGridStyle = {
-    width: '100%',
-    cursor: 'pointer'
-};
-// Takes Graphql Data and maps it to a new array for the Card Grid
-const CommunityMap = (data, searchParam) => {
-    if (data == undefined) {
-        return(
-            <Card key='0' style={communityGridStyle}>
-                <Empty />
-            </Card>
-        )
-    }
-    return data.map((item, index) => {
-        if(index < 8) {//set community render limit
-            if (data.length != 0) {
-                if((item.title.toLowerCase()).includes(searchParam.toLowerCase())) {
-                    return (
-                        <Card.Grid key={item.id} style={communityGridStyle} >
-                            <div className="alignleft">Community Name: <Link to={"/community/" + item.id}>{item.title}</Link></div>
-                            <div className="alignright">Genre: {item.id}</div>
-                        </Card.Grid>
-                    )
-                }
-            } else {
-                return(
-                    <Card.Grid key='0' style={communityGridStyle}>
-                        <Empty />
-                    </Card.Grid>
-                )
-
-            }
-        }
-    })
-}
+import { useCookies } from 'react-cookie'
 
 export default function Home() {
-    const [ searchParam, setSearch ] = useState('')
+    const [cookies] = useCookies(['userCookie'])
+    const [search, setSearch] = useState('')
+    let postQuery = GetGraphqlQuery(GET_POSTS_RECENT_QUERY)
+    let communityQuery = GetGraphqlQuery(GET_ALL_COMMUNITIES_QUERY)
+
+    if (!isLiteralObject(communityQuery) || !isLiteralObject(postQuery)) {
+        return (
+            <main className="home">
+                <h3><b>Home Page</b></h3>
+                <p style={{ textAlign: 'center', paddingTop: '80px' }}>Loading...</p>
+            </main>
+        )
+    }
+
     return (
         <main className="home">
             <section className="container">
@@ -61,16 +39,32 @@ export default function Home() {
                                 <CreatePostNav />
                             </section>
                             <section className="post-card">
-                                <Post data={GetGraphqlQueryID(0, GET_POSTS_RECENT_QUERY).post} />
+                                <Post post={postQuery.post} user={(cookies.userCookie === undefined) ? 0 : cookies.userCookie} />
                             </section>
                         </div>
                         <div className="community-card">
                             <div className="search-reset">
-                                <Search className="search" placeholder="Search Community" onSearch={setSearch}/>
-                                <Button className="reset"type="primary" onClick={() => {setSearch("")}}>Reset Search</Button>
+                                <Input className="search" placeholder="Search Community" onChange={(e) => { setSearch(e.target.value) }} />
                             </div>
                             <Card title={"Community"}>
-                                {CommunityMap(GetGraphqlQueryID(0, GET_ALL_COMMUNITIES_QUERY).community, searchParam)}
+                                <List
+                                    itemLayout="vertical"
+                                    size="small"
+                                    className="community-list"
+                                    pagination={{
+                                        position: 'bottom',
+                                        pageSize: 10
+                                    }}
+                                    dataSource={communityQuery.community}
+                                    renderItem={item => (
+                                        ((item.title.toLowerCase()).includes(search.toLowerCase())) ?
+                                            <List.Item key={item.id}>
+                                                <div><Link to={"/community/" + item.id}>{item.title}</Link></div>
+                                            </List.Item>
+                                            :
+                                            null
+                                    )}
+                                />
                             </Card>
                         </div>
                     </div>

@@ -1,5 +1,16 @@
 https://www.youtube.com/watch?v=6JnGBs88sL0
+https://www.youtube.com/watch?v=iZzjD3Smp_A
 
 TODO:
-Allow author to edit comments
-Allow authors to delete posts and comments
+
+//Work on account Page
+//check existing email
+
+//messages with users
+
+Create Post go to account post via history push
+Account handling user
+
+<p className="text" style={{ whiteSpace: 'pre-wrap' }}>
+    {JSON.stringify(query, null, '\t')}
+</p>

@@ -4,11 +4,17 @@
 @import './communitypost';
 @import './community';
 @import './editpost';
+@import './editcommunity';
+@import './createcommunity';
 @import './createpost';
 @import './viewpost';
 @import './error';
 @import './login';
 @import './register';
+@import './account';
+@import './editaccount';
+@import './error';
+@import './unauthorized';
 
 body {
     font-family: -apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
@@ -22,7 +28,7 @@ h1 {
 }
 
 .container {
-    max-width: 1200px;
+    max-width: 1300px;//1200px original
     margin: 0 auto;
 }
 
