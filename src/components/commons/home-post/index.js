@@ -1,10 +1,10 @@
 import React from 'react'
 import List from 'antd/lib/list'
 
-import { contentSwitch } from '../functions/contentswitch'
+import ContentCard from '../component/ContentCard'
 
 //Exports a list of cards with posts in the cards
-const Post = ({ post, user }) => {
+const Post = ({ post }) => {
     return (
         <div>
             <h3 style={{ marginTop: "10px", marginLeft: "10px" }}>Recent Posts</h3>
@@ -19,7 +19,7 @@ const Post = ({ post, user }) => {
                 dataSource={post}
                 renderItem={item => (
                     <List.Item key={item.id}>
-                        {contentSwitch(item, user)}
+                        <ContentCard item={item}/>
                     </List.Item>
                 )}
             />

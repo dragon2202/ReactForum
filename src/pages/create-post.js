@@ -13,14 +13,14 @@ import LoginOrRegister from '../components/commons/LoginOrRegister/login-or-regi
 import CreatePostContent from '../components/commons/create-post/create-post-content'
 
 import { GetGraphqlQueryID } from '../components/commons/functions/getgraphqlquery'
-import { GET_COMMUNITYUSERROLE_BY_USER_QUERY } from '../queries/posts'
+import { GET_COMMUNITYUSERROLE_BY_USER } from '../queries/posts'
 
 import { useCookies } from 'react-cookie'
 
 
 export default function CreatePost() {
     const [ cookies ] = useCookies(['userCookie'])
-    let query = (cookies.userCookie === undefined) ? null : GetGraphqlQueryID(cookies.userCookie.id, GET_COMMUNITYUSERROLE_BY_USER_QUERY)
+    let query = (cookies.userCookie === undefined) ? null : GetGraphqlQueryID(cookies.userCookie.id, GET_COMMUNITYUSERROLE_BY_USER)
     const location = useLocation()
     const [ communityID, setCommunityID ] = useState('')
     const [ currentMenu, setMenu ] = useState('Post')

@@ -8,19 +8,19 @@ import Message from 'antd/lib/message'
 
 import { useCookies } from 'react-cookie'
 
-import { CREATE_COMMUNITY_QUERY, CHECK_COMMUNITY_NAME_QUERY } from '../queries/posts'
+import { CREATE_COMMUNITY, CHECK_COMMUNITY_NAME } from '../queries/posts'
 import { useHistory } from 'react-router-dom'
 
 const { TextArea } = Input
 
 export default function CreateCommunity() {
     let history = useHistory()
-    const [mutation] = useMutation(CREATE_COMMUNITY_QUERY)
+    const [mutation] = useMutation(CREATE_COMMUNITY)
     const [ communityTitle, setComTitle ] = useState('')
     const [ communityObj, setComObj ] = useState(null)
     const [ cookies ] = useCookies(['userCookie'])
     const myStorage = window.localStorage;
-    const [ getTitle ] = useLazyQuery(CHECK_COMMUNITY_NAME_QUERY, {
+    const [ getTitle ] = useLazyQuery(CHECK_COMMUNITY_NAME, {
         onCompleted: data => {setComTitle(data)}
     })
 

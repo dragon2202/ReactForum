@@ -5,19 +5,7 @@ export function GetGraphqlQueryID(param, query) {
     const { data, error, loading } = useQuery(query, {
         variables: {
             id: param
-        },
-        onError: (({ graphQLErrors, networkError, operation, forward }) => {
-            if (graphQLErrors) {
-                // Retry the request, returning the new observable
-                return forward(operation);
-            }
-
-            // To retry on network errors, we recommend the RetryLink
-            // instead of the onError link. This just logs the error.
-            if (networkError) {
-                console.log(`[Network error]: ${networkError}`);
-            }
-        })
+        }
     })
 
     if (loading) {
@@ -30,20 +18,7 @@ export function GetGraphqlQueryID(param, query) {
 }
 //Function to grab graphql data from SQL, If an ID is NOT passed
 export function GetGraphqlQuery(query) {
-    const { data, error, loading } = useQuery(query, {
-        onError: (({ graphQLErrors, networkError, operation, forward }) => {
-            if (graphQLErrors) {
-                // Retry the request, returning the new observable
-                return forward(operation);
-            }
-
-            // To retry on network errors, we recommend the RetryLink
-            // instead of the onError link. This just logs the error.
-            if (networkError) {
-                console.log(`[Network error]: ${networkError}`);
-            }
-        })
-    })
+    const { data, error, loading } = useQuery(query)
 
     if (loading) {
         return 'loading'
@@ -52,6 +27,34 @@ export function GetGraphqlQuery(query) {
         return 'error'
     }
     return data
+}
+
+export function GetGraphqlQueryID_Refetch(param, query) {
+    const { data, error, loading, refetch } = useQuery(query, {
+        variables: {
+            id: param
+        }
+    })
+
+    if (loading) {
+        return 'loading'
+    }
+    if (error) {
+        return 'error'
+    }
+    return [data, refetch]
+}
+
+export function GetGraphqlQuery_Refetch(query) {
+    const { data, error, loading, refetch } = useQuery(query)
+
+    if (loading) {
+        return 'loading'
+    }
+    if (error) {
+        return 'error'
+    }
+    return [data, refetch]
 }
 
 //https://www.apollographql.com/docs/react/data/error-handling/

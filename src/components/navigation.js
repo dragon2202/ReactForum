@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import Avatar from 'antd/lib/avatar'
 import { useHistory } from 'react-router-dom'
 import { useCookies } from 'react-cookie'
-import message from 'antd/lib/message'
+import Message from 'antd/lib/message'
 
 import Menu from 'antd/lib/menu'
 import Dropdown from 'antd/lib/dropdown'
@@ -18,6 +18,10 @@ const navLink = [
     {
         title: 'Community',
         path: '/communityhome'
+    },
+    {
+        title: 'Inbox',
+        path: '/inbox'
     }
 ]
 
@@ -27,7 +31,7 @@ export default function Navigation() {
     const wrapperRef = useRef(null);
     const buttonRef = useRef(null);
     const [menuActive, setMenuActive] = useState(false)
-    const [cookies, removeCookie ,set] = useCookies(['userCookie'])
+    const [cookies, removeCookie, set] = useCookies(['userCookie'])
     let history = useHistory()
 
     //below is the same as componentDidMount and componentDidUnmount
@@ -82,10 +86,10 @@ export default function Navigation() {
                                 </Menu.Item>
                                 <Menu.Item key="1" onClick={() => {
                                     set('userCookie', { path: '/', sameSite:'lax',secure: true })//Sets current user cookie to null
-                                    message.success({
+                                    Message.success({
                                         content: 'You successfully logged out.',
                                         style: {
-                                          marginTop: '5vh',
+                                          marginTop: '10vh',
                                         },
                                     },7)
                                     history.push('/')

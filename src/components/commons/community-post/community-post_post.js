@@ -1,9 +1,9 @@
 import React from 'react'
 import List from 'antd/lib/list'
 
-import { contentSwitch } from '../functions/contentswitch_community-post'
+import ContentCard from '../component/ContentCard_Community-Post'
 
-const CommunityPost_Post = ({ query, user }) => {
+const CommunityPost_Post = ({ query }) => {
     return (
         <List 
             itemLayout="vertical" 
@@ -13,10 +13,10 @@ const CommunityPost_Post = ({ query, user }) => {
                 position: 'bottom',
                 pageSize: 10
             }}
-            dataSource={ query.community.post }
-            renderItem={ post =>(
+            dataSource={query.community.post}
+            renderItem={post => (
                 <List.Item key={post.id}>
-                    {contentSwitch(post, user)}
+                    <ContentCard post={post}/>
                 </List.Item>
             )}
         />

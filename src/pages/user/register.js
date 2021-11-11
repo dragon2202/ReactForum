@@ -1,83 +1,62 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { useHistory } from "react-router-dom";
 import Button from 'antd/lib/button'
 import Form from 'antd/lib/form'
 import Input from 'antd/lib/input'
-import message from 'antd/lib/message'
+import Message from 'antd/lib/message'
 import UserOutlined from '@ant-design/icons/UserOutlined'
 import LockOutlined from '@ant-design/icons/LockOutlined'
 import MailOutlined from '@ant-design/icons/MailOutlined'
 import { Link } from 'react-router-dom'
 
 import { useCookies } from 'react-cookie'
+import { validateForm } from '../../components/commons/functions/validateForm'
 
 import { useMutation, useLazyQuery } from '@apollo/react-hooks'
-import { REGISTER_USER_QUERY, CHECK_USER_EMAIL_QUERY } from '../../queries/posts/index'
+import { REGISTER_USER, CHECK_USER_EMAIL } from '../../queries/posts/index'
 
 export default function Register() {
     let history = useHistory();
-    const [ cookies ] = useCookies(['userCookie'])
-    const [ queryUser, setUser ] = useState(null)
-    const [ userObject, setObject ] = useState(null)
-    const [ mutation ] = useMutation(REGISTER_USER_QUERY);
-    const [ getUser] = useLazyQuery(CHECK_USER_EMAIL_QUERY, {
-        onCompleted: data => {setUser(data)}//triggers useEffect
-    })
-
-    //Checks if all form inputs are not blank
-    function validateForm(object){
-        var count = 0
-        for (const property in object) {
-            if(object[property] === undefined || object[property] === "") {
-                message.warning('Please fill out ' + `${property}`, 10)
-                count++
-            }
-        }
-        if(count > 0) { 
-            return false
-        } else {
-            return true
-        }
-    }
-
-    useEffect(async () => {
-        if(queryUser) {//block until triggered with OnFinsh
-            if(queryUser.user.email){
-                message.warning('Email is already registered.', 20)
+    const [cookies] = useCookies(['userCookie'])
+    const [user, setUser] = useState(null)
+    const [registerUser] = useMutation(REGISTER_USER);
+    const [getUser] = useLazyQuery(CHECK_USER_EMAIL, {
+        onCompleted: async (data) => {
+            if (data.user.email) {
+                Message.warning('Email is already registered.', 20)
             } else {
                 //GraphQL to add user
-                await mutation( { variables: { user: userObject } } )
-                message.success({ content: 'Account has been successfully registered.', style: { marginTop: '5vh'}},10)
+                await registerUser({ variables: { user: user } })
+                Message.success({ content: 'Account has been successfully registered.', style: { marginTop: '5vh' } }, 10)
                 history.push("/login")
             }
-        }
-    }, [queryUser])
+        }//triggers useEffect
+    })
 
-    async function OnFinish (values) {
-        var user = {
+    async function OnFinish(values) {
+        setUser({
             email: values.Email,
             password: values.Password,
             username: values.Username,
-        }
-        setObject(user)
-        if(validateForm(values)) {
-            if(values.Password === values.ConfirmPassword){
+        })
+        if (validateForm(values)) {
+            if (values.Password === values.ConfirmPassword) {
                 getUser({//GraphQL to grab user with same email as the input
                     variables: {
                         email: values.Email
                     }
                 })
             } else {
-                message.warning('Passwords do not match.', 10)
+                Message.warning('Passwords do not match.', 10)
             }
         }
     }
 
-    if(cookies.userCookie === undefined) {
+    if (cookies.userCookie === undefined) {
         return (
             <main className="register">
                 <Form name="normal_register" className="register-form" onFinish={OnFinish} noValidate>
-                    <h3 style={{textAlign:"center"}}><b>User Register</b></h3>
+                    <h3 style={{ textAlign: "center" }}><b>User Register</b></h3>
                     <Form.Item name="Email">
                         <Input prefix={<MailOutlined className="site-form-item-icon" />} type="email" placeholder="Please input your email!" />
                     </Form.Item>
@@ -104,16 +83,16 @@ export default function Register() {
                 </Form>
             </main>
         )
-    } else {
-        return(
-            <main className="login">
-                <div className="logged-in">
-                    <h1>You're already logged in.</h1> 
-                </div>
-                <div className="redirect">
-                    <Link to={"/"}>Redirect to Home</Link>
-                </div>
-            </main>
-        )
     }
+    return (
+        <main className="login">
+            <div className="logged-in">
+                <h1>You're already logged in.</h1>
+            </div>
+            <div className="redirect">
+                <Link to={"/"}>Redirect to Home</Link>
+            </div>
+        </main>
+    )
+
 }

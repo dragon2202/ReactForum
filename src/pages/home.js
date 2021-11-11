@@ -9,15 +9,15 @@ import Input from 'antd/lib/input'
 
 import { isLiteralObject } from '../components/commons/functions/isLiteralObject'
 import { GetGraphqlQuery } from '../components/commons/functions/getgraphqlquery'
-import { GET_POSTS_RECENT_QUERY, GET_ALL_COMMUNITIES_QUERY } from '../queries/posts'
+import { GET_POSTS_RECENT, GET_ALL_COMMUNITIES } from '../queries/posts'
 
 import { useCookies } from 'react-cookie'
 
 export default function Home() {
     const [cookies] = useCookies(['userCookie'])
     const [search, setSearch] = useState('')
-    let postQuery = GetGraphqlQuery(GET_POSTS_RECENT_QUERY)
-    let communityQuery = GetGraphqlQuery(GET_ALL_COMMUNITIES_QUERY)
+    let postQuery = GetGraphqlQuery(GET_POSTS_RECENT)
+    let communityQuery = GetGraphqlQuery(GET_ALL_COMMUNITIES)
 
     if (!isLiteralObject(communityQuery) || !isLiteralObject(postQuery)) {
         return (
@@ -39,7 +39,7 @@ export default function Home() {
                                 <CreatePostNav />
                             </section>
                             <section className="post-card">
-                                <Post post={postQuery.post} user={(cookies.userCookie === undefined) ? 0 : cookies.userCookie} />
+                                <Post post={postQuery.post} />
                             </section>
                         </div>
                         <div className="community-card">

@@ -10,7 +10,7 @@ import Modal from 'antd/lib/modal'
 
 import moment from 'moment'
 
-import { CREATE_COMMENT_QUERY, GET_FAMILY_COMMENTS, UPDATE_COMMENT_QUERY, DELETE_COMMENT_QUERY, DELETE_PARENT_COMMENT_QUERY } from '../../../../queries/posts'
+import { CREATE_COMMENT, GET_FAMILY_COMMENTS, UPDATE_COMMENT, DELETE_COMMENT, DELETE_PARENT_COMMENT } from '../../../../queries/posts'
 import { useCookies } from 'react-cookie'
 
 const { TextArea } = Input
@@ -22,24 +22,24 @@ const Comments = ({ commentsObj }) => {
   const [editDisplay, setEditDisplay] = useState('')
   const [value, setValue] = useState('')
   const [cookies] = useCookies(['userCookie'])
-  const [mutation] = useMutation(CREATE_COMMENT_QUERY)
-  const [editMutation] = useMutation(UPDATE_COMMENT_QUERY)
-  const [deleteMutation] = useMutation(DELETE_COMMENT_QUERY)
-  const [deleteParentMutation] = useMutation(DELETE_PARENT_COMMENT_QUERY)
+  const [mutation] = useMutation(CREATE_COMMENT)
+  const [editMutation] = useMutation(UPDATE_COMMENT)
+  const [deleteMutation] = useMutation(DELETE_COMMENT)
+  const [deleteParentMutation] = useMutation(DELETE_PARENT_COMMENT)
   let { id } = useParams()
   const myStorage = window.localStorage;
 
   const [familyComment, setFamilyComment] = useState(null)
   const [checkParenthood] = useLazyQuery(GET_FAMILY_COMMENTS, {
     onCompleted: data => {
-      setFamilyComment(data.commentfamily)
+      setFamilyComment(data.comment)
     }
   })
 
 
   useEffect(async () => {
-    if (familyComment != null) {
-      if (familyComment.child.length == 0) {
+    if (familyComment !== null) {
+      if (familyComment.child.length === 0) {
         //Has Child
         myStorage.setItem('reload', 2)
         await deleteMutation({
@@ -49,9 +49,9 @@ const Comments = ({ commentsObj }) => {
             }
           }
         })
-        if (familyComment.parent.id != null) {
+        if (familyComment.parent.id !== null) {
           //Has Parent Comment
-          if (familyComment.parent.comment == null) {
+          if (familyComment.parent.comment === null) {
             //Parent Comment has been previously deleted
             //1: Recursive call to check if parent comment has a parent commend, the selected comment's grandparent, then delete all deleted parents
             checkParenthood({
@@ -164,7 +164,7 @@ const Comments = ({ commentsObj }) => {
         <span>Login to reply</span>)]}
       key={cObj.id}
       author={cObj.user.username}
-      datetime={moment(parseInt(cObj.updated_at)).format('dddd, MMMM Do YYYY, h:mm:ss a')}
+      datetime={moment(parseInt(cObj.updated_at)).format('MMMM Do YYYY, h:mm:ss a')}
       content={(editDisplay === cObj.id) ?
         <Editor display={editDisplay === cObj.id ? true : false} EditorKey={cObj.id} onChange={(e) => handleChange(e)} onSubmit={() => handleEditSubmit(value, cObj.id)} defaultValue={cObj.comment} />
         :
@@ -204,7 +204,7 @@ const ChildComments = ({ commentsObj, parentID, handleChange, handleSubmit, hand
         <span>Login to reply</span>)]}
       key={cObj.id}
       author={cObj.user.username}
-      datetime={moment(parseInt(cObj.updated_at)).format('dddd, MMMM Do YYYY, h:mm:ss a')}
+      datetime={moment(parseInt(cObj.updated_at)).format('MMMM Do YYYY, h:mm:ss a')}
       content={(editDisplay === cObj.id) ?
         <Editor display={editDisplay === cObj.id ? true : false} EditorKey={cObj.id} onChange={(e) => handleChange(e)} onSubmit={() => handleEditSubmit(value, cObj.id)} defaultValue={cObj.comment} />
         :

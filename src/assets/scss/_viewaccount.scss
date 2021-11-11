@@ -1,0 +1,32 @@
+.viewAccount {
+    padding: 40px;
+    padding-top: 80px;
+    .post_comment_personal {
+        display: flex;
+        .post_comment {
+            width: 70%;
+            margin-right: 10px;
+            .overview-list {
+                .content {
+                    width: 100%;
+                }
+                .commentincard {
+                    background-color: rgb(220,220,220);
+                    .ant-comment {
+                        margin-top: 0;
+                        .ant-comment-content-author-time {
+                            color: black;
+                        }
+                    }
+                }
+                .comment_tree_card {
+                    width: 100%;
+                }
+            }
+        }
+        .personal{
+            width: 30%;
+            margin-left: 10px;
+        }
+    }
+}

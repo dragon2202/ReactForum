@@ -3,10 +3,10 @@ import CommunityHome from '../components/commons/community-home/community-home'
 
 import { isLiteralObject } from '../components/commons/functions/isLiteralObject'
 import { GetGraphqlQuery } from '../components/commons/functions/getgraphqlquery'
-import { GET_ALL_COMMUNITIES_QUERY } from '../queries/posts'
+import { GET_ALL_COMMUNITIES } from '../queries/posts'
 
 export default function Community() {
-    let query = GetGraphqlQuery(GET_ALL_COMMUNITIES_QUERY)
+    let query = GetGraphqlQuery(GET_ALL_COMMUNITIES)
 
     if (!isLiteralObject(query)) {
         return (

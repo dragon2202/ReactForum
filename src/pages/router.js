@@ -11,6 +11,8 @@ import ViewPost from './viewpost'
 import Login from './user/login'
 import Register from './user/register'
 import Account from './user/account'
+import Inbox from './user/inbox'
+import ViewAccount from './user/viewAccount'
 
 import Error from './error'
 import Unauthorized from './unauthorized'
@@ -27,7 +29,9 @@ export default function Router() {
             <Route path='/viewpost/:id' component={ViewPost} />
             <Route path='/login' component={Login} />
             <Route path='/register' component={Register} />
-            <Route path='/account/' component={Account} />
+            <Route path='/account' component={Account} />
+            <Route path='/inbox' component={Inbox} />
+            <Route path='/user/:id' component={ViewAccount} />
             <Route path='/unauthorized' component={Unauthorized} />
             <Route exact path='/' component={Home} />
             <Route component={Error} />

@@ -1,0 +1,123 @@
+.inbox {
+    padding-left: 40px;
+    padding-right: 40px;
+    padding-top: 80px;
+
+    .sentToandFrom {
+        display: flex;
+        .sentFromMessage {
+            width: 50%;
+            margin-right: 5px;
+            .ant-dropdown-button {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin-bottom: 20px;
+            }
+            .collapse {
+                .panel {
+                    .header_span {
+                        .subject {
+                            float: left;
+                        }
+                        .date {
+                            float: right;
+                        }
+                    }
+                }
+            }
+        }
+        
+        .sentToMessage {
+            width: 50%;
+            margin-left: 5px;
+            .ant-dropdown-button {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin-bottom: 20px;
+            }
+            .collapse {
+                .panel {
+                    .header_span {
+                        .subject {
+                            float: left;
+                        }
+                        .date {
+                            float: right;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    .sendMessage {
+        .recipient {
+            .tag-span {
+                display: block;
+                margin-bottom: 10px;
+            }
+        }
+        .message {
+            .textArea {
+                height: 15vh;
+            }
+        }
+    }
+}
+
+@media screen and (max-width: 600px) {
+    .inbox {
+        padding-left: 40px;
+        padding-right: 40px;
+        padding-top: 80px;
+        .sentToandFrom {
+            display: block;
+            .sentFromMessage {
+                width: 100%;
+                .ant-dropdown-button {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    margin-bottom: 20px;
+                }
+                .collapse {
+                    .panel {
+                        .header_span {
+                            .subject {
+                                float: left;
+                            }
+                            .date {
+                                float: right;
+                            }
+                        }
+                    }
+                }
+            }
+            .sentToMessage {
+                margin-top: 20px;
+                width: 100%;
+                .ant-dropdown-button {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    margin-bottom: 20px;
+                }
+                .collapse {
+                    .panel {
+                        .header_span {
+                            .subject {
+                                float: left;
+                            }
+                            .date {
+                                float: right;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+}

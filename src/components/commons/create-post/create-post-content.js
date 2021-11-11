@@ -9,7 +9,7 @@ import Message from 'antd/lib/message'
 
 import ImageUploadingComponent from '../functions/imageuploading'
 
-import { CREATE_POST_QUERY } from '../../../queries/posts'
+import { CREATE_POST } from '../../../queries/posts'
 
 const { TextArea } = Input;
 //Serves Form for Create Post Content
@@ -18,7 +18,7 @@ const CreatePostContent = ({ content, cookies, currentMenu, communityID, communi
     const [ form ] = Form.useForm() 
     const [images, setImages] = useState([])
 
-    const [mutation] = useMutation(CREATE_POST_QUERY)
+    const [mutation] = useMutation(CREATE_POST)
 
     async function onFinish(values) {
         let post

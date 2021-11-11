@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react'
-import { useMutation } from '@apollo/react-hooks'
 import { Link } from 'react-router-dom'
 import CreatePostNav from '../../components/commons/navigation/create-post-nav'
 
@@ -14,39 +13,51 @@ import EditOutlined from '@ant-design/icons/EditOutlined'
 import { useCookies } from 'react-cookie'
 
 import EditAccount from '../../components/commons/account/editaccount'
+import ContentCard from '../../components/commons/component/ContentCard'
 import LoginOrRegister from '../../components/commons/LoginOrRegister/login-or-register'
 import { isLiteralObject } from '../../components/commons/functions/isLiteralObject'
-import { contentSwitch } from '../../components/commons/functions/contentswitch'
-import { OnFinish_Username_Email } from '../../components/commons/account/functions/lazyQuery'
 import { GetGraphqlQueryID } from '../../components/commons/functions/getgraphqlquery'
-import { GET_COMMUNITY_USER_ROLE_AND_USER_QUERY, CHANGE_USER_INFO,  } from '../../queries/posts'
+import { GET_COMMUNITYUSERROLE_AND_USER_AND_POST } from '../../queries/posts'
 
 const { TabPane } = Tabs
 
+
 export default function Account() {
-    const [cookies, set] = useCookies(['userCookie'])
-    let query = (cookies.userCookie !== undefined) ? GetGraphqlQueryID(cookies.userCookie.id, GET_COMMUNITY_USER_ROLE_AND_USER_QUERY) : null
+    const [cookies] = useCookies(['userCookie'])
+    let query = (cookies.userCookie !== undefined) ? GetGraphqlQueryID(cookies.userCookie.id, GET_COMMUNITYUSERROLE_AND_USER_AND_POST) : null
     const [editToggle, setEditToggle] = useState(false)
     const [postSearch, setPostSearch] = useState('')
     const [communitySearch, setCommunitySearch] = useState('')
-    const [user, setUserObj] = useState(null)
-    const [ChangeUserInfo] = useMutation(CHANGE_USER_INFO)
     const localStorage = window.localStorage
 
     useEffect(() => {
         if (localStorage.getItem('reload') != null) {
-            Message.success({
-                content: 'Your account information has been successfully changed.',
-                style: {
-                    marginTop: '5vh',
-                },
-            }, 10)
+            switch (parseInt(localStorage.getItem('reload'))) {
+                case 1:
+                    Message.success({
+                        content: 'You have successfully updated your account username/email.',
+                        style: {
+                            marginTop: '5vh',
+                        },
+                    }, 10)
+                    break;
+                case 2:
+                    Message.success({
+                        content: "You have successfully updated your password.",
+                        style: {
+                            marginTop: '5vh',
+                        },
+                    }, 10)
+                    break;
+            }
             localStorage.clear()
         }
     }, [])
 
+    
+
     //If user is not logged in return a page with login and register
-    if (cookies.userCookie == undefined) {
+    if (cookies.userCookie === undefined) {
         return (
             <main className="editcommunity">
                 <h3>Edit Community</h3>
@@ -96,7 +107,7 @@ export default function Account() {
                                                                 dataSource={query.communityuserrole[index].community.post}
                                                                 renderItem={item => (
                                                                     <List.Item key={item.id}>
-                                                                        {contentSwitch(item, cookies.userCookie)}
+                                                                        <ContentCard item={item}/>
                                                                     </List.Item>
                                                                 )}
                                                             >
@@ -114,13 +125,6 @@ export default function Account() {
                                 <EditAccount
                                     editToggle={editToggle}
                                     item={query.user}
-                                    OnFinish_Username_Email={OnFinish_Username_Email}
-                                    user={user}
-                                    setUserObj={setUserObj}
-                                    ChangeUserInfo={ChangeUserInfo}
-                                    set={set}
-                                    localStorage={localStorage}
-
                                 />
                             </Card>
                             <Card className="personal-post-card" title={<Input placeholder="Search Posts" onChange={(e) => { setPostSearch(e.target.value) }} />}>

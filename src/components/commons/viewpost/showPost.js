@@ -3,19 +3,38 @@ import { Link } from 'react-router-dom'
 
 import Card from 'antd/lib/card'
 import Tooltip from 'antd/lib/tooltip'
+import Typography from 'antd/lib/typography'
 import EditOutlined from '@ant-design/icons/EditOutlined'
 import DeleteOutlined from '@ant-design/icons/DeleteOutlined'
 import UnlockOutlined from '@ant-design/icons/UnlockOutlined'
 import InfoCircleOutlined from '@ant-design/icons/InfoCircleOutlined'
-import UsergroupAddOutlined from '@ant-design/icons/UsergroupAddOutlined'
-import UserOutlined from '@ant-design/icons/UserOutlined'
+import moment from 'moment'
 
 import { showConfirmDelete, showConfirmLock, contentSwitch } from './components/functions'
+const { Text } = Typography
+
+const Header = ({ item }) => {
+    return (
+        <div>
+            <Link to={'/viewpost/' + item.community.id}>{item.community.title}</Link>
+            {<Text type='secondary'>{' Posted by ' + item.user.username + ' '}</Text>}
+            {
+                <Tooltip placement="top" title={moment(parseInt(item.created_at)).format('MMMM Do YYYY, h:mm:ss a')}>
+                    {moment(moment(parseInt(item.created_at)).format('MMMM Do YYYY, h:mm a'), 'MMMM Do YYYY, h:mm:ss a').fromNow()}
+                </Tooltip>
+            }
+            <br />
+            <span>
+                <b>{item.title}</b>
+            </span>
+        </div>
+    )
+}
 
 const ShowPost = ({ post, id, cookies, isEditable, triggerEditable, deletePostMutation, lockPostMutation, localStorage, history }) => {
     return (
         <Card
-            title={post.title}
+            title={<Header item={post}/>}
             className="viewpost-card"
             extra={
                 <Tooltip title="Inactive posts are locked and cannot be edited. It will also be hidden in Community and Home." placement="bottomLeft"> 
@@ -33,18 +52,6 @@ const ShowPost = ({ post, id, cookies, isEditable, triggerEditable, deletePostMu
                 null
             }
         >
-            <span className="author_span">
-                <UserOutlined />
-                <Tooltip title={post.user.email} placement="bottomRight">
-                    {"Author: " + post.user.username}
-                </Tooltip>
-            </span>
-            <span className="community_span">
-                <UsergroupAddOutlined />Community:
-                <Link to={{ pathname: `/community/${post.community.id}` }}>
-                    {" " + post.community.title}
-                </Link>
-            </span>
             <div className="clear"> </div>
             {contentSwitch(post)}
         </Card>

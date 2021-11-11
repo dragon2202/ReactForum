@@ -1,4 +1,7 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
+import { useHistory } from 'react-router-dom'
+import { useLazyQuery } from '@apollo/react-hooks'
+
 import { Link } from 'react-router-dom'
 import Button from 'antd/lib/button'
 import Form from 'antd/lib/form'
@@ -6,20 +9,18 @@ import Input from 'antd/lib/input'
 import Message from 'antd/lib/message'
 import MailOutlined from '@ant-design/icons/MailOutlined'
 import LockOutlined from '@ant-design/icons/LockOutlined'
-import { useHistory } from 'react-router-dom'
 
-import { useLazyQuery } from '@apollo/react-hooks'
-import { LOGIN_USER_QUERY } from '../../queries/posts'
-
+import { validateForm } from '../../components/commons/functions/validateForm'
+import { LOGIN_USER } from '../../queries/posts'
 import { useCookies } from 'react-cookie'
 
 export default function Login() {
     let history = useHistory()
     const [ cookies, set ] = useCookies(['userCookie'])
-    const [ loginUser ] = useLazyQuery(LOGIN_USER_QUERY, {
+    const [ loginUser ] = useLazyQuery(LOGIN_USER, {
         onCompleted: data => 
         {
-            if(data.user.id == null || data.user.email == null) {
+            if(data.user.id === null) {
                 Message.error({
                     content: 'Wrong Password. Please try again.',
                     style: {
@@ -39,29 +40,13 @@ export default function Login() {
         }, 
         onError: err => {
             Message.error({
-                content: 'Wrong Username. Please try again.',
+                content: 'No account found for this username. Please try again.',
                 style: {
                     marginTop: '5vh',
                 },
             },10)
         }
     })
-
-    //Checks if all form inputs are not blank
-    function validateForm(object){
-        var count = 0
-        for (const property in object) {
-            if(object[property] === undefined || object[property] === "") {
-                Message.warning('Please fill out ' + `${property}`, 10)
-                count++
-            }
-        }
-        if(count > 0) { 
-            return false
-        } else {
-            return true
-        }
-    }
 
     const onFinish = (values) => {
         if(validateForm(values)) {//validates form before logging in
@@ -99,18 +84,19 @@ export default function Login() {
                 </Form>
             </main>
         )
-    } else {
-        return(
-            <main className="login">
-                <div className="logged-in">
-                    <h1>You're already logged in.</h1> 
-                </div>
-                <div className="redirect">
-                    <Link to={"/"}>Redirect to Home</Link>
-                </div>
-            </main>
-        )
     }
+
+    return (
+        <main className="login">
+            <div className="logged-in">
+                <h1>You're already logged in.</h1> 
+            </div>
+            <div className="redirect">
+                <Link to={"/"}>Redirect to Home</Link>
+            </div>
+        </main>
+    )
+
 }
 
 //createPost

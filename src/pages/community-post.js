@@ -8,7 +8,7 @@ import CommunityPost_Post from '../components/commons/community-post/community-p
 
 import { isLiteralObject } from '../components/commons/functions/isLiteralObject'
 import { GetGraphqlQueryID } from '../components/commons/functions/getgraphqlquery'
-import { GET_COMMUNITY_POSTS_USER_QUERY, CREATE_USER_COMMUNITY_USER_ROLE, REMOVE_USER_COMMUNITY_USER_ROLE } from '../queries/posts'
+import { GET_COMMUNITY_POSTS_USER, CREATE_USER_COMMUNITY_USER_ROLE, REMOVE_USER_COMMUNITY_USER_ROLE } from '../queries/posts'
 import { JoinCommunity, LeaveCommunity } from '../components/commons/community-post/functions/community-post_join_leave_community'
 
 import { useCookies } from 'react-cookie'
@@ -16,7 +16,7 @@ import { useCookies } from 'react-cookie'
 //Forum Posts and Community Components for Community Page
 export default function CommunityPost() {
     let { id } = useParams()
-    let query = GetGraphqlQueryID(id, GET_COMMUNITY_POSTS_USER_QUERY)
+    let query = GetGraphqlQueryID(id, GET_COMMUNITY_POSTS_USER)
     const [createUser_CommunityUserRole] = useMutation(CREATE_USER_COMMUNITY_USER_ROLE)
     const [removeUser_CommunityUserRole] = useMutation(REMOVE_USER_COMMUNITY_USER_ROLE)
     const [cookies] = useCookies(['userCookie'])
@@ -41,7 +41,7 @@ export default function CommunityPost() {
                                 <CreatePostNav />
                             </section>
                             <section className="post-card">
-                                <CommunityPost_Post query={query} user={(cookies.userCookie !== undefined) ? cookies.userCookie : 0} />
+                                <CommunityPost_Post query={query} />
                             </section>
                         </div>
                         <div className="about-card">

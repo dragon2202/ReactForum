@@ -5,6 +5,8 @@ import Card from 'antd/lib/card'
 import Input from 'antd/lib/input'
 import Button from 'antd/lib/button'
 import Form from 'antd/lib/form'
+import Typography from 'antd/lib/typography'
+import Tooltip from 'antd/lib/tooltip'
 
 import EditOutlined from '@ant-design/icons/EditOutlined'
 import DeleteOutlined from '@ant-design/icons/DeleteOutlined'
@@ -14,8 +16,28 @@ import { EditPost_OnFinish } from './components/functions'
 import ImageUploadingComponent from '../functions/imageuploading'
 
 import { showConfirmDelete, showConfirmLock } from './components/functions'
+import moment from 'moment'
 
-const { TextArea } = Input;
+const { TextArea } = Input
+const { Text } = Typography
+
+const Header = ({ item }) => {
+    return (
+        <div>
+            <Link to={'/viewpost/' + item.community.id}>{item.community.title}</Link>
+            {<Text type='secondary'>{' Posted by ' + item.user.username + ' '}</Text>}
+            {
+                <Tooltip placement="top" title={moment(parseInt(item.created_at)).format('MMMM Do YYYY, h:mm:ss a')}>
+                    {moment(moment(parseInt(item.created_at)).format('MMMM Do YYYY, h:mm a'), 'MMMM Do YYYY, h:mm:ss a').fromNow()}
+                </Tooltip>
+            }
+            <br />
+            <span>
+                <b>{item.title}</b>
+            </span>
+        </div>
+    )
+}
 
 const EditPost = ({ post, id, post_type, cookies, isEditable, triggerEditable, deletePostMutation, lockPostMutation, update_post_mutation, localStorage, history }) => {
     const [images, setImages] = useState([])
@@ -110,7 +132,7 @@ const EditPost = ({ post, id, post_type, cookies, isEditable, triggerEditable, d
 
     return (
         <Card
-            title={"Edit Post - " + post.title}
+            title={<Header item={post}/>}
             className="viewpost-editcard"
             actions={
                 (cookies.userCookie !== undefined && cookies.userCookie.id === post.author_id) ?
