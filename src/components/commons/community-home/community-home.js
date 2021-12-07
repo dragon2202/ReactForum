@@ -14,18 +14,17 @@ import { useCookies } from 'react-cookie'
 
 //Side Navigation for Community Page
 //Shows and hides Community
-export default function CommunityHome(props) {
+
+const CommunityHome = ({ item, setHovered }) => {
     const [searchParam, setSearch] = useState('')
     const [cookies] = useCookies(['userCookie'])
 
     return (
         <div className="card-grid">
-            <div className="communities">
-                <span className="search-reset">
-                    <Input className="search" placeholder="Search Community by Name" onChange={(e) => { setSearch(e.target.value) }} />
-                </span>
+            <div className="communities-list">
                 <Card title="Community" extra={(cookies.userCookie == undefined) ? null : <Link to={"/createcommunity"}> Create a community</Link>}>
                     <List
+                        header={<Input className="search" placeholder="Search Community by Name" onChange={(e) => { setSearch(e.target.value) }} />}
                         itemLayout="vertical"
                         size="large"
                         className="community-list"
@@ -33,11 +32,11 @@ export default function CommunityHome(props) {
                             position: 'bottom',
                             pageSize: 10
                         }}
-                        dataSource={props.data}
+                        dataSource={item}
                         renderItem={item => (
                             ((item.title.toLowerCase()).includes(searchParam.toLowerCase())) ?
                             <List.Item key={item.id}>
-                                <div><Link to={"/community/" + item.id}>{item.title}</Link></div>
+                                <Link to={"/community/" + item.id} onMouseEnter={() => setHovered({ title: item.title, summary: item.summary})}>{item.title}</Link>
                             </List.Item>
                             :
                             null
@@ -50,3 +49,5 @@ export default function CommunityHome(props) {
 
     )
 }
+
+export default CommunityHome

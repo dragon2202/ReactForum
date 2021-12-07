@@ -4,7 +4,13 @@ export function validateForm(object){
     var count = 0
     for (const property in object) {
         if(object[property] === undefined || object[property] === "") {
-            Message.warning('Please fill out ' + `${property}`, 10)
+            Message.warning({
+                content: 'Please fill out ' + `${property}`,
+                style: {
+                    marginTop: '4vh'
+                },
+                duration: 6
+            })
             count++
         }
     }

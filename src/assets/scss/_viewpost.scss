@@ -1,82 +1,116 @@
 .viewpost {
     padding: 40px;
     padding-top: 80px;
-
-    .ant-card-head-title {
-        span {
-            cursor: pointer;
-        }
-    }
-    .viewpost-editcard {
-        .viewpost_edit_post {
-            .textArea {
-                height:40vh;
-            }
-        }
-        .viewpost_edit_image {
-            .current-image {
-                width: 50%;
-                float: left;
-                padding: 20px;
-                .header2 {
-                    text-align: center;
-                }
-                .image {
-                    display: block;
-                    margin: 0 auto;
-                    max-width: 90%;
+    .Post_Comment_Community {
+        max-width: 100%;
+        box-sizing: border-box;
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        margin: 0 auto;        
+        .Post_Comment {
+            width: 740px;
+            .ant-card-head-title {
+                span {
+                    cursor: pointer;
                 }
             }
-            .edit-post_image {
-                width: 50%;
-                float: left;
-                padding: 20px;
-                .header2 {
-                    text-align: center;
-                }
-                .form {
-                    .uploadButton {
-                        margin-bottom: 15px;
+            .viewpost-editcard {
+                .viewpost_edit_post {
+                    .textArea {
+                        height:40vh;
                     }
-                    .image-item {
-                        .image-item__btn-wrapper {
-                            margin-bottom: 15px;
-                            .update {
-                                margin-right: 10px;
-                            }
-                            .remove {
-                                margin-left: 10px;
-                            }
+                }
+                .viewpost_edit_image {
+                    .current-image {
+                        width: 50%;
+                        float: left;
+                        padding: 20px;
+                        .header2 {
+                            text-align: center;
                         }
-                        .preview-image {
-                            //display: "block", margin: "0 auto", border: "2px solid grey", maxWidth: "100%"
+                        .image {
                             display: block;
                             margin: 0 auto;
-                            border: 2px solid grey;
-                            max-width: 100%;
+                            max-width: 90%;
                         }
+                    }
+                    .edit-post_image {
+                        width: 50%;
+                        float: left;
+                        padding: 20px;
+                        .header2 {
+                            text-align: center;
+                        }
+                        .form {
+                            .uploadButton {
+                                margin-bottom: 15px;
+                            }
+                            .image-item {
+                                .image-item__btn-wrapper {
+                                    margin-bottom: 15px;
+                                    .update {
+                                        margin-right: 10px;
+                                    }
+                                    .remove {
+                                        margin-left: 10px;
+                                    }
+                                }
+                                .preview-image {
+                                    //display: "block", margin: "0 auto", border: "2px solid grey", maxWidth: "100%"
+                                    display: block;
+                                    margin: 0 auto;
+                                    border: 2px solid grey;
+                                    max-width: 100%;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        
+            .CommentDisplay {
+                .CommentForm {
+                    background-color: #DAE0E6;
+                }
+                .LoginOrRegister {
+                    background-color: #DAE0E6;
+                }
+            }
+            .ant-comment {
+                .ant-comment-content-author {
+                    .ant-comment-content-author-name {
+                        color: black;
+                    }
+                    .ant-comment-content-author-time {
+                        color: grey;
+                    }
+                }
+            }
+        }
+        .community_directory{
+            width: 312px;
+            margin-left: 14px;
+            .title {
+                font-size: 18px;
+                font-weight: 550;
+                line-height: 22px;
+                color: #1c1c1c;
+                margin-bottom: 6px;
+            }
+            .directory {
+                margin-top: 12px;
+                width: 312px;
+                display: block;
+                .column {
+                    float: left;
+                    width: 50%;
+                    .link {
+                        color: black;
                     }
                 }
             }
         }
     }
 
-    .CommentDisplay {
-        .CommentForm {
-            background-color: #DAE0E6;
-        }
-        .LoginOrRegister {
-            background-color: #DAE0E6;
-        }
-    }
-    .ant-comment {
-        .ant-comment-content-author {
-            .ant-comment-content-author-name {
-                color: black;
-            }
-            .ant-comment-content-author-time {
-                color: grey;
-            }
-        }
-    }
 }

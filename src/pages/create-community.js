@@ -33,7 +33,7 @@ export default function CreateCommunity() {
                 },
             }, 10)
             myStorage.clear()
-            history.push('/communityhome')
+            history.push('/communities')
         }
     }, [])
 

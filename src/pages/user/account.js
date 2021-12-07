@@ -1,60 +1,39 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { Link } from 'react-router-dom'
 import CreatePostNav from '../../components/commons/navigation/create-post-nav'
 
 import Card from 'antd/lib/card'
 import List from 'antd/lib/list'
 import Tabs from 'antd/lib/tabs'
-import Input from 'antd/lib/input'
 import Empty from 'antd/lib/empty'
-import Message from 'antd/lib/message'
-import EditOutlined from '@ant-design/icons/EditOutlined'
+import Avatar from 'antd/lib/avatar'
 
 import { useCookies } from 'react-cookie'
 
-import EditAccount from '../../components/commons/account/editaccount'
 import ContentCard from '../../components/commons/component/ContentCard'
 import LoginOrRegister from '../../components/commons/LoginOrRegister/login-or-register'
 import { isLiteralObject } from '../../components/commons/functions/isLiteralObject'
-import { GetGraphqlQueryID } from '../../components/commons/functions/getgraphqlquery'
+import { GetGraphqlQueryID_Refetch } from '../../components/commons/functions/getgraphqlquery'
 import { GET_COMMUNITYUSERROLE_AND_USER_AND_POST } from '../../queries/posts'
 
 const { TabPane } = Tabs
 
+const PersonalCard = ({ user }) => {
+    return (
+        <Card className='personal_card'>
+            <div className='css-header' />
+            <div>
+                <Avatar shape="square" size={80} style={{ borderStyle: 'solid 1px', backgroundColor: 'pink' }} src="https://joeschmoe.io/api/v1/jon" />
+                <p><strong>u/{user.username}</strong></p>
+                <Link to='/accountsettings'>Settings</Link>
+            </div>
+        </Card>
+    )
+}
 
 export default function Account() {
     const [cookies] = useCookies(['userCookie'])
-    let query = (cookies.userCookie !== undefined) ? GetGraphqlQueryID(cookies.userCookie.id, GET_COMMUNITYUSERROLE_AND_USER_AND_POST) : null
-    const [editToggle, setEditToggle] = useState(false)
-    const [postSearch, setPostSearch] = useState('')
-    const [communitySearch, setCommunitySearch] = useState('')
-    const localStorage = window.localStorage
-
-    useEffect(() => {
-        if (localStorage.getItem('reload') != null) {
-            switch (parseInt(localStorage.getItem('reload'))) {
-                case 1:
-                    Message.success({
-                        content: 'You have successfully updated your account username/email.',
-                        style: {
-                            marginTop: '5vh',
-                        },
-                    }, 10)
-                    break;
-                case 2:
-                    Message.success({
-                        content: "You have successfully updated your password.",
-                        style: {
-                            marginTop: '5vh',
-                        },
-                    }, 10)
-                    break;
-            }
-            localStorage.clear()
-        }
-    }, [])
-
-    
+    let [query, queryRefetch] = (cookies.userCookie !== undefined) ? GetGraphqlQueryID_Refetch(cookies.userCookie.id, GET_COMMUNITYUSERROLE_AND_USER_AND_POST) : null
 
     //If user is not logged in return a page with login and register
     if (cookies.userCookie === undefined) {
@@ -107,7 +86,7 @@ export default function Account() {
                                                                 dataSource={query.communityuserrole[index].community.post}
                                                                 renderItem={item => (
                                                                     <List.Item key={item.id}>
-                                                                        <ContentCard item={item}/>
+                                                                        <ContentCard item={item} refetch={queryRefetch}/>
                                                                     </List.Item>
                                                                 )}
                                                             >
@@ -121,15 +100,9 @@ export default function Account() {
                             </section>
                         </div>
                         <div className="personal">
-                            <Card className="user-info" title="User Info" extra={<EditOutlined onClick={() => setEditToggle(!editToggle)} />}>
-                                <EditAccount
-                                    editToggle={editToggle}
-                                    item={query.user}
-                                />
-                            </Card>
-                            <Card className="personal-post-card" title={<Input placeholder="Search Posts" onChange={(e) => { setPostSearch(e.target.value) }} />}>
+                            <PersonalCard user={query.user}/>
+                            <Card className="personal-post-card" title="List of your Posts">
                                 <List
-                                    header="List of your Posts"
                                     itemLayout="vertical"
                                     size="small"
                                     className="user-post"
@@ -139,19 +112,15 @@ export default function Account() {
                                     }}
                                     dataSource={query.post}
                                     renderItem={item => (
-                                        ((item.title.toLowerCase()).includes(postSearch.toLowerCase())) ?
-                                            <List.Item key={item.id}>
-                                                <Link to={"/viewpost/" + item.id}>{item.title}</Link>
-                                            </List.Item>
-                                            :
-                                            null
+                                        <List.Item key={item.id}>
+                                            <Link to={"/viewpost/" + item.id}>{item.title}</Link>
+                                        </List.Item>
                                     )}
                                 >
                                 </List>
                             </Card>
-                            <Card className="personal-community-card" title={<Input placeholder="Search Community" onChange={(e) => { setCommunitySearch(e.target.value) }} />}>
+                            <Card className="personal-community-card" title='List of your Communities'>
                                 <List
-                                    header="List of your Communities"
                                     itemLayout="vertical"
                                     size="small"
                                     className="about-community"
@@ -161,12 +130,9 @@ export default function Account() {
                                         pageSize: 10
                                     }}
                                     renderItem={item => (
-                                        ((item.community.title.toLowerCase()).includes(communitySearch.toLowerCase())) ?
-                                            <List.Item key={item.community.id}>
-                                                <Link to={{ pathname: "/community/" + item.community.id }}>{item.community.title}</Link>
-                                            </List.Item>
-                                            :
-                                            null
+                                        <List.Item key={item.community.id}>
+                                            <Link to={{ pathname: "/community/" + item.community.id }}>{item.community.title}</Link>
+                                        </List.Item>
                                     )}
                                 >
                                 </List>

@@ -1,8 +1,8 @@
 INSERT INTO roles(title)
 VALUES
-('owner'),
-('admin'),
-('user');
+('Owner'),
+('Admin'),
+('User');
 
 INSERT INTO permissions(action)
 VALUES
@@ -19,7 +19,7 @@ VALUES
 
 INSERT INTO users (email, password, username)
 VALUES
-('dummyAdmin', 12356, 'Dummy Admin');
+('a@gmail.com', 12356, 'Dummy Admin');
 
 INSERT INTO community (title, public, summary)
 VALUES
@@ -39,7 +39,7 @@ VALUES
 (1, 1,'Sample Post 2', 'Post', NULL, 'Ipsum', 1),
 (1, 1,'Sample Post 3', 'Link', NULL, 'https://www.google.com/', 1);
 
-INSERT INTO forum_post_comments (post_id, author_id, comment)
+INSERT INTO forum_posts_comments (post_id, author_id, comment)
 VALUES
 (1, 1, 'Totally broooo!'),
 (1, 1, 'Friggin owrsome');

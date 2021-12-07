@@ -3,7 +3,7 @@ import List from 'antd/lib/list'
 
 import ContentCard from '../component/ContentCard_Community-Post'
 
-const CommunityPost_Post = ({ query }) => {
+const CommunityPost_Post = ({ query, refetch }) => {
     return (
         <List 
             itemLayout="vertical" 
@@ -15,9 +15,7 @@ const CommunityPost_Post = ({ query }) => {
             }}
             dataSource={query.community.post}
             renderItem={post => (
-                <List.Item key={post.id}>
-                    <ContentCard post={post}/>
-                </List.Item>
+                <ContentCard post={post} refetch={refetch}/>
             )}
         />
     )

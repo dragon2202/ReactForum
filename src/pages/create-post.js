@@ -1,30 +1,25 @@
 import React, { useState, useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
-
-import Menu from 'antd/lib/menu'
 import Card from 'antd/lib/card'
-import Dropdown from 'antd/lib/dropdown'
 
-import FileTextTwoTone from '@ant-design/icons/FileTextTwoTone'
-import FileImageTwoTone from '@ant-design/icons/FileImageTwoTone'
-import LinkOutlined from '@ant-design/icons/LinkOutlined'
-
+//Components
 import LoginOrRegister from '../components/commons/LoginOrRegister/login-or-register'
-import CreatePostContent from '../components/commons/create-post/create-post-content'
+import CreatePostForm from '../components/commons/create-post/createpost-form'
+import Community_Rules_Card from '../components/commons/create-post/createpost_community_rules'
+import Dropdown_Community from '../components/commons/create-post/dropdown_community'
+import CreatePost_Menu from '../components/commons/create-post/createpost_menu'
 
+import { useCookies } from 'react-cookie'
+import { isLiteralObject } from '../components/commons/functions/isLiteralObject'
 import { GetGraphqlQueryID } from '../components/commons/functions/getgraphqlquery'
 import { GET_COMMUNITYUSERROLE_BY_USER } from '../queries/posts'
 
-import { useCookies } from 'react-cookie'
-
-
 export default function CreatePost() {
-    const [ cookies ] = useCookies(['userCookie'])
-    let query = (cookies.userCookie === undefined) ? null : GetGraphqlQueryID(cookies.userCookie.id, GET_COMMUNITYUSERROLE_BY_USER)
     const location = useLocation()
-    const [ communityID, setCommunityID ] = useState('')
+    const [ cookies ] = useCookies(['userCookie'])
     const [ currentMenu, setMenu ] = useState('Post')
     const [ community, setCommunity ] = useState('')
+    let query = (isLiteralObject(cookies.userCookie)) ? GetGraphqlQueryID(cookies.userCookie.id, GET_COMMUNITYUSERROLE_BY_USER) : null
 
     useEffect(() => {
         if (location.state) {//if location is undefined
@@ -32,31 +27,7 @@ export default function CreatePost() {
         }
     }, [location])
 
-    const handleClick = (value) => {
-        setMenu(value.key)
-    }
-
-    const CommunityMap = (data) => {
-        if (data == undefined || data.length == 0) {
-            return (
-                <Menu.Item key="0" disabled="true">
-                    Join a community to post content.
-                </Menu.Item>
-            )
-        }
-        return data.map((item, index) => {
-            return (
-                <Menu.Item key={index} onClick={() => {
-                    setCommunityID(item.community.id)
-                    setCommunity(item.community.title)
-                }} value={item.community.title}>
-                    {item.community.title}
-                </Menu.Item>
-            )
-        })
-    }
-
-    if (cookies.userCookie === undefined) {
+    if (!isLiteralObject(cookies.userCookie)) {
         return (
             <main className="createpost">
                 <h3>Create Post</h3>
@@ -65,29 +36,29 @@ export default function CreatePost() {
         )
     }
 
+    if (!isLiteralObject(query)) {
+        return (
+            <main className="createpost">
+                <h3>Create Post</h3>
+                <p style={{ textAlign: 'center' }}>Loading...</p>
+            </main>
+        )
+    }
+
     return (
         <main className="createpost">
-            <Card title="Create Post">
-                <Menu onClick={handleClick} selectedKeys={[currentMenu]} mode="horizontal" theme='dark'>
-                    <Menu.Item key="Post" icon={<FileTextTwoTone />}>
-                        Post
-                </Menu.Item>
-                    <Menu.Item key="Image" icon={<FileImageTwoTone />}>
-                        Image
-                </Menu.Item>
-                    <Menu.Item key="Link" icon={<LinkOutlined />}>
-                        Link
-                </Menu.Item>
-                </Menu>
-                <Dropdown.Button overlay={
-                    <Menu>
-                        { CommunityMap(query.communityuserrole) }
-                    </Menu>
-                }>
-                    <strong>{"Community for the post: " + community}</strong>
-                </Dropdown.Button>
-                <CreatePostContent content={currentMenu} cookies={cookies} currentMenu={currentMenu} communityID={communityID} community={community}/>
-            </Card>
+            <div className='createpost_community_rules'>
+                <div className='createpost-wrapper'>
+                    <div className='header'>Create a Post</div>
+                    <hr className='horizontal-rule'/>
+                    <Dropdown_Community communityQuery={query.communityuserrole} community={community} setCommunity={setCommunity}/>
+                    <Card className='createpost_card'>
+                        <CreatePost_Menu setMenu={setMenu} currentMenu={currentMenu}/>
+                        <CreatePostForm type={currentMenu} community={community} author_id={cookies.userCookie.id}/>
+                    </Card>
+                </div>
+                <Community_Rules_Card item={query.communityuserrole.find(item => item.community.id === community.id)}/>
+            </div>
         </main>
     )
 }

@@ -15,6 +15,29 @@
                 }
             }            
             .post-list {
+                .account-community-post {
+                    .container {
+                        display: flex;
+                        .like_dislike {
+                            width: 40px;
+                            margin-bottom: 12px;
+                            align-items: center;
+                            box-sizing: border-box;
+                            display: flex;
+                            flex-direction: column;
+                            left: 0;
+                            padding: 8px 4px 8px 0;
+                            position: relative;
+                            top: 0;
+                            background-color: white;
+                        }
+                        .content {
+                            width: 600px;
+                            flex-grow: 1;
+                            margin-bottom: 12px;
+                        }
+                    }
+                }
                 .card {
                     background-color: #DAE0E6;
                 }
@@ -33,27 +56,32 @@
         .personal {
             width: 30%;
             margin-left: 10px;
-            .user-info {
-                margin-bottom: 20px;
-                .ant-card-body {
-                    padding-top: 12px;
-                    padding-bottom: 12px;
-                    .username {
-                        float: left;
-                    }
-                    .icon {
-                        float: right;
-                    }
+            .personal_card {
+                .css-header {
+                    background-color:#33A8FF;
+                    border-radius:4px 4px 0 0;
+                    height: 94px;
+                    left: 0;
+                    top: 0;
+                    position: absolute;
+                    width: 100%;
                 }
+                margin-bottom: 12px;
             }
             .personal-post-card {
-                margin-bottom: 20px;
+                margin-bottom: 12px;
+                .ant-list-header {
+                    padding-top: 0px;
+                }
                 .ant-card-body {
                     padding-top: 12px;
                     padding-bottom: 12px;
                 }
             }
             .personal-community-card {
+                .ant-list-header {
+                    padding-top: 0px;
+                }
                 .ant-card-body {
                     padding-top: 12px;
                     padding-bottom: 12px;

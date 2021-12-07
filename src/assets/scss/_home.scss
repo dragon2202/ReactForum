@@ -3,15 +3,18 @@
     padding-top: 20px;
 
     .masonry-card-grid {
+        max-width: 100%;
+        box-sizing: border-box;
         display: flex;
-        width: 100%;
-        float: left;
+        flex-direction: row;
+        justify-content: center;
+        margin: 0 auto;
         .nested-section {
-            width: 70%;
+            width: 640px;
             .create-post-nav {
                 margin-bottom: 30px;
                 .MenuItemPost {
-                    width: 75%;
+                    width: 70%;
                 }
             }
             .post-card {
@@ -25,18 +28,46 @@
                     
                 }
                 padding-bottom: 40px;
+                .container {
+                    display: flex;
+                    .like_dislike {
+                        width: 40px;
+                        margin-bottom: 12px;
+                        align-items: center;
+                        box-sizing: border-box;
+                        display: flex;
+                        flex-direction: column;
+                        left: 0;
+                        padding: 8px 4px 8px 0;
+                        position: relative;
+                        top: 0;
+                        background-color: white;
+                    }
+                    .content {
+                        width: 600px;
+                        flex-grow: 1;
+                        margin-bottom: 12px;
+                    }
+                }
             }
         }
         
         .community-card {
-            width: 30%;
+            width: 310px;
             margin-left: 20px;
-            
-            .search-reset {
-                margin-bottom: 10px;
-                display: flex;
-                .search {
-                    margin-right: 10px;
+            .ant-card-body {
+                padding-top: 6px;
+            }
+            .directory {
+                width: 312px;
+                margin-top: 14px;
+                display: block; 
+                .column {
+                    float: left;
+                    width: 50%;
+                    .link {
+                        color: black;
+                    }
                 }
             }
         }
@@ -46,38 +77,28 @@
 @media screen and (max-width: 900px) {
     .home {
         .masonry-card-grid {
-            display: inline;
-            position: relative;
-            float: left;
             .nested-section {
-                width: 100%;
                 .create-post-nav {
-                    width: 100%;
-                    .MenuItemPost {
-                        width: 30%;
-                    }
-                    .MenuItemImage {
-                        width: 25%;
-                    }
-                    .MenuItemImage {
-                        width: 25%;
-                    }
+                    display: none;
                 }
             }
             
             .community-card {
-                width: 100%;
+                display: none;
             }
         }
     }
 }
 
-@media screen and (max-width: 600px) {
+@media screen and (max-width: 1000px) {
     .home {
         .masonry-card-grid {
             .nested-section {
                 .create-post-nav {
-                    width: 50px;
+                    width: 100%;
+                    .MenuItemPost {
+                        width: 60%;
+                    }
                 }
             }
             

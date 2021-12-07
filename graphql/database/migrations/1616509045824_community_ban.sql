@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS community_ban.sql (
+CREATE TABLE IF NOT EXISTS community_ban (
     community_id INT(12) NOT NULL,
     user_id INT(12) NOT NULL,
     UNIQUE KEY(community_id, user_id),

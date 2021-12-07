@@ -25,11 +25,7 @@ const ImageUploadingComponent = ({ imageState, setImageState }) => {
             }) => (
                 // write your building UI
                 <div className="upload_image-wrapper">
-                    <Button 
-                        className="uploadButton" 
-                        icon={<UploadOutlined />} 
-                        onClick={onImageUpload} 
-                    >
+                    <Button className="uploadButton" icon={<UploadOutlined />} onClick={onImageUpload} >
                         Upload Image
                     </Button>
                     {imageList.map((image, index) => (
@@ -39,7 +35,6 @@ const ImageUploadingComponent = ({ imageState, setImageState }) => {
                                 <Button className="remove" icon={<DeleteTwoTone />} onClick={() => onImageRemove(index)}>Remove</Button>
                             </div>
                             <img className="preview-image" src={image['data_url']} alt="" />
-                            
                         </div>
                     ))}
                 </div>

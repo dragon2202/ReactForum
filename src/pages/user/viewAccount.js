@@ -1,45 +1,30 @@
-import React, { useEffect } from 'react'
-import { useParams } from 'react-router-dom'
-import Tabs from 'antd/lib/tabs'
-import List from 'antd/lib/list'
-import Card from 'antd/lib/card'
+import React from 'react'
+import { useParams} from 'react-router-dom'
 
-import PostCommentCard from '../../components/commons/component/Post_Comment_Card'
+import Overview from '../../components/commons/viewaccount/Overview'
+import PostList from '../../components/commons/viewaccount/Post_List'
+import CommentList from '../../components/commons/viewaccount/Comment_List'
+import Directory from '../../components/commons/navigation/directory'
+import Avatar from 'antd/lib/avatar'
+import Card from 'antd/lib/card'
+import Tabs from 'antd/lib/tabs'
 import { GetGraphqlQueryID } from '../../components/commons/functions/getgraphqlquery'
 import { isLiteralObject } from '../../components/commons/functions/isLiteralObject'
 import { GET_VIEW_ACCOUNT } from '../../queries/posts'
 
 const { TabPane } = Tabs
 
-const Overview = ({ id, posts, comments, user }) => {
-    let filteredComments = comments.filter(
-        comment => !posts.map(post => { return post.id }).includes(comment.post_id)
-    )
-    const post_comment = posts.concat(filteredComments).sort(function(a, b){
-        var keyA = a.created_at,
-            keyB = b.created_at
-        // Compare the 2 dates
-        if(keyA > keyB) {
-            return -1
-        }
-        if(keyA < keyB) {
-            return 1
-        }
-        return 0
-    })
-    return(
-        <List
-            className='overview-list'
-            dataSource={post_comment}
-            renderItem={item => (
-                <List.Item>
-                    <PostCommentCard id={id} isPost={(item.title) ? true : false} item={item} user={user}/>
-                </List.Item>
-            )}
-        />
+const PersonalCard = ({ user }) => {
+    return (
+        <Card className='personal_card'>
+            <div className='css-header' />
+            <div>
+                <Avatar shape="square" size={80} style={{ borderStyle: 'solid 1px', backgroundColor: 'pink' }} src="https://joeschmoe.io/api/v1/jon" />
+                <p><strong>u/{user.username}</strong></p>
+            </div>
+        </Card>
     )
 }
-
 
 export default function ViewAccount() {
     let { id } = useParams()
@@ -55,48 +40,44 @@ export default function ViewAccount() {
         )
     }
 
-    return(
+    return (
         <main className="viewAccount">
             <h3><b>View Account</b></h3>
             <Tabs defaultActiveKey='1'>
-                <TabPane tab="Overview" key="1">
+                <TabPane className='overview_tabpane' tab="Overview" key="1">
                     <div className='post_comment_personal'>
                         <div className='post_comment'>
-                            <Overview id={parseInt(id)} posts={query.post} comments={query.comment} user={query.user}/>
+                            <Overview id={parseInt(id)} posts={query.post} comments={query.comment} user={query.user} />
                         </div>
                         <div className='personal'>
-                            <Card title="Default size card" extra={<a href="#">More</a>} style={{ width: 300 }}>
-                                <p>Card content</p>
-                                <p>Card content</p>
-                                <p>Card content</p>
-                            </Card>
+                            <PersonalCard user={query.user} />
+                            <Directory />
                         </div>
                     </div>
                 </TabPane>
-                <TabPane tab="Posts" key="2">
-
+                <TabPane className='posts_tabpane' tab="Posts" key="2">
+                    <div className='posts_personal'>
+                        <div className='posts'>
+                            <PostList item={query.post} user={query.user} />
+                        </div>
+                        <div className='personal'>
+                            <PersonalCard user={query.user} />
+                            <Directory />
+                        </div>
+                    </div>
                 </TabPane>
-                <TabPane tab="Comments" key="3">
-
+                <TabPane className='comments_tabpane' tab="Comments" key="3">
+                    <div className='comments_personal'>
+                        <div className='comments'>
+                            <CommentList item={query.comment} user={query.user} id={parseInt(id)} />
+                        </div>
+                        <div className='personal'>
+                            <PersonalCard user={query.user} />
+                            <Directory />
+                        </div>
+                    </div>
                 </TabPane>
             </Tabs>
         </main>
     )
 }
-
-/*
-    <Button onClick={() => PostCommentList(query)} type="primary">
-        Click Me
-    </Button>
-
-    
-
-    function PostCommentList (query) {
-        let postFilter = query.post.map(item => {
-            return item.id 
-        })
-        let filteredComments = query.comment.filter(
-            item => !postFilter.includes(item.post_id)
-        )
-    }
-*/

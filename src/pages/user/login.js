@@ -28,6 +28,7 @@ export default function Login() {
                     },
                 },10)
             } else {
+                console.log(data)
                 set('userCookie', data.user, {path: '/', sameSite:'lax', secure: true, expires: 0})//Set cookie for users
                 Message.success({
                     content: 'You successfully logged in.',

@@ -14,6 +14,14 @@ export const GET_POST = gql`
         }
     }
 `
+export const GET_POST_RECENT_BY_AUTHOR_ID = gql`
+    query getPostRecentByAuthorID($id: ID!) {
+        post: getPostRecentByAuthorID(id: $id) {
+            id
+            author_id
+        }
+    }
+`
 export const GET_POSTS_BY_AUTHOR_ID = gql`
     query getPostsbyAuthorID($post_id: ID!, $author_id: ID!) {
         post: getPostsbyAuthorID(post_id: $post_id, author_id: $author_id) {
@@ -67,23 +75,31 @@ export const GET_POSTS_RECENT = gql`
         post: getPostsRecent {
             id
             author_id
-            user {
-                id
-                email
-                username
-            }
             community_id
-            community {
-                id
-                title
-                summary
-            }
             title
             type
             image
             text
             updated_at
             created_at
+            user {
+                id
+                email
+                username
+            }
+            community {
+                id
+                title
+                summary
+            }
+            post_upvotes {
+                post_id
+                author_id
+            }
+            post_downvotes {
+                post_id
+                author_id
+            }
         }
     }
 `
@@ -184,11 +200,6 @@ export const GET_COMMUNITY_POSTS_USER = gql`
             post {
                 id
                 author_id
-                user {
-                    id
-                    email
-                    username
-                }
                 title
                 type
                 image
@@ -196,6 +207,19 @@ export const GET_COMMUNITY_POSTS_USER = gql`
                 active
                 updated_at
                 created_at
+                post_upvotes {
+                    post_id
+                    author_id
+                }
+                post_downvotes {
+                    post_id
+                    author_id
+                }
+                user {
+                    id
+                    email
+                    username
+                }
             }
         }
     }
@@ -298,6 +322,21 @@ export const GET_COMMUNITYUSERROLE_AND_USER_AND_POST = gql`
                 post {
                     id
                     author_id
+                    title
+                    type
+                    image
+                    text
+                    active
+                    updated_at
+                    created_at
+                    post_upvotes {
+                        post_id
+                        author_id
+                    }
+                    post_downvotes {
+                        post_id
+                        author_id
+                    }
                     user {
                         id
                         username
@@ -306,15 +345,7 @@ export const GET_COMMUNITYUSERROLE_AND_USER_AND_POST = gql`
                     community {
                         id
                         title
-                        summary
                     }
-                    title
-                    type
-                    image
-                    text
-                    active
-                    updated_at
-                    created_at
                 }
             }
             role {
@@ -330,22 +361,22 @@ export const GET_COMMUNITYUSERROLE_AND_USER_AND_POST = gql`
         post: getPostsbyAuthorID(post_id: null, author_id: $id) {
             id
             author_id
-            user {
-                id
-                username
-            }
             title
             type
             image
             text
             active
             community_id
+            updated_at
+            created_at
+            user {
+                id
+                username
+            }
             community {
                 id
                 title
             }
-            updated_at
-            created_at
         }
     }
 `
@@ -354,7 +385,6 @@ export const GET_COMMUNITYUSERROLE_BY_USER = gql`
         communityuserrole: getCommunityUserRoleByUser(id: $id) {
             community_id
             user_id
-            role_id
             community {
                 id
                 title
@@ -518,24 +548,6 @@ export const GET_ALL_USER = gql`
         }
     }
 `
-export const TEST = gql`
-    query test($id: ID!) {
-        post: getPost(id: $id) {
-            id
-            title
-            author_id
-            community_id
-            user {
-                id
-                username
-            }
-            community {
-                id
-                title
-            }
-        }
-    }
-`
 export const GET_VIEW_ACCOUNT = gql` 
     query getViewAccount($id: ID!) {
         user: getUser(id: $id) {
@@ -589,6 +601,9 @@ export const GET_VIEW_ACCOUNT = gql`
             comment
             updated_at
             created_at
+            user {
+                username
+            }
             post {
                 id
                 title
@@ -603,6 +618,16 @@ export const GET_VIEW_ACCOUNT = gql`
                     title
                 }
             }
+            parent {
+                id
+                author_id
+                comment
+                updated_at
+                created_at
+                user {
+                    username
+                }
+            }
         }
     }
 `
@@ -611,6 +636,14 @@ export const CHECK_USER_EMAIL = gql`
         user: checkUserEmail(email: $email) {
             id
             email
+        }
+    }
+`
+export const CHECK_USER_PASSWORD = gql`
+    query checkUserPassword($id: ID!, $password: String!) {
+        user: checkUserPassword(id: $id, password: $password) {
+            id
+            password
         }
     }
 `
@@ -624,11 +657,24 @@ export const LOGIN_USER = gql`
     }
 `
 export const CHECK_CREDENTIALS = gql`
-    query checkCredentials($id: ID!, $password: String!) {
-        user: checkCredentials(id: $id, password: $password) {
+    query checkCredentials($user: UserInput!) {
+        user: checkCredentials(user: $user) {
             id
             email
             username
+            password
+        }
+    }
+`
+export const CHECK_EMAIL_AND_PASSWORD = gql`
+    query checkEmailAndPassword($id: ID!, $email: String!, $password: String!) {
+        email: checkUserEmail(email: $email) {
+            id
+            email
+        }
+        password: checkUserPassword(id: $id, password: $password) {
+            id
+            email
         }
     }
 `
@@ -701,6 +747,38 @@ export const GET_SENT_MESSAGES = gql`
                 email
                 username
             }
+        }
+    }
+`
+export const CHECK_POST_UPVOTE = gql`
+    query checkPostUpvote($author_id: ID!, $post_id: ID!) {
+        post_upvote_downvote: checkPostUpvote(author_id: $author_id, post_id: $post_id) {
+            post_id
+            author_id
+        }
+    }
+`
+export const CHECK_POST_DOWNVOTE = gql`
+    query checkPostDownvote($author_id: ID!, $post_id: ID!) {
+        post_upvote_downvote: checkPostDownvote(author_id: $author_id, post_id: $post_id) {
+            post_id
+            author_id
+        }
+    }
+`
+export const GET_UPVOTES_POST_ID = gql`
+    query getUpvotes_PostID($id: ID!) {
+        post_upvote_downvote: getUpvotes_PostID(id: $id) {
+            post_id
+            author_id
+        }
+    }
+`
+export const GET_DOWNVOTES_POST_ID = gql`
+    query getDownvotes_PostID($id: ID!) {
+        post_upvote_downvote: getDownvotes_PostID(id: $id) {
+            post_id
+            author_id
         }
     }
 `
@@ -882,6 +960,38 @@ export const DELETE_MESSAGE_SENDER_RECIPIENT = gql`
             id
             sender_delete
             recipient_delete
+        }
+    }
+`
+export const POST_UPVOTE = gql`
+    mutation postUpvote($post_upvote_downvote: Post_Upvote_Downvote_Input!) {
+        postUpvote(post_upvote_downvote: $post_upvote_downvote) {
+            post_id
+            author_id
+        }
+    }
+`
+export const POST_DOWNVOTE = gql`
+    mutation postDownvote($post_upvote_downvote: Post_Upvote_Downvote_Input!) {
+        postDownvote(post_upvote_downvote: $post_upvote_downvote) {
+            post_id
+            author_id
+        }
+    }
+`
+export const REMOVE_POST_UPVOTE = gql`
+    mutation removePostUpvote($post_upvote_downvote: Post_Upvote_Downvote_Input!) {
+        removePostUpvote(post_upvote_downvote: $post_upvote_downvote) {
+            post_id
+            author_id
+        }
+    }
+`
+export const REMOVE_POST_DOWNVOTE = gql`
+    mutation removePostDownvote($post_upvote_downvote: Post_Upvote_Downvote_Input!) {
+        removePostDownvote(post_upvote_downvote: $post_upvote_downvote) {
+            post_id
+            author_id
         }
     }
 `

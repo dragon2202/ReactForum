@@ -17,7 +17,7 @@ const navLink = [
     },
     {
         title: 'Community',
-        path: '/communityhome'
+        path: '/communities'
     },
     {
         title: 'Inbox',
@@ -66,8 +66,7 @@ export default function Navigation() {
                     }
                 </ul>
                 <div className="menu-avatar-container">
-                    <Avatar size={50} src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />
-
+                    <Avatar size={50} src="https://joeschmoe.io/api/v1/jenni" />
                     <Dropdown placement="bottomRight" overlay={
                         cookies.userCookie == undefined || cookies.userCookie == "undefined" ? (
                             <Menu>

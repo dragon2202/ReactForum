@@ -4,10 +4,9 @@ import List from 'antd/lib/list'
 import ContentCard from '../component/ContentCard'
 
 //Exports a list of cards with posts in the cards
-const Post = ({ post }) => {
+const Post = ({ post, postQueryRefetch }) => {
     return (
         <div>
-            <h3 style={{ marginTop: "10px", marginLeft: "10px" }}>Recent Posts</h3>
             <List
                 itemLayout="vertical"
                 size="large"
@@ -18,9 +17,7 @@ const Post = ({ post }) => {
                 }}
                 dataSource={post}
                 renderItem={item => (
-                    <List.Item key={item.id}>
-                        <ContentCard item={item}/>
-                    </List.Item>
+                    <ContentCard item={item} refetch={postQueryRefetch}/>
                 )}
             />
         </div>
@@ -28,4 +25,5 @@ const Post = ({ post }) => {
 }
 
 export default Post
+//<h3 style={{ marginTop: "10px", marginLeft: "10px" }}>Recent Posts</h3>
 //https://stackoverflow.com/questions/53843548/pagination-and-card-components-with-ant-design-antd

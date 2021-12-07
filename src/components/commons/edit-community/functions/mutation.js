@@ -4,7 +4,7 @@ const { confirm } = Modal
 //Modal to confirm removing a user from community
 function confirmRemoveUser(id, user_id, role_id, mutation, localStorage) {
     confirm({
-        title: 'Remove Userz',
+        title: 'Remove User',
         content: "Are you sure you want to remove this person from the community?",
         onOk() {
             removeUser(id, user_id, role_id, mutation, localStorage)
@@ -30,7 +30,7 @@ async function removeUser(id, user_id, role_id, mutation, localStorage) {
 //Modal to confirm removing a user from community
 function confirmBanUser(id, user_id, mutation, localStorage) {
     confirm({
-        title: 'Ban Userz',
+        title: 'Ban User',
         content: "Are you sure you want to ban this person from the community?",
         onOk() {
             ban_user(id, user_id, mutation, localStorage)

@@ -1,60 +1,123 @@
 .createpost {
     padding: 40px;
-    padding-top: 80px;
-
-    .ant-card-head {
-        background-color:rgb(246, 247, 248);
+    padding-top: 94px;
+    .createpost_community_rules {
+        max-width: 100%;
+        box-sizing: border-box;
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        margin: 0 auto;
+        .createpost-wrapper {
+            width: 740px;
+            .header {
+                font-size: 18px;
+                font-weight: 550;
+                line-height: 22px;
+                color: #1c1c1c;
+                flex: 1;
+            }
+            .horizontal-rule {
+                color: #EDEFF1;
+                margin-top: 14px;
+                margin-bottom: 14px;
+            }
+            .dropdown-button {
+                height: 40px;
+                width: 300px;
+                .button-style {
+                    display: flex;
+                    justify-content: space-between;
+                }
+            }
+            .createpost_card {
+                margin-top: 8px;
+                margin-right: 12px;
+                .createpost_menu {
+                    margin-top: 12px;
+                    display: flex;
+                    flex-direction: row;
+                    align-items: stretch;
+                    .ant-menu-item {
+                        flex: 1;
+                    }
+                }
+                .createpost_post {
+                    margin-top: 12px;
+                    .post_textarea {
+                        height: 140px;
+                    }
+                }
+                .create-post_link {
+                    margin-top: 12px;
+                    .post_textarea {
+                        height: 140px;
+                    }
+                }
+                .create-post_image {
+                    margin-top: 12px;
+                    .upload_image-wrapper {
+                        .uploadButton {
+                            margin-bottom: 12px;
+                        }
+                        .image-item {
+                            .image-item__btn-wrapper {
+                                margin-bottom: 15px;
+                                .update {
+                                    margin-right: 10px;
+                                }
+                                .remove {
+                                    margin-left: 10px;
+                                }
+                            }
+                            .preview-image {
+                                //display: "block", margin: "0 auto", border: "2px solid grey", maxWidth: "100%"
+                                display: block;
+                                margin: 0 auto;
+                                border: 2px solid grey;
+                                max-width: 100%;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        .community_rules {
+            width: 312px;
+            margin-left: 12px;
+            margin-top: 20px;
+            .title {
+                font-size: 18px;
+                font-weight: 550;
+                line-height: 22px;
+                color: #1c1c1c;
+                margin-bottom: 6px;
+            }
+            .rules {
+                margin-top: 12px;
+                font-weight: 550;
+            }
+            .directory {
+                margin-top: 14px;
+                display: block;
+                .column-1, .column-2 {
+                    float: left;
+                    width: 50%;
+                }
+            }
+        }
     }
+}
 
-    .ant-card-body {
-        .ant-menu-horizontal {
-            margin-bottom: 20px;
-        }
-        .ant-input-affix-wrapper-textarea-with-clear-btn {
-            margin-bottom: 20px;
-            height:40vh;
-        }
-
-        /*
-        .ant-input {
-            margin-left: 5px;
-        }
-        */
-
-        .ant-btn-primary {
-            float: right;
-        }
-
-        .form {
-            .uploadButton {
-                margin-bottom: 15px;
+@media only screen and (max-width: 1100px) {
+    .createpost {
+        .createpost_community_rules {
+            .createpost-wrapper{
+                width: 100%;
             }
-            .image-item {
-                .image-item__btn-wrapper {
-                    margin-bottom: 15px;
-                    .update {
-                        margin-right: 10px;
-                    }
-                    .remove {
-                        margin-left: 10px;
-                    }
-                }
-                .preview-image {
-                    //display: "block", margin: "0 auto", border: "2px solid grey", maxWidth: "100%"
-                    display: block;
-                    margin: 0 auto;
-                    border: 2px solid grey;
-                    max-width: 100%;
-                }
+            .community_rules {
+                display: none;
             }
         }
-
-        .ant-dropdown-button {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 20px;
-        }
-        
     }
 }

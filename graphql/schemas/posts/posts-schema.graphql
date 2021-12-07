@@ -1,9 +1,10 @@
 type Query {
     getPost(id: ID!): Post
+    getPostRecentByAuthorID(id: ID!): Post
     getPostsbyAuthorID(post_id: ID, author_id: ID!): [Post]
+    getPostsbyAuthorIDRecent(post_id: ID, author_id: ID!): [Post]
     getPostsRecent: [Post]
     getPosts_CommunityPosts(id: ID!): [Post]
-    getPost_Comments(id: ID!): PostComment
     getCommunity(id: ID!): Community
     getAllCommunities: [Community]
     getCommunity_Posts_Users(id: ID!): Community
@@ -13,18 +14,29 @@ type Query {
     getCommunityUserRole(id: ID!): [CommunityUserRole]
     getCommunityUserRoleByUser(id: ID!): [CommunityUserRole]
     getCommunityUserRoleByCommunity(id: ID!): [CommunityUserRole]
-    getCommunityUserRoleAndUser(id: ID!): [CommunityUserRole]
+    getCommunityUserRole_User_Post(id: ID!): [CommunityUserRole]
     getComment (id: ID!): Comment
     getCommentsbyPostID(id: ID!): [Comment]
-    getFamilyComments(id: ID!): CommentFamily
+    getCommentsbyAuthorID(id: ID!): [Comment]
+    getCommentsbyAuthorIDRecent(id: ID!): [Comment]
+    getFamilyComments(id: ID!): Comment
     getChildComments (id: ID!): [Comment]
     getRolesPermissions(id: ID!): [RolesPermissions]
     getRole(id: ID!): Role
     getPermission(id: ID!): Permission
     getUser(id: ID!): User
+    getAllUser: [User]
+    getViewAccount(id: ID!): User
     checkUserEmail(email: String!): User
+    checkUserPassword(id: ID!, password: String!): User
     loginUser(email: String!, password: String!): User
-    checkCredentials(id: ID!, password: String!): User
+    checkCredentials(user: UserInput!): User
+    getMessages(id: ID!): [Message]
+    getSentMessages(id: ID!): [Message]
+    checkPostUpvote(author_id: ID!, post_id: ID!): Post_Upvote_Downvote
+    checkPostDownvote(author_id: ID!, post_id: ID!): Post_Upvote_Downvote
+    getUpvotes_PostID(id: ID!): [Post_Upvote_Downvote]
+    getDownvotes_PostID(id: ID!): [Post_Upvote_Downvote]
 }
 
 type Mutation {
@@ -45,6 +57,13 @@ type Mutation {
     registerUser(user: UserInput!): User
     changeUserInfo(user: UserInput!): User
     changeUserPassword(user: UserInput!): User
+    sendMessage(message: MessageInput!): Message
+    deleteMessage(message: MessageInput!): Message
+    deleteMessage_sender_recipient(message: MessageInput!): Message
+    postUpvote(post_upvote_downvote: Post_Upvote_Downvote_Input!): Post_Upvote_Downvote 
+    postDownvote(post_upvote_downvote: Post_Upvote_Downvote_Input!): Post_Upvote_Downvote 
+    removePostUpvote(post_upvote_downvote: Post_Upvote_Downvote_Input!): Post_Upvote_Downvote 
+    removePostDownvote(post_upvote_downvote: Post_Upvote_Downvote_Input!): Post_Upvote_Downvote 
 }
 
 input LoginInput {
@@ -129,8 +148,28 @@ input CommunityUserRoleInput {
     role_id: Int
 }
 
+input MessageInput {
+    id: Int
+    sender_id: Int
+    recipient_id: Int
+    subject_line: String
+    message: String
+    sender_delete: Int
+    recipient_delete: Int
+}
+
+input Post_Upvote_Downvote_Input {
+    post_id: Int
+    author_id: Int
+}
+
+input Comment_Upvote_Downvote_Input {
+    comment_id: Int
+    author_id: Int
+}
+
 type Post {
-    id: ID!
+    id: Int
     author_id: Int
     user: User
     title: String
@@ -142,6 +181,9 @@ type Post {
     community: Community
     updated_at: String
     created_at: String
+    comment: [Comment]
+    post_upvotes: [Post_Upvote_Downvote]
+    post_downvotes: [Post_Upvote_Downvote]
 }
 
 type Community {
@@ -214,26 +256,13 @@ type Comment {
     post_id: Int
     author_id: Int
     parent_comment_id: Int
-    updated_at: String
-    created_at: String
     comment: String
-    user: User
-}
-
-type PostComment {
-    id: ID!
-    author_id: Int
-    user: User
-    title: String
-    type: String
-    image: String
-    text: String
-    active: Int
-    community_id: Int
-    community: Community
     updated_at: String
     created_at: String
-    comment: [Comment]
+    user: User
+    parent: Comment
+    child: [Comment]
+    post: Post
 }
 
 type CommentFamily {
@@ -246,4 +275,27 @@ type CommentFamily {
     comment: String 
     parent: Comment
     child: [Comment]
+}
+
+type Message {
+    id: Int
+    sender_id: Int
+    recipient_id: Int
+    subject_line: String
+    message: String
+    sender_delete: Int
+    recipient_delete: Int
+    created_at: String
+    recipient: User
+    sender: User
+}
+
+type Post_Upvote_Downvote {
+    post_id: Int
+    author_id: Int
+}
+
+type Comment_Upvote_Downvote {
+    comment_id: Int
+    author_id: Int
 }

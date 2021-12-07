@@ -16,13 +16,10 @@ const { Text } = Typography
 const Header = ({ item }) => {
     return (
         <div>
-            <Link to={'/viewpost/' + item.community.id}>{item.community.title}</Link>
-            {<Text type='secondary'>{' Posted by ' + item.user.username + ' '}</Text>}
-            {
-                <Tooltip placement="top" title={moment(parseInt(item.created_at)).format('MMMM Do YYYY, h:mm:ss a')}>
-                    {moment(moment(parseInt(item.created_at)).format('MMMM Do YYYY, h:mm a'), 'MMMM Do YYYY, h:mm:ss a').fromNow()}
-                </Tooltip>
-            }
+            <Text type='secondary'>{' Posted by ' + item.user.username + ' '}</Text>
+            <Tooltip placement="top" title={moment(parseInt(item.created_at)).format('MMMM Do YYYY, h:mm:ss a')}>
+                {moment(moment(parseInt(item.created_at)).format('MMMM Do YYYY, h:mm a'), 'MMMM Do YYYY, h:mm:ss a').fromNow()}
+            </Tooltip>
             <br />
             <span>
                 <b>{item.title}</b>

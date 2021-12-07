@@ -15,6 +15,18 @@ module.exports = {
             ...post
         }
     },
+    getPostRecentByAuthorID: async (id) => {
+        const posts = db.select('*')
+            .from('forum_posts')
+            .where({ author_id: id })
+            .orderBy('created_at', 'desc')
+            .catch(errorHandler)
+
+        let [post] = await posts
+        return {
+            ...post
+        }
+    },
     getPostsbyAuthorID: async (post_id, author_id) => {
         if (post_id === null) {
             let qry = db.select('*')
@@ -41,12 +53,39 @@ module.exports = {
         }
 
     },
+    getPostsbyAuthorIDRecent: async (post_id, author_id) => {
+        if (post_id === null) {
+            let qry = db.select('*')
+                .from('forum_posts')
+                .where({ author_id: author_id })
+                .orderBy('created_at', 'desc')
+                .catch(errorHandler)
+
+            return qry
+                .catch(err => {
+                    console.log(err)
+                })
+
+        } else {
+            let qry = db.select('*')
+                .from('forum_posts')
+                .where({ author_id: author_id })
+                .andWhereNot({ id: post_id })
+                .orderBy('created_at', 'desc')
+                .catch(errorHandler)
+
+            return qry
+                .catch(err => {
+                    console.log(err)
+                })
+        }
+
+    },
     getPostsRecent: async () => {
         let qry = db.select('*')
             .from('forum_posts')
             .where({ active: 1 })
             .orderBy('created_at', 'desc')
-        /* .limit(5) */
         return qry
             .catch(err => {
                 console.log(err)
@@ -65,17 +104,6 @@ module.exports = {
             .catch(err => {
                 console.log(err)
             })
-    },
-    getPost_Comments: async (id) => {
-        const posts = db.select('*')
-            .from('forum_posts')
-            .where({ id })
-            .catch(errorHandler)
-
-        let [post] = await posts
-        return {
-            ...post
-        }
     },
     getCommunity: async (id) => {
         const posts = db.select('*')
@@ -171,7 +199,7 @@ module.exports = {
     },
     getComment: async (id) => {
         const posts = db.select('*')
-            .from('forum_post_comments')
+            .from('forum_posts_comments')
             .where({ id })
             .catch(errorHandler)
 
@@ -182,8 +210,31 @@ module.exports = {
     },
     getCommentsbyPostID: async (id) => {
         let qry = db.select('*')
-            .from('forum_post_comments')
+            .from('forum_posts_comments')
             .where({ post_id: id })
+            .catch(errorHandler)
+
+        return qry
+            .catch(err => {
+                console.log(err)
+            })
+    },
+    getCommentsbyAuthorID: async (id) => {
+        let qry = db.select('*')
+            .from('forum_posts_comments')
+            .where({ author_id: id })
+            .catch(errorHandler)
+
+        return qry
+            .catch(err => {
+                console.log(err)
+            })
+    },
+    getCommentsbyAuthorIDRecent: async (id) => {
+        let qry = db.select('*')
+            .from('forum_posts_comments')
+            .where({ author_id: id })
+            .orderBy('created_at', 'desc')
             .catch(errorHandler)
 
         return qry
@@ -193,7 +244,7 @@ module.exports = {
     },
     getFamilyComments: async (id) => {
         const posts = db.select('*')
-            .from('forum_post_comments')
+            .from('forum_posts_comments')
             .where({ id })
             .catch(errorHandler)
 
@@ -204,7 +255,7 @@ module.exports = {
     },
     getChildComments: async (id) => {
         let qry = db.select('*')
-            .from('forum_post_comments')
+            .from('forum_posts_comments')
             .where({ parent_comment_id: id })
             .catch(errorHandler)
 
@@ -246,33 +297,45 @@ module.exports = {
         }
     },
     getUser: async (id) => {
-        const posts = db.select('*')
-            .from('users')
-            .where({ id })
-            .catch(errorHandler)
+        if (id) {
+            const posts = db.select('*')
+                .from('users')
+                .where({ id })
+                .catch(errorHandler)
 
-        let [post] = await posts
-        return {
-            ...post
+            let [post] = await posts
+            return {
+                ...post
+            }
+        } else {
+            return null
         }
+    },
+    getAllUser: async () => {
+        let qry = db.select('*')
+            .from('users')
+
+        return qry
+            .catch(err => {
+                console.log(err)
+            })
     },
     checkUserEmail: async (email) => {
         const posts = db.select('*')
             .from('users')
             .where({ email: email })
             .catch(errorHandler)
-
         let [post] = await posts
         return {
             ...post
         }
     },
-    loginUser: async (email, password) => {
+    checkUserPassword: async (id, password) => {
         const posts = db.select('*')
             .from('users')
-            .where({ email: email })
+            .where({ id })
             .catch(errorHandler)
-
+            
         let [post] = await posts
         if (bcrypt.compareSync(password, post.password)) {
             return {
@@ -282,19 +345,107 @@ module.exports = {
             return {}
         }
     },
-    checkCredentials: async (id, password) => {
+    loginUser: async (email, password) => {
         const posts = db.select('*')
             .from('users')
-            .where({ id })
+            .where({ email: email })
             .catch(errorHandler)
         let [post] = await posts
+
         if (bcrypt.compareSync(password, post.password)) {
             return {
                 ...post
             }
         } else {
-            return
+            return {}
         }
+    },
+    checkCredentials: async (args) => {
+        const posts = db.select('*')
+            .from('users')
+            .where({ id: args.id })
+            .catch(errorHandler)
+        let [post] = await posts
+        if (bcrypt.compareSync(args.password, post.password)) {
+            await db('users')
+                .where({ id: args.id })
+                .update({
+                    email: args.email,
+                    username: args.username
+                })
+                .then(res => {
+                    return res
+                })
+            
+        } else {
+            return null
+        }
+        delete post.password
+        return {
+            ...post
+        }
+    },
+    getMessages: async (id) => {
+        let qry = db.select('*')
+            .from('forum_messages')
+            .where({ recipient_id: id })
+            .andWhere({ recipient_delete: 0 })
+            .orderBy('created_at', 'desc')
+
+        return qry
+            .catch(err => {
+                console.log(err)
+            })
+    },
+    getSentMessages: async (id) => {
+        let qry = db.select('*')
+            .from('forum_messages')
+            .where({ sender_id: id })
+            .andWhere({ sender_delete: 0 })
+            .orderBy('created_at', 'desc')
+
+        return qry
+            .catch(err => {
+                console.log(err)
+            })
+    },
+    checkPostUpvote: async (author_id, post_id) => {
+        const posts = db.select('*')
+            .from('forum_posts_upvote')
+            .where({ author_id: author_id })
+            .andWhere({ post_id: post_id })
+
+        let [post] = await posts
+        return {
+            ...post
+        }
+    },
+    checkPostDownvote: async (author_id, post_id) => {
+        const posts = db.select('*')
+            .from('forum_posts_downvote')
+            .where({ author_id: author_id })
+            .andWhere({ post_id: post_id })
+
+        let [post] = await posts
+            return {
+                ...post
+            }
+    },
+    getUpvotes_PostID: async (id) => {
+        let qry = db.select('*')
+            .from('forum_posts_upvote')
+            .where({ post_id: id })
+            .catch(errorHandler)
+
+        return qry.catch(err => {console.log(err)})
+    },
+    getDownvotes_PostID: async (id) => {
+        let qry = db.select('*')
+            .from('forum_posts_downvote')
+            .where({ post_id: id })
+            .catch(errorHandler)
+
+        return qry.catch(err => {console.log(err)})
     },
     createPost: async (args) => {
         await db('forum_posts').insert({
@@ -305,13 +456,12 @@ module.exports = {
             text: args.text,
             active: args.active,
             community_id: args.community_id
+        }).then(res => {
+            return res[0]
         })
-            .then(res => {
-                return res
-            })
     },
     updatePost: async (args) => {
-        if(args.image === null) {
+        if (args.image === null) {
             await db('forum_posts')
                 .where({ id: args.id })
                 .update({
@@ -335,7 +485,7 @@ module.exports = {
                     return res
                 })
         }
-        
+
     },
     deletePost: async (args) => {
         if (args.commentLength > 0) {
@@ -368,7 +518,7 @@ module.exports = {
 
     },
     createComment: async (args) => {
-        await db('forum_post_comments').insert({
+        await db('forum_posts_comments').insert({
             post_id: args.post_id,
             author_id: args.author_id,
             parent_comment_id: args.parent_comment_id,
@@ -379,7 +529,7 @@ module.exports = {
             })
     },
     updateComment: async (args) => {
-        await db('forum_post_comments')
+        await db('forum_posts_comments')
             .where({ id: args.id })
             .update({
                 comment: args.comment,
@@ -390,7 +540,7 @@ module.exports = {
             })
     },
     deleteComment: async (args) => {
-        await db('forum_post_comments')
+        await db('forum_posts_comments')
             .where({ id: args.id })
             .del()
             .then(res => {
@@ -399,7 +549,7 @@ module.exports = {
 
     },
     deleteParentComment: async (args) => {
-        await db('forum_post_comments')
+        await db('forum_posts_comments')
             .where({ id: args.id })
             .update({
                 comment: null
@@ -524,29 +674,106 @@ module.exports = {
             })
     },
     changeUserPassword: async (args) => {
+        const hash = await bcrypt.hashSync(args.password, saltRounds);
         await db('users')
             .where({ id: args.id })
             .update({
-                password: args.password
+                password: hash
             })
+            .then(res => {
+                return res
+            })
+    },
+    sendMessage: async (args) => {
+        await db('forum_messages').insert({
+            sender_id: args.sender_id,
+            recipient_id: args.recipient_id,
+            subject_line: args.subject_line,
+            message: args.message
+        }).then(res => {
+            return res
+        })
+    },
+    deleteMessage: async (args) => {
+        await db('forum_messages')
+            .where({ id: args.id })
+            .del()
+            .then(res => {
+                return res
+            })
+    },
+    deleteMessage_sender_recipient: async (args) => {
+        await db('forum_messages')
+            .where({ id: args.id })
+            .update({
+                sender_delete: args.sender_delete,
+                recipient_delete: args.recipient_delete
+            })
+            .then(res => {
+                return res
+            })
+    },
+    postUpvote: async (args) => {
+        await db('forum_posts_upvote')
+            .insert({
+                post_id: args.post_id,
+                author_id: args.author_id
+            })
+            .then(async res => {
+                await db('forum_posts_downvote')
+                    .where({ 
+                        post_id: args.post_id,
+                        author_id: args.author_id
+                    })
+                    .del()
+                    .then(res => {
+                        return res
+                    })
+                return res
+            })
+        
+    },
+    postDownvote: async (args) => {
+        await db('forum_posts_downvote')
+            .insert({
+                post_id: args.post_id,
+                author_id: args.author_id
+            })
+            .then(async res => {
+                await db('forum_posts_upvote')
+                    .where({ 
+                        post_id: args.post_id,
+                        author_id: args.author_id
+                    })
+                    .del()
+                    .then(res => {
+                        return res
+                    })
+                return res
+            })
+
+    },
+    removePostUpvote: async (args) => {
+        await db('forum_posts_upvote')
+            .where({
+                post_id: args.post_id,
+                author_id: args.author_id
+            })
+            .del()
+            .then(res => {
+                return res
+            })
+    },
+    removePostDownvote: async (args) => {
+        await db('forum_posts_downvote')
+            .where({
+                post_id: args.post_id,
+                author_id: args.author_id
+            })
+            .del()
             .then(res => {
                 return res
             })
     }
 }
-/*
-        const posts = db.select('*')
-            .from('users')
-            .where({ email: email })
-            .catch(errorHandler)
-
-        let [post] = await posts
-        if ()) {
-            return {
-                ...post
-            }
-        } else {
-            return {}
-        }
-*/
 //https://www.youtube.com/watch?v=QYIWnpvqs-E

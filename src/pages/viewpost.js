@@ -12,6 +12,7 @@ import ShowPost from '../components/commons/viewpost/showPost'
 import EditPost from '../components/commons/viewpost/editPost'
 
 import Comments from '../components/commons/viewpost/viewpost-comments/comments'
+import Directory from '../components/commons/navigation/directory'
 import LoginOrRegister from '../components/commons/LoginOrRegister/login-or-register'
 
 import { isLiteralObject } from '../components/commons/functions/isLiteralObject'
@@ -90,28 +91,44 @@ export default function ViewPost() {
     return (
         <main className="viewpost">
             <h3><b>{(!editPostToggle) ? 'View Post' : 'Edit Post'}</b></h3>
-            <PostEditable toggle={editPostToggle} />
-            <div className={"CommentDisplay"} style={{ marginTop: "10px" }}>
-                <Card style={{ marginTop: "10px" }} title={`${query.post.comment.length} ${query.post.comment.length > 1 ? 'comments' : 'comment'}`}>
-                    {(cookies.userCookie !== undefined ?
-                        <Card className={"CommentForm"}>
-                            <Form key={0}>
-                                <Form.Item >
-                                    <TextArea className="editor" rows={4} onChange={(e) => setValue(e.target.value)} />
-                                </Form.Item>
-                                <Form.Item>
-                                    <Button htmlType="submit" type="primary" onClick={() => comment_onFinish(localStorage, id, cookies, value, createCommentMutation)}>
-                                        Add Comment
-                                    </Button>
-                                </Form.Item>
-                            </Form>
+            <div className='Post_Comment_Community'>
+                <div className='Post_Comment'>
+                    <PostEditable toggle={editPostToggle} />
+                    <div className="CommentDisplay">
+                        <Card title={`${query.post.comment.length} ${query.post.comment.length > 1 ? 'comments' : 'comment'}`}>
+                            {(cookies.userCookie !== undefined ?
+                                <Card className={"CommentForm"}>
+                                    <Form key={0}>
+                                        <Form.Item >
+                                            <TextArea className="editor" rows={4} onChange={(e) => setValue(e.target.value)} />
+                                        </Form.Item>
+                                        <Form.Item>
+                                            <Button htmlType="submit" type="primary" onClick={() => comment_onFinish(localStorage, id, cookies, value, createCommentMutation)}>
+                                                Add Comment
+                                            </Button>
+                                        </Form.Item>
+                                    </Form>
+                                </Card>
+                                :
+                                <LoginOrRegister />
+                            )}
+                            <Comments commentsObj={query.post.comment}/>
                         </Card>
-                        :
-                        <LoginOrRegister />
-                    )}
-                    <Comments commentsObj={query.post.comment}/>
-                </Card>
+                    </div>
+                </div>
+                <div className='community_directory'>
+                    <Card>
+                        <div className='title'><Link to={'/community/' + query.post.community.id}>{query.post.community.title}</Link></div>
+                        {query.post.community.summary}
+                    </Card>
+                    <Directory />
+                </div>
             </div>
+
         </main>
     )
 }
+
+
+//add community card
+// Revamp viewpost communityhome

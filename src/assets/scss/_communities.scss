@@ -1,0 +1,55 @@
+.communities {
+    padding: 40px;
+    padding-top: 80px;
+    .nested-section {
+        padding-top: 12px;
+        max-width: 100%;
+        box-sizing: border-box;
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        margin: 0 auto;  
+        .card-grid { 
+            .communities-list {
+                width: 640px;
+                .create-community-button-link{
+                    margin-bottom: 20px;
+                }
+                .ant-card-head {
+                    background-color:rgb(246, 247, 248);
+                }
+                .ant-card-body {
+                    .alignleft {
+                        float: left;
+                        width: 50%;
+                    }
+                    .alignright {
+                        float: right;
+                        width: 50%;
+                    }
+                }
+            }
+        }
+        .description-directory {
+            .community-details{
+                width: 312px;
+                margin-left: 12px;
+                margin-bottom: 12px;
+            }
+            .directory {
+                max-height: 100%;
+                width: 312px;
+                margin-left: 12px;
+                display: block;
+                .column {
+                    float: left;
+                    width: 50%;
+                    .link {
+                        color: black;
+                    }
+                }
+            }
+        }
+    }
+
+}

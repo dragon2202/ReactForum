@@ -1,32 +1,229 @@
 .viewAccount {
     padding: 40px;
     padding-top: 80px;
-    .post_comment_personal {
+    .overview_tabpane {
+        max-width: 100%;
+        box-sizing: border-box;
         display: flex;
-        .post_comment {
-            width: 70%;
-            margin-right: 10px;
-            .overview-list {
-                .content {
-                    width: 100%;
+        flex-direction: row;
+        justify-content: center;
+        margin: 0 auto;
+        .post_comment_personal {
+            display: flex;
+            .post_comment {
+                width: 640px;
+                margin-right: 12px;
+                .overview-list {
+                    .content {
+                        width: 100%;
+                    }
+                    .commentincard {
+                        .ant-comment {
+                            border-left: 2px dashed;
+                            border-color: #EDEFF1;
+                            .ant-comment-inner {
+                                padding-top: 0px;
+                                .ant-comment-content{
+                                    padding-top: 8px;
+                                    padding-left: 10px;
+                                }
+                                .ant-comment-content-author-time {
+                                    color: black;
+                                }
+                            }
+                        }
+                    }
+                    .comment_tree_card {
+                        width: 100%;
+                        .ant-comment {
+                           background-color: rgba(0, 121, 211, 0.05);
+                           fill: rgb(135, 138, 140);
+                        }
+                        .ant-comment-inner {
+                            padding-top: 0px;
+                            .ant-comment-content{
+                                padding-top: 8px;
+                                padding-left: 10px;
+                            }
+                        }
+                    }
                 }
-                .commentincard {
-                    background-color: rgb(220,220,220);
-                    .ant-comment {
-                        margin-top: 0;
-                        .ant-comment-content-author-time {
+            }
+            .personal{
+                width: 312px;
+                margin-left: 12px;
+                padding-top: 12px;
+                .personal_card {
+                    .css-header {
+                        background-color:#33A8FF;
+                        border-radius:4px 4px 0 0;
+                        height: 94px;
+                        left: 0;
+                        top: 0;
+                        position: absolute;
+                        width: 100%;
+                    }
+                }
+                .directory {
+                    width: 312px;
+                    margin-top: 14px;
+                    display: block;
+                    .column {
+                        float: left;
+                        width: 50%;
+                        .link {
                             color: black;
                         }
                     }
                 }
-                .comment_tree_card {
-                    width: 100%;
+            }
+        }
+    }
+    .posts_tabpane {
+        .posts_personal {
+            max-width: 100%;
+            display: flex;
+            box-sizing: border-box;
+            flex-direction: row;
+            justify-content: center;
+            margin: 0 auto;
+            .posts {
+                width: 100%;
+                .description_list {
+                    .description-expand {
+                        .expand-icon {
+                            color: black; 
+                            padding-right: 12px;
+                        }
+                        .comment-icon{
+                            color: black; 
+                            text-decoration: none;
+                        }
+                        .image {
+                            max-height: 200px;
+                            max-width: 100%;
+                        }
+                        .external-link {
+                            color: black; 
+                            text-decoration: none;
+                            padding-right: 12px;
+                        }
+                        .post {
+                            color: black;
+                        }
+                    }
+                }
+            }
+            .personal{
+                margin-left: 12px;
+                padding-top: 12px;
+                .personal_card {
+                    width: 312px;
+                    .css-header {
+                        background-color:#33A8FF;
+                        border-radius:4px 4px 0 0;
+                        height: 94px;
+                        left: 0;
+                        top: 0;
+                        position: absolute;
+                        width: 100%;
+                    }
+                }
+                .directory {
+                    width: 312px;
+                    margin-top: 14px;
+                    display: block;
+                    .column {
+                        float: left;
+                        width: 50%;
+                        .link {
+                            color: black;
+                        }
+                    }
                 }
             }
         }
-        .personal{
-            width: 30%;
-            margin-left: 10px;
+
+    }
+    .comments_tabpane {
+        .comments_personal {
+            max-width: 100%;
+            display: flex;
+            box-sizing: border-box;
+            flex-direction: row;
+            justify-content: center;
+            margin: 0 auto;
+            .comments {
+                width: 100%;
+                .list-content {
+                    width: 100%;
+                    .ant-comment {
+                        border-left: 2px dashed;
+                        border-color: #EDEFF1;
+                    }
+                }
+            }
+            .personal{
+                margin-left: 12px;
+                padding-top: 12px;
+                .personal_card {
+                    width: 312px;
+                    .css-header {
+                        background-color:#33A8FF;
+                        border-radius:4px 4px 0 0;
+                        height: 94px;
+                        left: 0;
+                        top: 0;
+                        position: absolute;
+                        width: 100%;
+                    }
+                }
+                .directory {
+                    width: 312px;
+                    margin-top: 14px;
+                    display: block;
+                    .column {
+                        float: left;
+                        width: 50%;
+                        .link {
+                            color: black;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+@media only screen and (max-width: 1055px) {
+    .viewAccount {
+        .overview_tabpane {
+            .post_comment_personal {
+                .personal{
+                    display: none;
+                }
+            }
+            
+        }
+        .comments_tabpane {
+            .comments_personal {
+                .personal {
+                    display: none;
+                }
+            }
+        }
+    }
+}
+
+@media only screen and (max-width: 855px) {
+    .viewAccount {
+        .posts_tabpane {
+            .posts_personal {
+                .personal{
+                    display: none;
+                }
+            }
+    
         }
     }
 }
