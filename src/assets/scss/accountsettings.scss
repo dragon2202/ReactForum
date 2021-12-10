@@ -1,4 +1,20 @@
 .accountsettings {
     padding: 40px;
     padding-top: 20px;
+    .question-display-form {
+        max-width: 100%;
+        box-sizing: border-box;
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        margin: 0 auto;
+        .question-display {
+            margin-top: 20px;
+            width: 640px;
+        }
+        .question-form {
+            margin-top: 20px;
+            width: 640px;
+        }
+    }
 }

@@ -2,16 +2,19 @@
     padding: 40px;
     padding-top: 20px;
     .posts-list {
+        max-width: 100%;
+        box-sizing: border-box;
         display: flex;
-        width: 100%;
-        float: left;
+        flex-direction: row;
+        justify-content: center;
+        margin: 0 auto;
         .posts {
-            width: 70%;
+            width: 640px;
             margin-right: 10px;
             .create-post-nav {
                 margin-bottom: 30px;
                 .MenuItemPost {
-                    width: 75%;
+                    width: 70%;
                 }
             }            
             .post-list {
@@ -54,7 +57,7 @@
             }
         }
         .personal {
-            width: 30%;
+            width: 310px;
             margin-left: 10px;
             .personal_card {
                 .css-header {

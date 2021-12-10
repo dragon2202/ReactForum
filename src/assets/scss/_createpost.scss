@@ -98,11 +98,15 @@
                 font-weight: 550;
             }
             .directory {
+                width: 312px;
                 margin-top: 14px;
-                display: block;
-                .column-1, .column-2 {
+                display: block; 
+                .column {
                     float: left;
                     width: 50%;
+                    .link {
+                        color: black;
+                    }
                 }
             }
         }
