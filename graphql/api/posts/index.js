@@ -4,6 +4,7 @@ const bcrypt = require('bcrypt');
 const saltRounds = 10;
 
 module.exports = {
+    //Post
     getPost: async (id) => {
         const posts = db.select('*')
             .from('forum_posts')
@@ -105,6 +106,7 @@ module.exports = {
                 console.log(err)
             })
     },
+    //Community
     getCommunity: async (id) => {
         const posts = db.select('*')
             .from('community')
@@ -168,6 +170,7 @@ module.exports = {
                 console.log(err)
             })
     },
+    //Community/User/Role
     getCommunityUserRole: async (id) => {
         let qry = db.select('*')
             .from('community_user_role')
@@ -197,6 +200,7 @@ module.exports = {
                 console.log(err)
             })
     },
+    //Comment
     getComment: async (id) => {
         const posts = db.select('*')
             .from('forum_posts_comments')
@@ -264,6 +268,7 @@ module.exports = {
                 console.log(err)
             })
     },
+    //Roles/Permission
     getRolesPermissions: async (id) => {
         let qry = db.select('*')
             .from('roles_permissions')
@@ -296,6 +301,7 @@ module.exports = {
             ...post
         }
     },
+    //User
     getUser: async (id) => {
         if (id) {
             const posts = db.select('*')
@@ -320,6 +326,7 @@ module.exports = {
                 console.log(err)
             })
     },
+    //Check Credentials
     checkUserEmail: async (email) => {
         const posts = db.select('*')
             .from('users')
@@ -351,7 +358,6 @@ module.exports = {
             .where({ email: email })
             .catch(errorHandler)
         let [post] = await posts
-
         if (bcrypt.compareSync(password, post.password)) {
             return {
                 ...post
@@ -360,31 +366,7 @@ module.exports = {
             return {}
         }
     },
-    checkCredentials: async (args) => {
-        const posts = db.select('*')
-            .from('users')
-            .where({ id: args.id })
-            .catch(errorHandler)
-        let [post] = await posts
-        if (bcrypt.compareSync(args.password, post.password)) {
-            await db('users')
-                .where({ id: args.id })
-                .update({
-                    email: args.email,
-                    username: args.username
-                })
-                .then(res => {
-                    return res
-                })
-            
-        } else {
-            return null
-        }
-        delete post.password
-        return {
-            ...post
-        }
-    },
+    //Message
     getMessages: async (id) => {
         let qry = db.select('*')
             .from('forum_messages')
@@ -409,6 +391,7 @@ module.exports = {
                 console.log(err)
             })
     },
+    //Upvote/Downvote
     checkPostUpvote: async (author_id, post_id) => {
         const posts = db.select('*')
             .from('forum_posts_upvote')
@@ -447,6 +430,17 @@ module.exports = {
 
         return qry.catch(err => {console.log(err)})
     },
+    //Security Questions
+    getSecurityQuestionsByAuthorID: async (id) => {
+        let qry = db.select('*')
+            .from('users_security_questions')
+            .where({ user_id: id })
+            .catch(errorHandler)
+
+        return qry.catch(err => {console.log(err)})
+    },
+    //Mutation---------------------------------------------------------------------------------------------------------------------
+    //Post
     createPost: async (args) => {
         await db('forum_posts').insert({
             author_id: args.author_id,
@@ -517,6 +511,7 @@ module.exports = {
             })
 
     },
+    //Comment
     createComment: async (args) => {
         await db('forum_posts_comments').insert({
             post_id: args.post_id,
@@ -558,6 +553,7 @@ module.exports = {
                 return res
             })
     },
+    //Community
     createCommunity: async (args) => {
         await db('community').insert({
             title: args.title,
@@ -618,6 +614,7 @@ module.exports = {
                 return res
             })
     },
+    //Community User Role
     createUser_CommunityUserRole: async (args) => {
         await db('community_user_role').insert({
             community_id: args.community_id,
@@ -652,6 +649,7 @@ module.exports = {
             return res
         })
     },
+    //User
     registerUser: async (args) => {
         const hash = await bcrypt.hashSync(args.password, saltRounds);
         await db('users').insert({
@@ -684,6 +682,7 @@ module.exports = {
                 return res
             })
     },
+    //Message
     sendMessage: async (args) => {
         await db('forum_messages').insert({
             sender_id: args.sender_id,
@@ -713,6 +712,7 @@ module.exports = {
                 return res
             })
     },
+    //UpvoteDownvote
     postUpvote: async (args) => {
         await db('forum_posts_upvote')
             .insert({
@@ -734,46 +734,60 @@ module.exports = {
         
     },
     postDownvote: async (args) => {
-        await db('forum_posts_downvote')
-            .insert({
+        await db('forum_posts_downvote').insert({
+            post_id: args.post_id,
+            author_id: args.author_id
+        }).then(async res => {
+            await db('forum_posts_upvote').where({ 
                 post_id: args.post_id,
                 author_id: args.author_id
-            })
-            .then(async res => {
-                await db('forum_posts_upvote')
-                    .where({ 
-                        post_id: args.post_id,
-                        author_id: args.author_id
-                    })
-                    .del()
-                    .then(res => {
-                        return res
-                    })
-                return res
-            })
+            }).del().then(res => { return res})
+            return res
+        })
 
     },
     removePostUpvote: async (args) => {
-        await db('forum_posts_upvote')
-            .where({
-                post_id: args.post_id,
-                author_id: args.author_id
-            })
-            .del()
-            .then(res => {
-                return res
-            })
+        await db('forum_posts_upvote').where({
+            post_id: args.post_id,
+            author_id: args.author_id
+         }).del().then(res => {
+            return res
+        })
     },
     removePostDownvote: async (args) => {
-        await db('forum_posts_downvote')
-            .where({
-                post_id: args.post_id,
-                author_id: args.author_id
-            })
-            .del()
-            .then(res => {
-                return res
-            })
+        await db('forum_posts_downvote').where({
+            post_id: args.post_id,
+            author_id: args.author_id
+        }).del().then(res => {
+            return res
+        })
+    },
+    createSecurityQuestion: async (args) => {
+        await db('users_security_questions').insert({
+            user_id: args.user_id,
+            question: args.question,
+            answer: args.answer
+        }).then(res => {
+            return res
+        })
+    },
+    updateSecurityQuestion: async (args) => {
+        await db('users_security_questions').update({
+            user_id: args.user_id,
+            question: args.question,
+            answer: args.answer
+        }).then(res => {
+            return res
+        })
+    },
+    removeSecurityQuestion: async (args) => {
+        await db('users_security_questions').where({
+            user_id: args.user_id,
+            question: args.question,
+        }).del().then(res => {
+            return res
+        })
     }
+    
 }
 //https://www.youtube.com/watch?v=QYIWnpvqs-E

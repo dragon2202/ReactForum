@@ -85,9 +85,7 @@ export default function Account() {
                                                                 }}
                                                                 dataSource={query.communityuserrole[index].community.post}
                                                                 renderItem={item => (
-                                                                    <List.Item key={item.id}>
-                                                                        <ContentCard item={item} refetch={queryRefetch}/>
-                                                                    </List.Item>
+                                                                    <ContentCard item={item} refetch={queryRefetch}/>
                                                                 )}
                                                             >
                                                             </List>

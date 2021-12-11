@@ -30,7 +30,7 @@ export default function Register() {
                 Message.success({ content: 'Account has been successfully registered.', style: { marginTop: '5vh' } }, 10)
                 history.push("/login")
             }
-        }//triggers useEffect
+        }
     })
 
     async function OnFinish(values) {
@@ -55,8 +55,9 @@ export default function Register() {
     if (cookies.userCookie === undefined) {
         return (
             <main className="register">
-                <Form name="normal_register" className="register-form" onFinish={OnFinish} noValidate>
+                <Form name="normal_register" className="register-form" onFinish={OnFinish}>
                     <h3 style={{ textAlign: "center" }}><b>User Register</b></h3>
+                    <h3 style={{textAlign:"center"}}>Note: Password Recovery and Reset is not supported</h3>
                     <Form.Item name="Email">
                         <Input prefix={<MailOutlined className="site-form-item-icon" />} type="email" placeholder="Please input your email!" />
                     </Form.Item>
@@ -71,9 +72,9 @@ export default function Register() {
                     </Form.Item>
                     <Form.Item>
                         <span><Link to={"/login"}>Login!</Link></span>
-                        <a className="login-form-forgot" href="" style={{ float: "right" }}>
-                            Forgot password
-                        </a>
+                        <Link to={"/forgot"} className="login-form-forgot" style={{ float: "right" }}>
+                            Forgot password!
+                        </Link>
                     </Form.Item>
                     <Form.Item>
                         <Button type="primary" htmlType="submit" className="login-form-button">

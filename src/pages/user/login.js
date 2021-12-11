@@ -18,9 +18,8 @@ export default function Login() {
     let history = useHistory()
     const [ cookies, set ] = useCookies(['userCookie'])
     const [ loginUser ] = useLazyQuery(LOGIN_USER, {
-        onCompleted: data => 
-        {
-            if(data.user.id === null) {
+        onCompleted: result => {
+            if(result.user.id === null) {
                 Message.error({
                     content: 'Wrong Password. Please try again.',
                     style: {
@@ -28,8 +27,7 @@ export default function Login() {
                     },
                 },10)
             } else {
-                console.log(data)
-                set('userCookie', data.user, {path: '/', sameSite:'lax', secure: true, expires: 0})//Set cookie for users
+                set('userCookie', result.user, {path: '/', sameSite:'lax', secure: true, expires: 0})//Set cookie for users
                 Message.success({
                     content: 'You successfully logged in.',
                     style: {
@@ -41,7 +39,7 @@ export default function Login() {
         }, 
         onError: err => {
             Message.error({
-                content: 'No account found for this username. Please try again.',
+                content: 'No account found for this email. Please try again.',
                 style: {
                     marginTop: '5vh',
                 },
@@ -65,6 +63,7 @@ export default function Login() {
             <main className="login">
                 <Form name="normal_login" className="login-form" onFinish={onFinish}>
                     <h3 style={{textAlign:"center"}}><b>User Login</b></h3>
+                    <h3 style={{textAlign:"center"}}>Note: Password Recovery and Reset is not supported</h3>
                     <Form.Item name="email">
                         <Input prefix={<MailOutlined className="site-form-item-icon" />} placeholder="Email" type="email"/>
                     </Form.Item>
@@ -73,9 +72,9 @@ export default function Login() {
                     </Form.Item>
                     <Form.Item>
                         <span><Link to={"/register"}>Register now!</Link></span>
-                        <a className="login-form-forgot" href="" style={{ float: "right" }}>
-                            Forgot password
-                        </a>
+                        <Link to={"/forgot"} className="login-form-forgot" style={{ float: "right" }}>
+                            Forgot password!
+                        </Link>
                     </Form.Item>
                     <Form.Item>
                         <Button type="primary" htmlType="submit" className="login-form-button">

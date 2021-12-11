@@ -539,6 +539,7 @@ export const GET_USER = gql`
         }
     }
 `
+
 export const GET_ALL_USER = gql`
     query getAllUser {
         user: getAllUser {
@@ -631,6 +632,14 @@ export const GET_VIEW_ACCOUNT = gql`
         }
     }
 `
+export const GET_USER_QUESTIONS = gql`
+    query getUserQuestion($email: String!) {
+        user: getUserQuestion(email: $email) {
+            id
+            email
+        }
+    }
+`
 export const CHECK_USER_EMAIL = gql`
     query checkUserEmail($email: String!) {
         user: checkUserEmail(email: $email) {
@@ -643,7 +652,19 @@ export const CHECK_USER_PASSWORD = gql`
     query checkUserPassword($id: ID!, $password: String!) {
         user: checkUserPassword(id: $id, password: $password) {
             id
-            password
+            email
+        }
+    }
+`
+export const CHECK_EMAIL_AND_PASSWORD = gql`
+    query checkEmailAndPassword($id: ID!, $email: String!, $password: String!) {
+        emailCheck: checkUserEmail(email: $email) {
+            id
+            email
+        }
+        passwordCheck: checkUserPassword(id: $id, password: $password) {
+            id
+            email
         }
     }
 `
@@ -653,28 +674,6 @@ export const LOGIN_USER = gql`
             id
             email
             username
-        }
-    }
-`
-export const CHECK_CREDENTIALS = gql`
-    query checkCredentials($user: UserInput!) {
-        user: checkCredentials(user: $user) {
-            id
-            email
-            username
-            password
-        }
-    }
-`
-export const CHECK_EMAIL_AND_PASSWORD = gql`
-    query checkEmailAndPassword($id: ID!, $email: String!, $password: String!) {
-        email: checkUserEmail(email: $email) {
-            id
-            email
-        }
-        password: checkUserPassword(id: $id, password: $password) {
-            id
-            email
         }
     }
 `
@@ -779,6 +778,14 @@ export const GET_DOWNVOTES_POST_ID = gql`
         post_upvote_downvote: getDownvotes_PostID(id: $id) {
             post_id
             author_id
+        }
+    }
+`
+export const GET_SECURITY_QUESTIONS_BY_AUTHOR_ID = gql`
+    query getSecurityQuestionsByAuthorID($id: ID!) {
+        security_questions: getSecurityQuestionsByAuthorID(id: $id) {
+            user_id
+            question
         }
     }
 `
@@ -925,7 +932,6 @@ export const CHANGE_USER_INFO = gql`
             id
             email
             username
-            password
         }
     }
 `
@@ -992,6 +998,32 @@ export const REMOVE_POST_DOWNVOTE = gql`
         removePostDownvote(post_upvote_downvote: $post_upvote_downvote) {
             post_id
             author_id
+        }
+    }
+`
+export const CREATE_SECURITY_QUESTION = gql`
+    mutation createSecurityQuestion($securityQuestion: Security_Question_Input!) {
+        createSecurityQuestion(securityQuestion: $securityQuestion) {
+            user_id
+            question
+            answer
+        }
+    }
+`
+export const UPDATE_SECURITY_QUESTION = gql`
+    mutation updateSecurityQuestion($securityQuestion: Security_Question_Input!) {
+        updateSecurityQuestion(securityQuestion: $securityQuestion) {
+            user_id
+            question
+            answer
+        }
+    }
+`
+export const REMOVE_SECURITY_QUESTION = gql`
+    mutation removeSecurityQuestion($securityQuestion: Security_Question_Input!) {
+        removeSecurityQuestion(securityQuestion: $securityQuestion) {
+            user_id
+            question
         }
     }
 `

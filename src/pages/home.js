@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom'
 
 import Card from 'antd/lib/card'
 import List from 'antd/lib/list'
-import Input from 'antd/lib/input'
 
 import Post from '../components/commons/home-post/index'
 import CreatePostNav from '../components/commons/navigation/create-post-nav'

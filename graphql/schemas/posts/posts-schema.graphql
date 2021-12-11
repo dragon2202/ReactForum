@@ -30,13 +30,13 @@ type Query {
     checkUserEmail(email: String!): User
     checkUserPassword(id: ID!, password: String!): User
     loginUser(email: String!, password: String!): User
-    checkCredentials(user: UserInput!): User
     getMessages(id: ID!): [Message]
     getSentMessages(id: ID!): [Message]
     checkPostUpvote(author_id: ID!, post_id: ID!): Post_Upvote_Downvote
     checkPostDownvote(author_id: ID!, post_id: ID!): Post_Upvote_Downvote
     getUpvotes_PostID(id: ID!): [Post_Upvote_Downvote]
     getDownvotes_PostID(id: ID!): [Post_Upvote_Downvote]
+    getSecurityQuestionsByAuthorID(id: ID!): [Security_Question]
 }
 
 type Mutation {
@@ -64,6 +64,9 @@ type Mutation {
     postDownvote(post_upvote_downvote: Post_Upvote_Downvote_Input!): Post_Upvote_Downvote 
     removePostUpvote(post_upvote_downvote: Post_Upvote_Downvote_Input!): Post_Upvote_Downvote 
     removePostDownvote(post_upvote_downvote: Post_Upvote_Downvote_Input!): Post_Upvote_Downvote 
+    createSecurityQuestion(securityQuestion: Security_Question_Input!): Security_Question
+    updateSecurityQuestion(securityQuestion: Security_Question_Input!): Security_Question
+    removeSecurityQuestion(securityQuestion: Security_Question_Input!): Security_Question
 }
 
 input LoginInput {
@@ -166,6 +169,12 @@ input Post_Upvote_Downvote_Input {
 input Comment_Upvote_Downvote_Input {
     comment_id: Int
     author_id: Int
+}
+
+input Security_Question_Input {
+    user_id: Int
+    question: String
+    answer: String
 }
 
 type Post {
@@ -298,4 +307,10 @@ type Post_Upvote_Downvote {
 type Comment_Upvote_Downvote {
     comment_id: Int
     author_id: Int
+}
+
+type Security_Question {
+    user_id: Int
+    question: String
+    answer: String
 }

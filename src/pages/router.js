@@ -10,6 +10,7 @@ import CreatePost from './create-post'
 import ViewPost from './viewpost'
 import Login from './user/login'
 import Register from './user/register'
+import ForgotPassword from './user/forgotpassword'
 import Account from './user/account'
 import AccountSettings from './user/accountsettings'
 import Inbox from './user/inbox'
@@ -30,6 +31,7 @@ export default function Router() {
             <Route path='/viewpost/:id' component={ViewPost} />
             <Route path='/login' component={Login} />
             <Route path='/register' component={Register} />
+            <Route path='/forgot' component={ForgotPassword} />
             <Route path='/account' component={Account} />
             <Route path='/accountsettings' component={AccountSettings} />
             <Route path='/inbox' component={Inbox} />

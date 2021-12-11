@@ -1,0 +1,14 @@
+.forgot {
+    padding: 40px;
+    padding-top: 80px;
+    .forgot-form {
+        margin: auto;
+        width: 50%;
+        padding: 10px;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        -ms-transform: translate(-50%, -50%);
+        transform: translate(-50%, -50%);
+    }
+}

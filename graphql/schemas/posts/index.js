@@ -5,6 +5,7 @@ const PostService = require('../../api/posts')
 module.exports = {
     resolvers: {
         Query: {
+            //Posts
             getPost: async (parent, {id}) => {
                 const post = await PostService.getPost(id)
                 return post
@@ -29,6 +30,7 @@ module.exports = {
                 const post = await PostService.getPosts_CommunityPosts(id)
                 return post
             },
+            //Community
             getCommunity: async (parent, {id}) => {
                 const post = await PostService.getCommunity(id)
                 return post
@@ -65,6 +67,7 @@ module.exports = {
                 const post = await PostService.getCommunityUserRoleByCommunity(id)
                 return post
             },
+            //Comment
             getComment: async (parent, {id}) => {
                 const post = await PostService.getComment(id)
                 return post
@@ -89,6 +92,7 @@ module.exports = {
                 const post = await PostService.getChildComments(id)
                 return post
             },
+            //Roles and Permission
             getRolesPermissions: async (parent, {id}) => {
                 const post = await PostService.getRolesPermissions(id)
                 return post
@@ -101,6 +105,7 @@ module.exports = {
                 const post = await PostService.getPermission(id)
                 return post
             },
+            //User
             getUser: async (parent, {id}) => {
                 const post = await PostService.getUser(id)
                 return post
@@ -113,6 +118,7 @@ module.exports = {
                 const post = await PostService.getViewAccount(id)
                 return post
             },
+            //Check Credentials like email and password
             checkUserEmail: async (parent, {email}) => {
                 const post = await PostService.checkUserEmail(email)
                 return post
@@ -125,10 +131,7 @@ module.exports = {
                 const post = await PostService.loginUser(email, password)
                 return post
             },
-            checkCredentials: async (parent, args) => {
-                const post = await PostService.checkCredentials(args.user)
-                return post
-            },
+            //Message
             getMessages: async (parent, {id}) => {
                 const post = await PostService.getMessages(id)
                 return post
@@ -137,6 +140,7 @@ module.exports = {
                 const post = await PostService.getSentMessages(id)
                 return post
             },
+            //Upvote/Downvote
             checkPostUpvote: async (parent, {author_id, post_id}) => {
                 const post = await PostService.checkPostUpvote(author_id, post_id)
                 return post
@@ -151,6 +155,11 @@ module.exports = {
             },
             getDownvotes_PostID: async (parent, {id}) => {
                 const post = await PostService.getDownvotes_PostID(id)
+                return post
+            },
+            //Security Question
+            getSecurityQuestionsByAuthorID: async (parent, {id}) => {
+                const post = await PostService.getSecurityQuestionsByAuthorID(id)
                 return post
             }
         },
@@ -188,30 +197,41 @@ module.exports = {
             recipient: async (obj, args, context, info) => await PostService.getUser(obj.recipient_id)
         },
         Mutation: {
+            //Post Mutations
             createPost: async (parent, args) => await PostService.createPost(args.post),
             updatePost: async (parent, args) => await PostService.updatePost(args.post),
             deletePost: async (parent, args) => await PostService.deletePost(args.post),
             lockPost: async (parent, args) => await PostService.lockPost(args.post),
+            //Comment Mutations
             createComment: async(parent, args) => await PostService.createComment(args.comment),
             updateComment: async (parent, args) => await PostService.updateComment(args.comment),
             deleteComment: async (parent, args) => await PostService.deleteComment(args.comment),
             deleteParentComment: async (parent, args) => await PostService.deleteParentComment(args.comment),
+            //Community Mutations
             createCommunity: async (parent, args) => await PostService.createCommunity(args.communityUser),
             updateCommunityUserRole: async (parent, args) => await PostService.updateCommunityUserRole(args.communityuserrole),
             updateCommunityDetails: async (parent, args) => await PostService.updateCommunityDetails(args.community),
+            //Community User Role Mutation- Roles within community
             createUser_CommunityUserRole: async (parent, args) => await PostService.createUser_CommunityUserRole(args.communityuserrole),
             removeUser_CommunityUserRole: async (parent, args) => await PostService.removeUser_CommunityUserRole(args.communityuserrole),
             banUser: async (parent, args) => await PostService.banUser(args.communityban),
+            //User Mutation
             registerUser: async (parent, args) => await PostService.registerUser(args.user),
             changeUserInfo: async (parent, args) => await PostService.changeUserInfo(args.user),
             changeUserPassword: async (parent, args) => await PostService.changeUserPassword(args.user),
+            //Message Mutations
             sendMessage: async(parent, args) => await PostService.sendMessage(args.message),
             deleteMessage: async(parent, args) => await PostService.deleteMessage(args.message),
             deleteMessage_sender_recipient: async(parent, args) => await PostService.deleteMessage_sender_recipient(args.message),
+            //Upvote/Downvote Mutations
             postUpvote: async(parent, args) => await PostService.postUpvote(args.post_upvote_downvote),
             postDownvote: async(parent, args) => await PostService.postDownvote(args.post_upvote_downvote),
-            removePostUpvote:  async(parent, args) => await PostService.removePostUpvote(args.post_upvote_downvote),
-            removePostDownvote:  async(parent, args) => await PostService.removePostDownvote(args.post_upvote_downvote)
+            removePostUpvote: async(parent, args) => await PostService.removePostUpvote(args.post_upvote_downvote),
+            removePostDownvote: async(parent, args) => await PostService.removePostDownvote(args.post_upvote_downvote),
+            //Security Question Mutation
+            createSecurityQuestion: async(parent, args) => await PostService.createSecurityQuestion(args.securityQuestion),
+            updateSecurityQuestion: async(parent, args) => await PostService.updateSecurityQuestion(args.securityQuestion),
+            removeSecurityQuestion: async(parent, args) => await PostService.removeSecurityQuestion(args.securityQuestion)
         }
     },
     schema: fs.readFileSync(
