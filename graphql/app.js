@@ -18,9 +18,9 @@ const server = new ApolloServer({
 server.applyMiddleware({app})
 
 if(process.env.NODE_ENV === 'production') {
-    app.use(serve(path.join(__dirname, 'public')))
+    app.use(serve(path.join(__dirname, './public')))
     router.get('*', (req, res) => {
-        res.sendFile(path.resolve(__dirname, 'public', 'index.html'))
+        res.sendFile(path.resolve(__dirname, '..', 'public', 'index.html'))
     })
     app.use(router.routes()).use(router.allowedMethods())
 }
