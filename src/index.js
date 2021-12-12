@@ -19,7 +19,7 @@ The http link supports both POST and GET requests with the ability to change the
 This can be used for authentication, persisted queries, dynamic uris, and other granular updates. 
 */
 const httpLink = new HttpLink({
-  uri: 'http://localhost:4000/graphql'
+  uri: '/graphql'
 })
 
 const client = new ApolloClient({
