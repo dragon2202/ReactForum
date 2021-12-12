@@ -5,8 +5,8 @@
   "main": "app.js",
   "proxy": "http://localhost:4000",
   "scripts": {
-    "heroku-prebuild": "npm install -f",
-    "heroku-postbuild": "npm run prod",
+    "start": "node app.js",
+    "heroku-postbuild": "npm install",
     "test": "test",
     "create-migration": "node ./database/actions/create-migration.js",
     "run-migration": "node ./database/actions/run-migration.js"
