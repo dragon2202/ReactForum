@@ -3,7 +3,7 @@ const { ApolloServer } = require('apollo-server-koa')
 const { makeExecutableSchema } = require('graphql-tools')
 const { resolvers, typeDefs } = require("./schemas")
 
-const PORT = 4000
+const PORT = process.env.PORT || 4000
 
 const server = new ApolloServer({
     schema: makeExecutableSchema({typeDefs, resolvers})
