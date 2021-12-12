@@ -15,7 +15,7 @@ const server = new ApolloServer({
     schema: makeExecutableSchema({typeDefs, resolvers})
 })
 
-server.applyMiddleware({app})
+server.applyMiddleware({app, cors: false})
 
 if(process.env.NODE_ENV === 'production') {
     app.use(serve(path.join(__dirname, './public')))
