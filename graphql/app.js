@@ -11,8 +11,10 @@ const app = new Koa()
 const router = new Router()
 
 const corsOptions = {
-    origin: '*',
-    credentials: true
+    origin: "*",
+    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+    preflightContinue: false,
+    optionsSuccessStatus: 204,
 }
 
 const PORT = parseInt(process.env.PORT) || 4000
