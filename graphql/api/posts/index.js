@@ -317,6 +317,17 @@ module.exports = {
             return null
         }
     },
+    getUserByEmail: async (email) => {
+        const posts = db.select('*')
+            .from('users')
+            .where({ email: email})
+            .catch(errorHandler)
+
+        let [post] = await posts
+        return {
+            ...post
+        }
+    },
     getAllUser: async () => {
         let qry = db.select('*')
             .from('users')
@@ -342,7 +353,7 @@ module.exports = {
             .from('users')
             .where({ id })
             .catch(errorHandler)
-            
+
         let [post] = await posts
         if (bcrypt.compareSync(password, post.password)) {
             return {
@@ -350,6 +361,17 @@ module.exports = {
             }
         } else {
             return {}
+        }
+    },
+    checkQuestion: async (user_id, question, answer) => {
+        const posts = db.select('*')
+            .from('users_security_questions')
+            .where({ user_id: user_id, question: question, answer: answer })
+            .catch(errorHandler)
+
+        let [post] = await posts
+        return {
+            ...post
         }
     },
     loginUser: async (email, password) => {
@@ -410,9 +432,9 @@ module.exports = {
             .andWhere({ post_id: post_id })
 
         let [post] = await posts
-            return {
-                ...post
-            }
+        return {
+            ...post
+        }
     },
     getUpvotes_PostID: async (id) => {
         let qry = db.select('*')
@@ -420,7 +442,7 @@ module.exports = {
             .where({ post_id: id })
             .catch(errorHandler)
 
-        return qry.catch(err => {console.log(err)})
+        return qry.catch(err => { console.log(err) })
     },
     getDownvotes_PostID: async (id) => {
         let qry = db.select('*')
@@ -428,7 +450,7 @@ module.exports = {
             .where({ post_id: id })
             .catch(errorHandler)
 
-        return qry.catch(err => {console.log(err)})
+        return qry.catch(err => { console.log(err) })
     },
     //Security Questions
     getSecurityQuestionsByAuthorID: async (id) => {
@@ -437,7 +459,7 @@ module.exports = {
             .where({ user_id: id })
             .catch(errorHandler)
 
-        return qry.catch(err => {console.log(err)})
+        return qry.catch(err => { console.log(err) })
     },
     //Mutation---------------------------------------------------------------------------------------------------------------------
     //Post
@@ -649,6 +671,14 @@ module.exports = {
             return res
         })
     },
+    unbanUser: async (args) => {
+        await db('community_ban').where({
+            community_id: args.community_id,
+            user_id: args.user_id
+        }).del().then(res => {
+            return res
+        })
+    },
     //User
     registerUser: async (args) => {
         const hash = await bcrypt.hashSync(args.password, saltRounds);
@@ -721,7 +751,7 @@ module.exports = {
             })
             .then(async res => {
                 await db('forum_posts_downvote')
-                    .where({ 
+                    .where({
                         post_id: args.post_id,
                         author_id: args.author_id
                     })
@@ -731,17 +761,17 @@ module.exports = {
                     })
                 return res
             })
-        
+
     },
     postDownvote: async (args) => {
         await db('forum_posts_downvote').insert({
             post_id: args.post_id,
             author_id: args.author_id
         }).then(async res => {
-            await db('forum_posts_upvote').where({ 
+            await db('forum_posts_upvote').where({
                 post_id: args.post_id,
                 author_id: args.author_id
-            }).del().then(res => { return res})
+            }).del().then(res => { return res })
             return res
         })
 
@@ -750,7 +780,7 @@ module.exports = {
         await db('forum_posts_upvote').where({
             post_id: args.post_id,
             author_id: args.author_id
-         }).del().then(res => {
+        }).del().then(res => {
             return res
         })
     },
@@ -788,6 +818,6 @@ module.exports = {
             return res
         })
     }
-    
+
 }
 //https://www.youtube.com/watch?v=QYIWnpvqs-E

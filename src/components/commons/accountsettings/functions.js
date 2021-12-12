@@ -105,7 +105,7 @@ export function OnFinish_RemoveQuestion(checkPassword_RemoveQuestion, user_id, q
         })
     }
 }
-
+//Modal form for updating security questions
 export function UpdateConfirm(checkPassword_UpdateQuestion, question, user_id, setInputObject) {
     confirm({
         title: 'Update Security Question',
@@ -142,6 +142,7 @@ export function UpdateConfirm(checkPassword_UpdateQuestion, question, user_id, s
     })
 }
 
+//Modal form for removing security questions
 export function RemoveConfirm(checkPassword_RemoveQuestion, question, user_id, setInputObject) {
     confirm({
         title: 'Remove Security Question: ' + question,

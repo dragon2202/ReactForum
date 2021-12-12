@@ -16,7 +16,7 @@ import { useCookies } from 'react-cookie'
 //Forum Posts and Community Components for Community Page
 export default function CommunityPost() {
     let { id } = useParams()
-    let [query, queryRefetch] = GetGraphqlQueryID_Refetch(id, GET_COMMUNITY_POSTS_USER)
+    let [query, refetch] = GetGraphqlQueryID_Refetch(id, GET_COMMUNITY_POSTS_USER)
     const [createUser_CommunityUserRole] = useMutation(CREATE_USER_COMMUNITY_USER_ROLE)
     const [removeUser_CommunityUserRole] = useMutation(REMOVE_USER_COMMUNITY_USER_ROLE)
     const [cookies] = useCookies(['userCookie'])
@@ -41,7 +41,7 @@ export default function CommunityPost() {
                                 <CreatePostNav />
                             </section>
                             <section className="post-card">
-                                <CommunityPost_Post query={query} refetch={queryRefetch}/>
+                                <CommunityPost_Post query={query} refetch={refetch}/>
                             </section>
                         </div>
                         <div className="about-card">
@@ -53,6 +53,7 @@ export default function CommunityPost() {
                                 joinMutation={createUser_CommunityUserRole}
                                 LeaveCommunity={LeaveCommunity}
                                 leaveMutation={removeUser_CommunityUserRole}
+                                refetch={refetch}
                             />
                         </div>
                     </div>

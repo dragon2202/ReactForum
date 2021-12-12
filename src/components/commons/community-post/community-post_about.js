@@ -11,61 +11,41 @@ import UserAddOutlined from '@ant-design/icons/UserAddOutlined'
 const { confirm } = Modal
 
 //Exports a List of cards containing communities to the community post page
-const AboutCommunity = ({ query, pageID, userID, JoinCommunity, joinMutation, LeaveCommunity, leaveMutation }) => {
-    const myStorage = window.localStorage
-    useEffect(() => {
-        if (myStorage.getItem('reload') != null) {
-            switch (parseInt(myStorage.getItem('reload'))) {
-                case 1:
-                    Message.success({
-                        content: 'You have successfully joined ' + query.title,
-                        style: {
-                            marginTop: '5vh',
-                        },
-                    }, 10)
-                    break;
-                case 2:
-                    Message.success({
-                        content: 'You have successfully left ' + query.title,
-                        style: {
-                            marginTop: '5vh',
-                        },
-                    }, 10)
-                    break;
-            }
-            myStorage.clear()
-        }
-    },[])
-    
+const AboutCommunity = ({ query, pageID, userID, JoinCommunity, joinMutation, LeaveCommunity, leaveMutation, refetch }) => {
     const communityuserrole = query.communityuserrole.find(item => item.user_id === userID)
     const communityBan = query.communityban.find(item => item.user_id === userID)
-    const JoinCommunityConfirm = (commPrivacy) => {
-        if(commPrivacy === 0) {
-            Message.warning({
-                content: 'This community is private. Message an admin to join this community.',
-                style: { marginTop: '5vh' }
-            }, 10)
-            return
-        }
+    const JoinCommunityConfirm = () => {
         confirm({
             title: 'Join Community - ' + query.title,
             content: 'Are you sure you want to join this community?',
             okText: 'Confirm',
             onOk() {
-                myStorage.setItem('reload', 1)
                 JoinCommunity(pageID, userID, joinMutation)
+                Message.success({
+                    content: 'You have successfully joined ' + query.title,
+                    style: {
+                        marginTop: '5vh',
+                    },
+                }, 10)
+                refetch()
             },
             width: '125vh'
         })
     }
-    const LeaveCommunityConfirm = (communityuserrole) => {
+    const LeaveCommunityConfirm = (communityuserrole, refetch) => {
         confirm({
             title: 'Leave Community - ' + query.title,
             content: 'Are you sure you want to leave this community?',
             okText: 'Confirm',
             onOk() {
-                myStorage.setItem('reload', 2)
                 LeaveCommunity(communityuserrole, leaveMutation)
+                Message.success({
+                    content: 'You have successfully left ' + query.title,
+                    style: {
+                        marginTop: '5vh',
+                    },
+                }, 10)
+                refetch()
             },
             width: '125vh'
         })
@@ -87,11 +67,11 @@ const AboutCommunity = ({ query, pageID, userID, JoinCommunity, joinMutation, Le
                             <Link to={`/editcommunity/${pageID}`} className="edit" style={{paddingRight: '5px'}}>
                                 <EditOutlined key="edit" />
                             </Link>
-                            <UserDeleteOutlined type="primary" onClick={() => { LeaveCommunityConfirm(communityuserrole) }}/>
+                            <UserDeleteOutlined type="primary" onClick={() => { LeaveCommunityConfirm(communityuserrole, refetch) }}/>
                         </span>
                     :
                         ((communityuserrole === undefined) ? false : communityuserrole.user_id === userID && communityuserrole.role_id === 3) ?
-                            <UserDeleteOutlined type="primary" onClick={() => { LeaveCommunityConfirm(communityuserrole) }}/>
+                            <UserDeleteOutlined type="primary" onClick={() => { LeaveCommunityConfirm(communityuserrole, refetch) }}/>
                             :
                             (communityBan !== undefined) ?
                                 <UserAddOutlined type="primary" onClick={() => {
@@ -102,7 +82,7 @@ const AboutCommunity = ({ query, pageID, userID, JoinCommunity, joinMutation, Le
                                 }}/>
                                 :
                                 (userID !== null) ?
-                                    <UserAddOutlined type="primary" onClick={() => { JoinCommunityConfirm(query.public) }}/>
+                                    <UserAddOutlined type="primary" onClick={() => { JoinCommunityConfirm(query.public, refetch) }}/>
                                     :
                                     null
             }

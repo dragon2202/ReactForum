@@ -38,8 +38,8 @@ export default function Account() {
     //If user is not logged in return a page with login and register
     if (cookies.userCookie === undefined) {
         return (
-            <main className="editcommunity">
-                <h3>Edit Community</h3>
+            <main className="account">
+                <h3>Account</h3>
                 <LoginOrRegister />
             </main>
         )

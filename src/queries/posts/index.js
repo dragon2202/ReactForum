@@ -256,6 +256,11 @@ query getCommunity_User($id: ID!) {
         communityban {
             community_id
             user_id
+            user {
+                id
+                email
+                username
+            }
         }
     }
 }
@@ -539,7 +544,15 @@ export const GET_USER = gql`
         }
     }
 `
-
+export const GET_USER_BY_EMAIL = gql`
+    query getUserByEmail($email: String!) {
+        user: getUserByEmail(email: $email) {
+            id
+            email
+            username
+        }
+    }
+`
 export const GET_ALL_USER = gql`
     query getAllUser {
         user: getAllUser {
@@ -653,6 +666,14 @@ export const CHECK_USER_PASSWORD = gql`
         user: checkUserPassword(id: $id, password: $password) {
             id
             email
+        }
+    }
+`
+export const CHECK_QUESTION = gql`
+    query checkQuestion($user_id: ID!, $question: String!, $answer: String!) {
+        security_question: checkQuestion(user_id: $user_id, question: $question, answer: $answer) {
+            user_id
+            question
         }
     }
 `
@@ -912,6 +933,14 @@ export const REMOVE_USER_COMMUNITY_USER_ROLE = gql`
 export const BAN_USER = gql`
     mutation banUser($communityban: CommunityBanInput!){
         banUser(communityban: $communityban) {
+            community_id
+            user_id
+        }
+    }
+`
+export const UNBAN_USER = gql`
+    mutation unbanUser($communityban: CommunityBanInput!){
+        unbanUser(communityban: $communityban) {
             community_id
             user_id
         }

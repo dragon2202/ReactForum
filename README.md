@@ -1,9 +1,7 @@
-# React Forum
-This project was made with React as the Front End. Apollo/Koa connecting to a MySQL for the backend. This is a forum like Reddit, where you can join a community and create/edit posts.
+# Getting Started with Create React App
 
-This project is being worked on.
+This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-Email me at tcalvin9@gmail.com for any questions
 ## Available Scripts
 
 In the project directory, you can run:

@@ -3,13 +3,8 @@ https://www.youtube.com/watch?v=iZzjD3Smp_A
 
 TODO:
 
-//Work on account Page
-//check existing email
-
-//messages with users
-
-Create Post go to account post via history push
-Account handling user
+Update account css
+update community ban
 
 <p className="text" style={{ whiteSpace: 'pre-wrap' }}>
     {JSON.stringify(query, null, '\t')}

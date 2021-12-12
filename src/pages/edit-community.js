@@ -8,7 +8,6 @@ import Form from 'antd/lib/form'
 import Input from 'antd/lib/input'
 import Button from 'antd/lib/button'
 import Search from 'antd/lib/input/Search'
-import Message from 'antd/lib/message'
 import Dropdown from 'antd/lib/dropdown'
 import List from 'antd/lib/list'
 import Descriptions from 'antd/lib/descriptions'
@@ -18,17 +17,17 @@ import DeleteOutlined from '@ant-design/icons/DeleteOutlined'
 import StopOutlined from '@ant-design/icons/StopOutlined'
 
 import EditCommunityDropDown from '../components/commons/edit-community/EditCommunityDropDown'
-import { confirmRemoveUser, confirmBanUser, updateDetails } from '../components/commons/edit-community/functions/mutation'
+import { confirmRemoveUser, confirmBanUser, updateDetails, confirmUnbanUser } from '../components/commons/edit-community/functions/mutation'
 import { isLiteralObject } from '../components/commons/functions/isLiteralObject'
-import { GetGraphqlQueryID } from '../components/commons/functions/getgraphqlquery'
-import { GET_COMMUNITY_USER, UPDATE_COMMUNITY_USER_ROLE, UPDATE_COMMUNITY_DETAILS, REMOVE_USER_COMMUNITY_USER_ROLE, BAN_USER } from '../queries/posts'
+import { GetGraphqlQueryID_Refetch } from '../components/commons/functions/getgraphqlquery'
+import { GET_COMMUNITY_USER, UPDATE_COMMUNITY_USER_ROLE, UPDATE_COMMUNITY_DETAILS, REMOVE_USER_COMMUNITY_USER_ROLE, BAN_USER, UNBAN_USER } from '../queries/posts'
 import { useCookies } from 'react-cookie'
 
 const { TabPane } = Tabs
 
 export default function EditCommunity() {
     let { id } = useParams()
-    let query = GetGraphqlQueryID(id, GET_COMMUNITY_USER)
+    let [query, refetch] = GetGraphqlQueryID_Refetch(id, GET_COMMUNITY_USER)
     
     const [currentTab, setTab] = useState("1")
     const [searchParam, setSearch] = useState('')
@@ -36,52 +35,11 @@ export default function EditCommunity() {
     const [removeUserCommunityUserRole] = useMutation(REMOVE_USER_COMMUNITY_USER_ROLE)
     const [updateCommunityDetails] = useMutation(UPDATE_COMMUNITY_DETAILS)
     const [banUser] = useMutation(BAN_USER) 
+    const [unbanUser] = useMutation(UNBAN_USER) 
     
     const [cookies] = useCookies(['userCookie'])
     let currentUser = (query.community === undefined) ? null : query.community.communityuserrole.find(element => element.user_id === cookies.userCookie.id)
     let communityuserrole
-    const localStorage = window.localStorage
-
-    useEffect(() => {
-        if (localStorage.getItem('reload') != null) {
-            switch (parseInt(localStorage.getItem('reload'))) {
-                case 1:
-                    Message.success({
-                        content: 'You have successfully updated details of the community.',
-                        style: {
-                            marginTop: '5vh',
-                        },
-                    }, 10)
-                    setTab("2")
-                    break;
-                case 2:
-                    Message.success({
-                        content: "You have successfully updated a user's role.",
-                        style: {
-                            marginTop: '5vh',
-                        },
-                    }, 10)
-                    break;
-                case 3:
-                    Message.success({
-                        content: "You have successfully removed a user from this community.",
-                        style: {
-                            marginTop: '5vh',
-                        },
-                    }, 10)
-                    break;
-                case 4:
-                    Message.success({
-                        content: "You have successfully banned a user from this community.",
-                        style: {
-                            marginTop: '5vh',
-                        },
-                    }, 10)
-                    break;
-            }
-            localStorage.clear()
-        }
-    }, [])
 
     //If user is not logged in return a page with error
     if (cookies.userCookie === undefined) {
@@ -101,7 +59,7 @@ export default function EditCommunity() {
     }
 
     const onFinish = (values) => {
-        updateDetails(values, id, updateCommunityDetails, localStorage)
+        updateDetails(values, id, updateCommunityDetails, refetch, setTab)
     }
 
     function handleChange(event) {
@@ -131,8 +89,8 @@ export default function EditCommunity() {
                                                     null
                                                     :
                                                     <span>
-                                                        <StopOutlined onClick={() => confirmBanUser(item.community_id, item.user_id, banUser, localStorage)} style={{marginRight: '10px'}}/>
-                                                        <DeleteOutlined onClick={() => confirmRemoveUser(item.community_id, item.user_id, item.role_id, removeUserCommunityUserRole, localStorage)}/>
+                                                        <StopOutlined onClick={() => confirmBanUser(item.community_id, item.user_id, banUser, refetch)} style={{marginRight: '10px'}}/>
+                                                        <DeleteOutlined onClick={() => confirmRemoveUser(item.community_id, item.user_id, item.role_id, removeUserCommunityUserRole, refetch)}/>
                                                     </span>
                                             }
                                         >
@@ -161,7 +119,7 @@ export default function EditCommunity() {
                                                             }
                                                             username={item.user.username}
                                                             mutation={updateRole}
-                                                            localStorage={localStorage}
+                                                            refetch={refetch}
                                                         />
                                                     }>
                                                         <a> {item.role.title} <DownOutlined /></a>
@@ -206,6 +164,22 @@ export default function EditCommunity() {
                                 </Button>
                             </Form.Item>
                         </Form>
+                    </TabPane>
+
+                    <TabPane tab="Community Bans" key="3">
+                        <List
+                            itemLayout="vertical"
+                            size="large"
+                            dataSource={query.community.communityban}
+                            renderItem={item => (
+                                <List.Item>
+                                    <span>
+                                        {item.user.username}
+                                        <DeleteOutlined style={{ float: 'right'}} onClick={() => confirmUnbanUser(item.community_id, item.user_id, unbanUser, refetch)}/>
+                                    </span>
+                                </List.Item>
+                            )}
+                        />
                     </TabPane>
 
                 </Tabs>

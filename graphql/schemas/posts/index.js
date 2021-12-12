@@ -110,12 +110,12 @@ module.exports = {
                 const post = await PostService.getUser(id)
                 return post
             },
-            getAllUser: async (parent) => {
-                const post = await PostService.getAllUser()
+            getUserByEmail: async (parent, {email}) => {
+                const post = await PostService.getUserByEmail(email)
                 return post
             },
-            getViewAccount: async (parent, {id}) => {
-                const post = await PostService.getViewAccount(id)
+            getAllUser: async (parent) => {
+                const post = await PostService.getAllUser()
                 return post
             },
             //Check Credentials like email and password
@@ -127,6 +127,10 @@ module.exports = {
                 const post = await PostService.checkUserPassword(id, password)
                 return post
             },
+            checkQuestion: async (parent, {user_id, question, answer}) => {
+                const post = await PostService.checkQuestion(user_id, question, answer)
+                return post
+            }, 
             loginUser: async (parent, {email, password}) => {
                 const post = await PostService.loginUser(email, password)
                 return post
@@ -169,6 +173,12 @@ module.exports = {
             comment: async (obj, args, context, info) => await PostService.getCommentsbyPostID(obj.id),
             post_upvotes: async (obj, args, context, info) => await PostService.getUpvotes_PostID(obj.id),
             post_downvotes: async (obj, args, context, info) => await PostService.getDownvotes_PostID(obj.id)
+        },
+        User: {
+            securityQuestion: async (obj, args, context, info) => await PostService.getSecurityQuestionsByAuthorID(obj.user_id)
+        },
+        CommunityBan: {
+            user: async (obj, args, context, info) => await PostService.getUser(obj.user_id)
         },
         Comment: {
             user: async (obj, args, context, info) => await PostService.getUser(obj.author_id),
@@ -215,6 +225,7 @@ module.exports = {
             createUser_CommunityUserRole: async (parent, args) => await PostService.createUser_CommunityUserRole(args.communityuserrole),
             removeUser_CommunityUserRole: async (parent, args) => await PostService.removeUser_CommunityUserRole(args.communityuserrole),
             banUser: async (parent, args) => await PostService.banUser(args.communityban),
+            unbanUser: async (parent, args) => await PostService.unbanUser(args.communityban),
             //User Mutation
             registerUser: async (parent, args) => await PostService.registerUser(args.user),
             changeUserInfo: async (parent, args) => await PostService.changeUserInfo(args.user),

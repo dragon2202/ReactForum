@@ -25,10 +25,11 @@ type Query {
     getRole(id: ID!): Role
     getPermission(id: ID!): Permission
     getUser(id: ID!): User
+    getUserByEmail(email: String!): User
     getAllUser: [User]
-    getViewAccount(id: ID!): User
     checkUserEmail(email: String!): User
     checkUserPassword(id: ID!, password: String!): User
+    checkQuestion(user_id: ID!, question: String!, answer: String!): Security_Question
     loginUser(email: String!, password: String!): User
     getMessages(id: ID!): [Message]
     getSentMessages(id: ID!): [Message]
@@ -54,6 +55,7 @@ type Mutation {
     createUser_CommunityUserRole(communityuserrole: CommunityUserRoleInput!): CommunityUserRole
     removeUser_CommunityUserRole(communityuserrole: CommunityUserRoleInput!): CommunityUserRole
     banUser(communityban: CommunityBanInput!): CommunityBan
+    unbanUser(communityban: CommunityBanInput!): CommunityBan
     registerUser(user: UserInput!): User
     changeUserInfo(user: UserInput!): User
     changeUserPassword(user: UserInput!): User
@@ -208,6 +210,7 @@ type Community {
 type CommunityBan {
     community_id: Int
     user_id: Int
+    user: User
 }
 
 type Community_CommunityUserRole {
@@ -241,6 +244,7 @@ type User {
     email: String
     username: String
     password: String
+    securityQuestion: [Security_Question]
 }
 
 type Role {
