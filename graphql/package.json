@@ -3,7 +3,12 @@
   "version": "1.0.0",
   "description": "A Koa and Graphql backend for react forum",
   "main": "app.js",
+  "engines": {
+    "npm": "6.13.7",
+    "node": "14.15.4"
+  },
   "scripts": {
+    "heroku-postbuild": "npm install",
     "test": "test",
     "create-migration": "node ./database/actions/create-migration.js",
     "run-migration": "node ./database/actions/run-migration.js"
