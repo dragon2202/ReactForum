@@ -5,10 +5,12 @@ const Router = require('koa-router')
 const { ApolloServer } = require('apollo-server-koa')
 const { makeExecutableSchema } = require('graphql-tools')
 const { resolvers, typeDefs } = require("./schemas")
-const { cors } = require('cors')
+const cors = require('@koa/cors')
 
 const app = new Koa()
 const router = new Router()
+
+app.use(cors())
 
 const corsOptions = {
     origin: "*",
@@ -32,7 +34,6 @@ if(process.env.NODE_ENV === 'production') {
         res.sendFile(path.resolve(__dirname, '..', 'public', 'index.html'))
     })
     app.use(router.routes()).use(router.allowedMethods())
-    app.use(cors(corsOptions))
 }
 
 app.listen({port: PORT}, () => {
