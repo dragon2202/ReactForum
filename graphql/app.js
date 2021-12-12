@@ -9,7 +9,7 @@ const { resolvers, typeDefs } = require("./schemas")
 const app = new Koa()
 const router = new Router()
 
-const PORT = process.env.PORT || 4000
+const PORT = parseInt(process.env.PORT) || 4000
 
 const server = new ApolloServer({
     schema: makeExecutableSchema({typeDefs, resolvers})
