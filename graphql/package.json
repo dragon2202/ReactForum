@@ -4,7 +4,7 @@
   "description": "A Koa and Graphql backend for react forum",
   "main": "app.js",
   "proxy": "http://localhost:4000",
-  "scripts": {...
+  "scripts": {
     "heroku-prebuild": "npm install -f",
     "heroku-postbuild": "npm run prod",
     "test": "test",
