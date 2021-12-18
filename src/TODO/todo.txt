@@ -1,0 +1,11 @@
+https://www.youtube.com/watch?v=6JnGBs88sL0
+https://www.youtube.com/watch?v=iZzjD3Smp_A
+
+TODO:
+
+Update account css
+update community ban
+
+<p className="text" style={{ whiteSpace: 'pre-wrap' }}>
+    {JSON.stringify(query, null, '\t')}
+</p>

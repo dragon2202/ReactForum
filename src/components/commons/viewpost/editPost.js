@@ -39,10 +39,11 @@ const Header = ({ item }) => {
     )
 }
 
-const EditPost = ({ post, id, post_type, cookies, isEditable, triggerEditable, deletePostMutation, lockPostMutation, update_post_mutation, localStorage, history }) => {
+const EditPost = ({ post, id, post_type, cookies, isEditable, triggerEditable, deletePostMutation, lockPostMutation, update_post_mutation, refetch, history }) => {
     const [images, setImages] = useState([])
     const onFinish = (values) => {
-        EditPost_OnFinish(post, values, images, update_post_mutation, localStorage)
+        console.log(values)
+        EditPost_OnFinish(post, values, images, update_post_mutation, refetch)
     }
     const ContentDisplay = ({ post_type }) => {
         switch (post_type) {
@@ -138,8 +139,8 @@ const EditPost = ({ post, id, post_type, cookies, isEditable, triggerEditable, d
                 (cookies.userCookie !== undefined && cookies.userCookie.id === post.author_id) ?
                     [
                         <EditOutlined key="edit" onClick={() => triggerEditable(!isEditable)} />,
-                        <DeleteOutlined onClick={() => showConfirmDelete(post, cookies, id, deletePostMutation, localStorage, history)} />,
-                        <UnlockOutlined onClick={() => showConfirmLock(post, cookies, id, lockPostMutation, localStorage)}/>
+                        <DeleteOutlined onClick={() => showConfirmDelete(post, cookies, id, deletePostMutation, refetch, history)} />,
+                        <UnlockOutlined onClick={() => showConfirmLock(post, cookies, id, lockPostMutation, refetch)}/>
                     ]
                     :
                     null

@@ -28,7 +28,7 @@ const Header = ({ item }) => {
     )
 }
 
-const ShowPost = ({ post, id, cookies, isEditable, triggerEditable, deletePostMutation, lockPostMutation, localStorage, history }) => {
+const ShowPost = ({ post, id, cookies, isEditable, triggerEditable, deletePostMutation, lockPostMutation, refetch, history }) => {
     return (
         <Card
             title={<Header item={post}/>}
@@ -42,8 +42,8 @@ const ShowPost = ({ post, id, cookies, isEditable, triggerEditable, deletePostMu
                 (cookies.userCookie !== undefined && cookies.userCookie.id === post.author_id) ?
                 [
                     <EditOutlined key="edit" onClick={() => triggerEditable(!isEditable)}/>,
-                    <DeleteOutlined onClick={() => showConfirmDelete(post, cookies, id, deletePostMutation, localStorage, history)} />,
-                    <UnlockOutlined onClick={() => showConfirmLock(post, cookies, id, lockPostMutation, localStorage)} />
+                    <DeleteOutlined onClick={() => showConfirmDelete(post, cookies, id, deletePostMutation, refetch, history)} />,
+                    <UnlockOutlined onClick={() => showConfirmLock(post, cookies, id, lockPostMutation, refetch)} />
                 ]
                 : 
                 null

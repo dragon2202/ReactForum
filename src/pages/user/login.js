@@ -63,7 +63,6 @@ export default function Login() {
             <main className="login">
                 <Form name="normal_login" className="login-form" onFinish={onFinish}>
                     <h3 style={{textAlign:"center"}}><b>User Login</b></h3>
-                    <h3 style={{textAlign:"center"}}>Note: Password Recovery and Reset is not supported</h3>
                     <Form.Item name="email">
                         <Input prefix={<MailOutlined className="site-form-item-icon" />} placeholder="Email" type="email"/>
                     </Form.Item>
