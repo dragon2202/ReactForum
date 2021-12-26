@@ -8,6 +8,7 @@ import EditOutlined from '@ant-design/icons/EditOutlined'
 import DeleteOutlined from '@ant-design/icons/DeleteOutlined'
 import UnlockOutlined from '@ant-design/icons/UnlockOutlined'
 import InfoCircleOutlined from '@ant-design/icons/InfoCircleOutlined'
+import Message from 'antd/lib/message'
 import moment from 'moment'
 
 import { showConfirmDelete, showConfirmLock, contentSwitch } from './components/functions'
@@ -40,13 +41,33 @@ const ShowPost = ({ post, id, cookies, isEditable, triggerEditable, deletePostMu
             }
             actions={
                 (cookies.userCookie !== undefined && cookies.userCookie.id === post.author_id) ?
-                [
-                    <EditOutlined key="edit" onClick={() => triggerEditable(!isEditable)}/>,
-                    <DeleteOutlined onClick={() => showConfirmDelete(post, cookies, id, deletePostMutation, refetch, history)} />,
-                    <UnlockOutlined onClick={() => showConfirmLock(post, cookies, id, lockPostMutation, refetch)} />
-                ]
-                : 
-                null
+                    (post.active === -1) ?
+                    [
+                        <EditOutlined key="edit" onClick={() => 
+                            Message.warning({
+                                content: 'Post is locked. You cannot edit at this time.',
+                                style: {
+                                    marginTop: '5vh',
+                                },
+                            }, 10)} 
+                        />,
+                        <DeleteOutlined onClick={() => 
+                            Message.warning({
+                                content: 'Post is locked. You cannot edit at this time.',
+                                style: {
+                                    marginTop: '5vh',
+                                },
+                            }, 10)}  />,
+                        <UnlockOutlined onClick={() => showConfirmLock(post, cookies, id, lockPostMutation, refetch)} />
+                    ]
+                    :
+                    [
+                        <EditOutlined key="edit" onClick={() => triggerEditable(!isEditable)} />,
+                        <DeleteOutlined onClick={() => showConfirmDelete(post, cookies, id, deletePostMutation, refetch, history)} />,
+                        <UnlockOutlined onClick={() => showConfirmLock(post, cookies, id, lockPostMutation, refetch)} />
+                    ]
+                    :
+                    null
             }
         >
             <div className="clear"> </div>

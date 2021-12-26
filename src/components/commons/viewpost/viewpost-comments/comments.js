@@ -7,6 +7,7 @@ import Form from 'antd/lib/form'
 import Button from 'antd/lib/button'
 import Input from 'antd/lib/input'
 import Modal from 'antd/lib/modal'
+import Message from 'antd/lib/message'
 
 import moment from 'moment'
 
@@ -16,7 +17,7 @@ import { useCookies } from 'react-cookie'
 const { TextArea } = Input
 const { confirm } = Modal
 
-const Comments = ({ commentsObj }) => {
+const Comments = ({ commentsObj, refetch, active }) => {
   const parentComments = commentsObj.filter(pc => pc.parent_comment_id === null)
   const [display, setDisplay] = useState('')
   const [editDisplay, setEditDisplay] = useState('')
@@ -36,12 +37,23 @@ const Comments = ({ commentsObj }) => {
     }
   })
 
+  useEffect(() => {
+    if (myStorage.getItem('reload') !== null) {
+      Message.success({
+        content: 'Comment has been deleted',
+        style: {
+          marginTop: '5vh',
+        },
+      }, 10)
+      myStorage.clear()
+    }
+  }, [])
 
   useEffect(async () => {
     if (familyComment !== null) {
       if (familyComment.child.length === 0) {
         //Has Child
-        myStorage.setItem('reload', 2)
+        myStorage.setItem('reload', 1)
         await deleteMutation({
           variables: {
             comment: {
@@ -69,7 +81,7 @@ const Comments = ({ commentsObj }) => {
           window.location.reload()
         }
       } else {
-        myStorage.setItem('reload', 2)
+        myStorage.setItem('reload', 1)
         await deleteParentMutation({
           variables: {
             comment: {
@@ -98,39 +110,38 @@ const Comments = ({ commentsObj }) => {
   }
   //Handles submit for Parent Comments
   async function handleSubmit(text, parentID) {
-    myStorage.setItem('reload', 1)
     const comment = {
       post_id: parseInt(id),
       author_id: cookies.userCookie.id,
       parent_comment_id: parentID,
       comment: text
     }
-    await mutation(
-      {
-        variables: {
-          comment
-        }
-      }
-    )
-    window.location.reload()
+    await mutation({ variables: { comment } })
+
+    Message.success({
+      content: 'Comment has been created',
+      style: {
+        marginTop: '5vh',
+      },
+    }, 10)
+    refetch()
   }
 
   //Handles submit for edit comments
   async function handleEditSubmit(text, passedID) {
-    myStorage.setItem('reload', 3)
     const comment = {
       id: parseInt(passedID),
       comment: text,
       updated_at: moment(new Date()).format("YYYY-MM-DD HH:mm:ss").toString()
     }
-    await editMutation(
-      {
-        variables: {
-          comment
-        }
-      }
-    )
-    window.location.reload()
+    await editMutation({ variables: { comment } })
+    Message.success({
+      content: 'Comment has been sucessfully edited.',
+      style: {
+        marginTop: '5vh',
+      },
+    }, 10)
+    refetch()
   }
 
   //Handles submit for Parent Comments
@@ -145,23 +156,29 @@ const Comments = ({ commentsObj }) => {
   //Maps All Parent Comments from database
   return parentComments.map(cObj => (
     <Comment
-      actions={[(cookies.userCookie != undefined ?
-        <div>
-          <span style={{ cursor: 'pointer' }} key={"comment-list-reply-to-" + cObj.id.toString()} onClick={() => { setDisplay(display === cObj.id ? '' : cObj.id) }}>
-            Reply
-          </span>
-          {(cookies.userCookie.id == cObj.author_id) ?
-            <span>
-              <span style={{ marginLeft: "5px", cursor: 'pointer' }} key={"comment-list-edit-" + cObj.id.toString()} onClick={() => { setEditDisplay(editDisplay === cObj.id ? '' : cObj.id) }}>
-                Edit
+      actions={[
+        (cookies.userCookie !== undefined) ?
+          (active === 1) ?
+            <div>
+              <span style={{ cursor: 'pointer' }} key={"comment-list-reply-to-" + cObj.id.toString()} onClick={() => { setDisplay(display === cObj.id ? '' : cObj.id) }}>
+                Reply
               </span>
-              <span style={{ marginLeft: "5px", cursor: 'pointer' }} key={"comment-list-delete-" + cObj.id.toString()} onClick={() => { showConfirm(cObj.id) }}>
-                Delete
-              </span>
-            </span> : null
-          }
-        </div> :
-        <span>Login to reply</span>)]}
+              {(cookies.userCookie.id == cObj.author_id) ?
+                <span>
+                  <span style={{ marginLeft: "5px", cursor: 'pointer' }} key={"comment-list-edit-" + cObj.id.toString()} onClick={() => { setEditDisplay(editDisplay === cObj.id ? '' : cObj.id) }}>
+                    Edit
+                  </span>
+                  <span style={{ marginLeft: "5px", cursor: 'pointer' }} key={"comment-list-delete-" + cObj.id.toString()} onClick={() => { showConfirm(cObj.id) }}>
+                    Delete
+                  </span>
+                </span> : null
+              }
+            </div>
+            :
+            <span>Post has been locked. It cannot be changed at this time.</span>
+          :
+          <span>Login to reply</span>
+      ]}
       key={cObj.id}
       author={cObj.user.username}
       datetime={moment(parseInt(cObj.updated_at)).format('MMMM Do YYYY, h:mm:ss a')}
@@ -172,36 +189,42 @@ const Comments = ({ commentsObj }) => {
       }
     >
       <Editor display={display === cObj.id ? true : false} EditorKey={cObj.id} onChange={(e) => handleChange(e)} onSubmit={() => handleSubmit(value, cObj.id)} value={value} defaultValue={""} />
-      <ChildComments commentsObj={commentsObj} parentID={cObj.id} handleChange={handleChange} handleSubmit={handleSubmit} handleEditSubmit={handleEditSubmit} showConfirm={showConfirm} value={value} cookies={cookies} />
+      <ChildComments commentsObj={commentsObj} parentID={cObj.id} handleChange={handleChange} handleSubmit={handleSubmit} handleEditSubmit={handleEditSubmit} showConfirm={showConfirm} value={value} cookies={cookies} active={active} />
     </Comment>
   ))
 }
 
 //Maps all Child Comments from Parent. This all recursive calls to map children of the child comments
-const ChildComments = ({ commentsObj, parentID, handleChange, handleSubmit, handleEditSubmit, showConfirm, value, cookies }) => {
+const ChildComments = ({ commentsObj, parentID, handleChange, handleSubmit, handleEditSubmit, showConfirm, value, cookies, active }) => {
   const [display, setDisplay] = useState('')
   const [editDisplay, setEditDisplay] = useState('')
   const childComments = commentsObj.filter(cc => cc.parent_comment_id === parentID)
 
   return childComments.map(cObj => (
     <Comment
-      actions={[(cookies.userCookie != undefined ?
-        <div>
-          <span style={{ cursor: 'pointer' }} key={"comment-list-reply-to-" + cObj.id.toString()} onClick={() => { setDisplay(display === cObj.id ? '' : cObj.id) }}>
-            Reply
-          </span>
-          {(cookies.userCookie.id == cObj.author_id) ?
-            <span>
-              <span style={{ marginLeft: "5px", cursor: 'pointer' }} key={"comment-list-edit-" + cObj.id.toString()} onClick={() => { setEditDisplay(editDisplay === cObj.id ? '' : cObj.id) }}>
-                Edit
+      actions={[
+        (cookies.userCookie !== undefined) ?
+          (active === 1) ?
+            <div>
+              <span style={{ cursor: 'pointer' }} key={"comment-list-reply-to-" + cObj.id.toString()} onClick={() => { setDisplay(display === cObj.id ? '' : cObj.id) }}>
+                Reply
               </span>
-              <span style={{ marginLeft: "5px", cursor: 'pointer' }} key={"comment-list-delete-" + cObj.id.toString()} onClick={() => { showConfirm(cObj.id) }}>
-                Delete
-              </span>
-            </span> : null
-          }
-        </div> :
-        <span>Login to reply</span>)]}
+              {(cookies.userCookie.id == cObj.author_id) ?
+                <span>
+                  <span style={{ marginLeft: "5px", cursor: 'pointer' }} key={"comment-list-edit-" + cObj.id.toString()} onClick={() => { setEditDisplay(editDisplay === cObj.id ? '' : cObj.id) }}>
+                    Edit
+                  </span>
+                  <span style={{ marginLeft: "5px", cursor: 'pointer' }} key={"comment-list-delete-" + cObj.id.toString()} onClick={() => { showConfirm(cObj.id) }}>
+                    Delete
+                  </span>
+                </span> : null
+              }
+            </div>
+            :
+            <span>Post has been locked. It cannot be changed at this time.</span>
+          :
+          <span>Login to reply</span>
+      ]}
       key={cObj.id}
       author={cObj.user.username}
       datetime={moment(parseInt(cObj.updated_at)).format('MMMM Do YYYY, h:mm:ss a')}
@@ -212,7 +235,7 @@ const ChildComments = ({ commentsObj, parentID, handleChange, handleSubmit, hand
       }
     >
       <Editor display={display === cObj.id ? true : false} EditorKey={cObj.id} onChange={(e) => handleChange(e)} onSubmit={() => handleSubmit(value, cObj.id)} value={value} defaultValue={""} />
-      <ChildComments commentsObj={commentsObj} parentID={cObj.id} handleChange={handleChange} handleSubmit={handleSubmit} handleEditSubmit={handleEditSubmit} showConfirm={showConfirm} value={value} cookies={cookies} />
+      <ChildComments commentsObj={commentsObj} parentID={cObj.id} handleChange={handleChange} handleSubmit={handleSubmit} handleEditSubmit={handleEditSubmit} showConfirm={showConfirm} value={value} cookies={cookies} active={active} />
     </Comment>
   ))
 

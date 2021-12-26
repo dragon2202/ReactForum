@@ -7,6 +7,7 @@ import Button from 'antd/lib/button'
 import Form from 'antd/lib/form'
 import Typography from 'antd/lib/typography'
 import Tooltip from 'antd/lib/tooltip'
+import Message from 'antd/lib/message'
 
 import EditOutlined from '@ant-design/icons/EditOutlined'
 import DeleteOutlined from '@ant-design/icons/DeleteOutlined'
@@ -42,7 +43,6 @@ const Header = ({ item }) => {
 const EditPost = ({ post, id, post_type, cookies, isEditable, triggerEditable, deletePostMutation, lockPostMutation, update_post_mutation, refetch, history }) => {
     const [images, setImages] = useState([])
     const onFinish = (values) => {
-        console.log(values)
         EditPost_OnFinish(post, values, images, update_post_mutation, refetch)
     }
     const ContentDisplay = ({ post_type }) => {
@@ -106,10 +106,10 @@ const EditPost = ({ post, id, post_type, cookies, isEditable, triggerEditable, d
                         </div>
                         <div className="edit-post_image">
                             <h2 className='header2'>Change Current Image</h2>
-                            <Form 
-                                name="edit_post" 
-                                initialValues={{ 
-                                    ["title"]: post.title 
+                            <Form
+                                name="edit_post"
+                                initialValues={{
+                                    ["title"]: post.title
                                 }}
                                 onFinish={onFinish}
                                 layout="vertical"
@@ -118,8 +118,8 @@ const EditPost = ({ post, id, post_type, cookies, isEditable, triggerEditable, d
                                 <Form.Item name="title" className="edit-post_image_title" label="Title">
                                     <Input />
                                 </Form.Item>
-                                <Form.Item name="image"className="edit-post_image_image">
-                                    <ImageUploadingComponent imageState={images} setImageState={setImages}/>
+                                <Form.Item name="image" className="edit-post_image_image">
+                                    <ImageUploadingComponent imageState={images} setImageState={setImages} />
                                 </Form.Item>
                                 <Form.Item>
                                     <Button type="primary" htmlType="submit">Submit</Button>
@@ -133,14 +133,34 @@ const EditPost = ({ post, id, post_type, cookies, isEditable, triggerEditable, d
 
     return (
         <Card
-            title={<Header item={post}/>}
+            title={<Header item={post} />}
             className="viewpost-editcard"
             actions={
                 (cookies.userCookie !== undefined && cookies.userCookie.id === post.author_id) ?
+                    (post.active === -1) ?
+                    [
+                        <EditOutlined key="edit" onClick={() => 
+                            Message.warning({
+                                content: 'Post is locked. You cannot edit at this time.',
+                                style: {
+                                    marginTop: '5vh',
+                                },
+                            }, 10)} 
+                        />,
+                        <DeleteOutlined onClick={() => 
+                            Message.warning({
+                                content: 'Post is locked. You cannot edit at this time.',
+                                style: {
+                                    marginTop: '5vh',
+                                },
+                            }, 10)}  />,
+                        <UnlockOutlined onClick={() => showConfirmLock(post, cookies, id, lockPostMutation, refetch)} />
+                    ]
+                    :
                     [
                         <EditOutlined key="edit" onClick={() => triggerEditable(!isEditable)} />,
                         <DeleteOutlined onClick={() => showConfirmDelete(post, cookies, id, deletePostMutation, refetch, history)} />,
-                        <UnlockOutlined onClick={() => showConfirmLock(post, cookies, id, lockPostMutation, refetch)}/>
+                        <UnlockOutlined onClick={() => showConfirmLock(post, cookies, id, lockPostMutation, refetch)} />
                     ]
                     :
                     null

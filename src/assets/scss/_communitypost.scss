@@ -11,7 +11,7 @@
         .nested-section {
             width: 640px;
             .create-post-nav {
-                margin-bottom: 30px;
+                margin-bottom: 20px;
                 .MenuItemPost {
                     width: 70%;
                 }
@@ -68,12 +68,36 @@
     }
 }
 
+@media screen and (max-width: 500px) {
+    .communitypost {
+        .masonry-card-grid {
+            .nested-section {
+                min-width: 300px;
+                overflow:hidden;
+                .create-post-nav {
+                    min-width: 300px;
+                    overflow:hidden;
+                    margin-bottom: 10px;
+                }
+            }
+            
+            .community-card {
+                display: none;
+            }
+        }
+    }
+}
+
 @media screen and (max-width: 1000px) {
     .communitypost {
         .masonry-card-grid {
             .nested-section {
+                min-width: 400px;
+                overflow:hidden;
                 .create-post-nav {
-                    display: none;
+                    min-width: 400px;
+                    overflow:hidden;
+                    margin-bottom: 10px;
                 }
             }
             .about-card {

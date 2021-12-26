@@ -131,6 +131,7 @@ export const GET_POST_COMMENTS = gql`
             updated_at
             created_at
             community_id
+            active
             community {
                 id
                 title

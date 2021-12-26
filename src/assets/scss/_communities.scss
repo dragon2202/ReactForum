@@ -53,3 +53,17 @@
     }
 
 }
+
+@media screen and (max-width: 900px) {
+    .communities {
+        padding: 40px;
+        padding-top: 80px;
+        .nested-section {
+            width: 100%;
+            .description-directory {
+                display: none;
+            }
+        }
+    
+    }
+}

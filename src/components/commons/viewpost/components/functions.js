@@ -4,20 +4,20 @@ import Modal from 'antd/lib/modal'
 
 const { confirm } = Modal
 //Confirm Modal For deleting posts
-export function showConfirmDelete(passedPost, cookies, id, deletePostMutation, history) {
+export function showConfirmDelete(passedPost, cookies, id, deletePostMutation, refetch, history) {
     confirm({
         title: 'Delete Post',
         content: "Note: Deleting posts with commments will make it inactive, making the post still accessible. Posts without comments will be removed forever.",
         icon: null,
         onOk() {
-            deleteOnFinish(passedPost, cookies, id, deletePostMutation, history)
+            deleteOnFinish(passedPost, cookies, id, deletePostMutation, refetch, history)
         },
         width: '125vh'
     })
 }
 
 //function to call usemutation to delete post
-async function deleteOnFinish(passedPost, cookies, id, deletePostMutation, history) {
+async function deleteOnFinish(passedPost, cookies, id, deletePostMutation, refetch, history) {
     if (cookies.userCookie.id == passedPost.author_id) {
         const post = {
             id: parseInt(id),
@@ -36,7 +36,8 @@ async function deleteOnFinish(passedPost, cookies, id, deletePostMutation, histo
                 marginTop: '5vh',
             },
         }, 10)
-        history.push('/')
+        refetch()
+        history.push("/")
     } else {
         Message.error({
             content: 'This action cannot be completed as you are not the author',
@@ -68,6 +69,12 @@ async function lockOnFinish(passedPost, cookies, id, lockPostMutation, refetch) 
             active: passedPost.active
         }
         await lockPostMutation( { variables: { post } } )
+        Message.success({
+            content: (passedPost.active === -1) ? 'Post has been unlocked.' : 'Post has been locked. Editing has been restricted.',
+            style: {
+                marginTop: '5vh',
+            },
+        }, 10)
         refetch()
     } else {
         Message.error({
@@ -98,7 +105,7 @@ export function contentSwitch(item) {
     }
 }
  //function to call usemutation to create post
-export async function comment_onFinish(refetch, id, cookies, value, createCommentMutation) {
+export async function comment_onFinish(refetch, id, cookies, value, createCommentMutation, commentForm) {
     const comment = {
         post_id: parseInt(id),
         author_id: cookies.userCookie.id,
@@ -108,7 +115,14 @@ export async function comment_onFinish(refetch, id, cookies, value, createCommen
     await createCommentMutation({
         variables: { comment }
     })
+    Message.success({
+        content: 'You have successfully commented.',
+        style: {
+            marginTop: '5vh',
+        }
+    }, 10)
     refetch()
+    commentForm.resetFields()
 }
 
 export async function EditPost_OnFinish(passedPost, formValues, images, mutation, refetch) {
@@ -124,6 +138,12 @@ export async function EditPost_OnFinish(passedPost, formValues, images, mutation
             }
             try {
                 await mutation({ variables: { post } })
+                Message.success({
+                    content: 'You have successfully edited your post.',
+                    style: {
+                        marginTop: '5vh',
+                    }
+                }, 10)
                 refetch()
             } catch (error) {
                 Message.error({
@@ -144,7 +164,12 @@ export async function EditPost_OnFinish(passedPost, formValues, images, mutation
             }
             try {
                 await mutation({ variables: { post } })
-                
+                Message.success({
+                    content: 'You have successfully edited your image.',
+                    style: {
+                        marginTop: '5vh',
+                    }
+                }, 10)
                 refetch()
             } catch (error) {
                 Message.error({
@@ -163,11 +188,10 @@ export async function EditPost_OnFinish(passedPost, formValues, images, mutation
                 text: formValues.link,
                 updated_at: moment(new Date()).format("YYYY-MM-DD HH:mm:ss").toString()
             }
-            console.log(post)
             try {
                 await mutation({ variables: { post } })
                 Message.success({
-                    content: 'Link has been successfully updated. ',
+                    content: 'You have successfully edited your link.',
                     style: {
                         marginTop: '5vh',
                     }

@@ -27,6 +27,7 @@ const { TextArea } = Input
 export default function ViewPost() {
     let history = useHistory()
     let { id } = useParams()
+    const [commentForm] = Form.useForm()
     let [query, refetch] = GetGraphqlQueryID_Refetch(id, GET_POST_COMMENTS)
     const [value, setValue] = useState('')
     const [editPostToggle, setEditPostToggle] = useState(false)
@@ -72,6 +73,7 @@ export default function ViewPost() {
                     triggerEditable={setEditPostToggle}
                     deletePostMutation={deletePostMutation}
                     lockPostMutation={lockPostMutation}
+                    refetch={refetch}
                     history={history}
                 />
             )
@@ -86,23 +88,28 @@ export default function ViewPost() {
                     <PostEditable toggle={editPostToggle} />
                     <div className="CommentDisplay">
                         <Card title={`${query.post.comment.length} ${query.post.comment.length > 1 ? 'comments' : 'comment'}`}>
-                            {(cookies.userCookie !== undefined ?
+                            {(cookies.userCookie !== undefined) ?
+                                (query.post.active === 1) ?
+                                    <Card className={"CommentForm"}>
+                                        <Form key={0} form={commentForm}>
+                                            <Form.Item >
+                                                <TextArea className="editor" rows={4} onChange={(e) => setValue(e.target.value)} />
+                                            </Form.Item>
+                                            <Form.Item>
+                                                <Button htmlType="submit" type="primary" onClick={() => comment_onFinish(refetch, id, cookies, value, createCommentMutation, commentForm)}>
+                                                    Add Comment
+                                                </Button>
+                                            </Form.Item>
+                                        </Form>
+                                    </Card>
+                                :
                                 <Card className={"CommentForm"}>
-                                    <Form key={0}>
-                                        <Form.Item >
-                                            <TextArea className="editor" rows={4} onChange={(e) => setValue(e.target.value)} />
-                                        </Form.Item>
-                                        <Form.Item>
-                                            <Button htmlType="submit" type="primary" onClick={() => comment_onFinish(localStorage, id, cookies, value, createCommentMutation)}>
-                                                Add Comment
-                                            </Button>
-                                        </Form.Item>
-                                    </Form>
+                                    Post has been locked. Comments cannot be created, and edited at this time.
                                 </Card>
                                 :
                                 <LoginOrRegister />
-                            )}
-                            <Comments commentsObj={query.post.comment}/>
+                            }
+                            <Comments commentsObj={query.post.comment} refetch={refetch} active={query.post.active}/>
                         </Card>
                     </div>
                 </div>

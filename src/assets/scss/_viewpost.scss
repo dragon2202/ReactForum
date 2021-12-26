@@ -114,3 +114,15 @@
     }
 
 }
+
+@media screen and (max-width: 900px) {
+    .viewpost {
+        .Post_Comment_Community {
+            min-width: 400px;
+            overflow:hidden;
+            .community_directory{
+                display: none;
+            }
+        }
+    }
+}
