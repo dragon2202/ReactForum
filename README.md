@@ -26,33 +26,44 @@ I respond to emails within a day or so, so feel free to ask me any questions. Sp
 ### Home Page
 It displays the most recent post from the entire website.
 <img src="/screenshots/home.png" width="100%">
+
 ### Community
 This page is for groups to hang out and post content for their community
 <img src="/screenshots/community.png" width="100%">
+
 ### Community Home
 Lists of all communities
 <img src="/screenshots/communities_page.png" width="100%">
+
 ### Create Post
 Page to create post whether its a text, link, or an image to a selected community
 <img src="/screenshots/createpost.png" width="100%">
+
 ### Send Message
 Page to send a message, to anyone within the community. You can also send to multpile people.
 <img src="/screenshots/sendmessage.png" width="100%">
+
 ### Inbox
 Page to view and respond to messages
 <img src="/screenshots/inbox.png" width="100%">
+
 ### View Account
 Page to view another person's profile, what they posted, commented
+
 ### View Account Overview
 Shows both comments and posts by date
 <img src="/screenshots/view_account_overview.png" width="100%">
+
 ### View Account Post
 <img src="/screenshots/view_account_post.png" width="100%">
-### View Account Comments
+
+### View Account Comment
 <img src="/screenshots/view_account_comments.png " width="100%">
-### Personal Account
+
+### Account
 Shows all the posts from all communities you are a part of. It also shows you all the posts you have posted. A one stop shop to see your activity
 <img src="/screenshots/personalaccount.png " width="100%">
+
 ### Account Settings
 Page to change password/add a personal security question(s), and change username/email
 <img src="/screenshots/accountsettings.png " width="100%">
