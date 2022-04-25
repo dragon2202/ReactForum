@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { useMutation } from '@apollo/react-hooks'
 import { useParams } from 'react-router'
 import { useHistory, Link } from 'react-router-dom'
@@ -16,9 +16,8 @@ import Directory from '../components/commons/navigation/directory'
 import LoginOrRegister from '../components/commons/LoginOrRegister/login-or-register'
 
 import { isLiteralObject } from '../components/commons/functions/isLiteralObject'
-import { reloadMessage } from '../components/commons/viewpost/components/reloadMessage'
 import { comment_onFinish } from '../components/commons/viewpost/components/functions'
-import { GetGraphqlQueryID, GetGraphqlQueryID_Refetch } from '../components/commons/functions/getgraphqlquery'
+import { GetGraphqlQueryID_Refetch } from '../components/commons/functions/getgraphqlquery'
 import { GET_POST_COMMENTS, CREATE_COMMENT, DELETE_POST, LOCK_POST, UPDATE_POST } from '../queries/posts'
 import { useCookies } from 'react-cookie'
 
@@ -41,7 +40,7 @@ export default function ViewPost() {
     if (!isLiteralObject(query)) {
         return (
             <main className="viewpost">
-                <p style={{ textAlign: 'center', paddingTop: '80px' }}>Loading...</p>
+                <p style={{ textAlign: 'center', paddingTop: '80px' }}>No Post Found.</p>
             </main>
         )
     }
@@ -74,7 +73,6 @@ export default function ViewPost() {
                     deletePostMutation={deletePostMutation}
                     lockPostMutation={lockPostMutation}
                     refetch={refetch}
-                    history={history}
                 />
             )
         }
@@ -93,10 +91,10 @@ export default function ViewPost() {
                                     <Card className={"CommentForm"}>
                                         <Form key={0} form={commentForm}>
                                             <Form.Item >
-                                                <TextArea className="editor" rows={4} onChange={(e) => setValue(e.target.value)} />
+                                                <TextArea className="editor" rows={4} onChange={(e) => setValue(e.target.value)} value={value}/>
                                             </Form.Item>
                                             <Form.Item>
-                                                <Button htmlType="submit" type="primary" onClick={() => comment_onFinish(refetch, id, cookies, value, createCommentMutation, commentForm)}>
+                                                <Button htmlType="submit" type="primary" onClick={() => comment_onFinish(refetch, id, cookies, value, setValue, createCommentMutation, commentForm)}>
                                                     Add Comment
                                                 </Button>
                                             </Form.Item>
@@ -115,7 +113,7 @@ export default function ViewPost() {
                 </div>
                 <div className='community_directory'>
                     <Card>
-                        <div className='title'><Link to={'/community/' + query.post.community.id}>{query.post.community.title}</Link></div>
+                        <div className='title'><a onClick={() => {window.location.href="/community/" + query.post.community.id}}>{query.post.community.title}</a></div>
                         {query.post.community.summary}
                     </Card>
                     <Directory />

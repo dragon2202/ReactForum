@@ -116,8 +116,8 @@ const Comments = ({ commentsObj, refetch, active }) => {
       parent_comment_id: parentID,
       comment: text
     }
+    setDisplay("")
     await mutation({ variables: { comment } })
-
     Message.success({
       content: 'Comment has been created',
       style: {
@@ -134,6 +134,7 @@ const Comments = ({ commentsObj, refetch, active }) => {
       comment: text,
       updated_at: moment(new Date()).format("YYYY-MM-DD HH:mm:ss").toString()
     }
+    setDisplay("")
     await editMutation({ variables: { comment } })
     Message.success({
       content: 'Comment has been sucessfully edited.',
@@ -185,7 +186,7 @@ const Comments = ({ commentsObj, refetch, active }) => {
       content={(editDisplay === cObj.id) ?
         <Editor display={editDisplay === cObj.id ? true : false} EditorKey={cObj.id} onChange={(e) => handleChange(e)} onSubmit={() => handleEditSubmit(value, cObj.id)} defaultValue={cObj.comment} />
         :
-        (cObj.comment == null) ? <p style={{ fontWeight: 'bold' }}>This post is unavailable or deleted</p> : <p>{cObj.comment}</p>
+        (cObj.comment === null) ? <p style={{ fontWeight: 'bold' }}>This post is unavailable or deleted</p> : <p>{cObj.comment}</p>
       }
     >
       <Editor display={display === cObj.id ? true : false} EditorKey={cObj.id} onChange={(e) => handleChange(e)} onSubmit={() => handleSubmit(value, cObj.id)} value={value} defaultValue={""} />

@@ -4,40 +4,34 @@ import Modal from 'antd/lib/modal'
 
 const { confirm } = Modal
 //Confirm Modal For deleting posts
-export function showConfirmDelete(passedPost, cookies, id, deletePostMutation, refetch, history) {
+export function showConfirmDelete(passedPost, cookies, id, deletePostMutation) {
     confirm({
         title: 'Delete Post',
         content: "Note: Deleting posts with commments will make it inactive, making the post still accessible. Posts without comments will be removed forever.",
         icon: null,
         onOk() {
-            deleteOnFinish(passedPost, cookies, id, deletePostMutation, refetch, history)
+            deleteOnFinish(passedPost, cookies, id, deletePostMutation)
         },
         width: '125vh'
     })
 }
 
 //function to call usemutation to delete post
-async function deleteOnFinish(passedPost, cookies, id, deletePostMutation, refetch, history) {
+async function deleteOnFinish(passedPost, cookies, id, deletePostMutation,) {
     if (cookies.userCookie.id == passedPost.author_id) {
         const post = {
             id: parseInt(id),
             commentLength: passedPost.comment.length
         }
-        await deletePostMutation(
-            {
-                variables: {
-                    post
-                }
-            }
-        )
+        await deletePostMutation({ variables: { post } })
         Message.success({
             content: 'You have successfully deleted a post',
             style: {
                 marginTop: '5vh',
             },
         }, 10)
-        refetch()
-        history.push("/")
+        //Would refresh over history push.
+        window.location.href = '/'
     } else {
         Message.error({
             content: 'This action cannot be completed as you are not the author',
@@ -105,24 +99,22 @@ export function contentSwitch(item) {
     }
 }
  //function to call usemutation to create post
-export async function comment_onFinish(refetch, id, cookies, value, createCommentMutation, commentForm) {
+export async function comment_onFinish(refetch, id, cookies, value, setValue, createCommentMutation, commentForm) {
     const comment = {
         post_id: parseInt(id),
         author_id: cookies.userCookie.id,
         parent_comment_id: null,
         comment: value
     }
-    await createCommentMutation({
-        variables: { comment }
-    })
+    await createCommentMutation({ variables: { comment } })
+    refetch()
     Message.success({
         content: 'You have successfully commented.',
         style: {
             marginTop: '5vh',
         }
     }, 10)
-    refetch()
-    commentForm.resetFields()
+    setValue("")
 }
 
 export async function EditPost_OnFinish(passedPost, formValues, images, mutation, refetch) {

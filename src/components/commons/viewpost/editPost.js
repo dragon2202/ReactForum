@@ -40,7 +40,7 @@ const Header = ({ item }) => {
     )
 }
 
-const EditPost = ({ post, id, post_type, cookies, isEditable, triggerEditable, deletePostMutation, lockPostMutation, update_post_mutation, refetch, history }) => {
+const EditPost = ({ post, id, post_type, cookies, isEditable, triggerEditable, deletePostMutation, lockPostMutation, update_post_mutation, refetch }) => {
     const [images, setImages] = useState([])
     const onFinish = (values) => {
         EditPost_OnFinish(post, values, images, update_post_mutation, refetch)
@@ -159,7 +159,7 @@ const EditPost = ({ post, id, post_type, cookies, isEditable, triggerEditable, d
                     :
                     [
                         <EditOutlined key="edit" onClick={() => triggerEditable(!isEditable)} />,
-                        <DeleteOutlined onClick={() => showConfirmDelete(post, cookies, id, deletePostMutation, refetch, history)} />,
+                        <DeleteOutlined onClick={() => showConfirmDelete(post, cookies, id, deletePostMutation)} />,
                         <UnlockOutlined onClick={() => showConfirmLock(post, cookies, id, lockPostMutation, refetch)} />
                     ]
                     :

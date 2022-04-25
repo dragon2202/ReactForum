@@ -20,14 +20,8 @@ const AboutCommunity = ({ query, pageID, userID, JoinCommunity, joinMutation, Le
             content: 'Are you sure you want to join this community?',
             okText: 'Confirm',
             onOk() {
-                JoinCommunity(pageID, userID, joinMutation)
-                Message.success({
-                    content: 'You have successfully joined ' + query.title,
-                    style: {
-                        marginTop: '5vh',
-                    },
-                }, 10)
-                refetch()
+                JoinCommunity(pageID, userID, joinMutation, refetch)
+                Message.success({ content: 'You have successfully joined this community', style: { marginTop: '5vh' } }, 10)
             },
             width: '125vh'
         })
@@ -38,14 +32,8 @@ const AboutCommunity = ({ query, pageID, userID, JoinCommunity, joinMutation, Le
             content: 'Are you sure you want to leave this community?',
             okText: 'Confirm',
             onOk() {
-                LeaveCommunity(communityuserrole, leaveMutation)
-                Message.success({
-                    content: 'You have successfully left ' + query.title,
-                    style: {
-                        marginTop: '5vh',
-                    },
-                }, 10)
-                refetch()
+                LeaveCommunity(communityuserrole, leaveMutation, refetch)
+                Message.success({ content: 'You have successfully left this community', style: { marginTop: '5vh' } }, 10)
             },
             width: '125vh'
         })

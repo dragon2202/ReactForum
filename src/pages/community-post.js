@@ -1,10 +1,11 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import { useMutation } from '@apollo/react-hooks'
 
 import About from '../components/commons/community-post/community-post_about'
 import CreatePostNav from '../components/commons/navigation/create-post-nav'
 import CommunityPost_Post from '../components/commons/community-post/community-post_post'
+import Directory from '../components/commons/navigation/directory'
 
 import { isLiteralObject } from '../components/commons/functions/isLiteralObject'
 import { GetGraphqlQueryID_Refetch } from '../components/commons/functions/getgraphqlquery'
@@ -34,7 +35,7 @@ export default function CommunityPost() {
         <main className="communitypost">
             <section className="container">
                 <div className="row">
-                    <h3 className="page-title"><b>{query.community.title}</b></h3>
+                    <h2 className="page-title"><b>{query.community.title}</b></h2>
                     <div className="masonry-card-grid">
                         <div className="nested-section">
                             <section className="create-post-nav">
@@ -55,6 +56,7 @@ export default function CommunityPost() {
                                 leaveMutation={removeUser_CommunityUserRole}
                                 refetch={refetch}
                             />
+                            <Directory />
                         </div>
                     </div>
                 </div>

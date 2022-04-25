@@ -60,7 +60,7 @@ export default function Navigation() {
                     {
                         navLink.map((link, index) => (
                             <li key={index}>
-                                <Link to={link.path}>{link.title}</Link>
+                                <a onClick={() => {window.location.href=link.path}}>{link.title}</a>
                             </li>
                         ))
                     }
@@ -81,7 +81,7 @@ export default function Navigation() {
                         ) : (
                             <Menu>
                                 <Menu.Item key="0">
-                                    <Link to={ '/account' }>Account</Link>
+                                    <Link to='/account'>Account</Link>
                                 </Menu.Item>
                                 <Menu.Item key="1" onClick={() => {
                                     set('userCookie', { path: '/', sameSite:'lax',secure: true })//Sets current user cookie to null

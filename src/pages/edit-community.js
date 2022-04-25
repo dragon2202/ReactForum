@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useMutation } from '@apollo/react-hooks'
-import { useParams, Redirect } from 'react-router-dom'
+import { useParams, Redirect, Link } from 'react-router-dom'
 
 import Tabs from 'antd/lib/tabs'
 import Card from 'antd/lib/card'
@@ -68,11 +68,12 @@ export default function EditCommunity() {
 
     return (
         <main className="editcommunity">
-            <h3>Edit Community</h3>
+            <Link to={'/community/' + id}>Back to Community</Link>
+            <h3 className="header">Edit Community</h3>
             <Card className="card-tab">
                 <Tabs type="card" className="tab" defaultActiveKey={currentTab}>
                     <TabPane tab="Edit Users in Community" key="1">
-                        <Search className="search-bar" placeholder="Search Users" onChange={handleChange} className='search-bar'/>
+                        <Search className="search-bar" placeholder="Search Users" onChange={handleChange}/>
                         <List
                             itemLayout="vertical"
                             size="large"

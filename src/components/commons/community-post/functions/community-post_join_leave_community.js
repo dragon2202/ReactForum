@@ -1,4 +1,4 @@
-export async function JoinCommunity(pageID, userID, mutation) {//Inputs users into a community with a role of 3 which is base user
+export async function JoinCommunity(pageID, userID, mutation, refetch) {//Inputs users into a community with a role of 3 which is base user
     const communityuserrole = {
         community_id: parseInt(pageID),
         user_id: userID,
@@ -9,9 +9,10 @@ export async function JoinCommunity(pageID, userID, mutation) {//Inputs users in
             communityuserrole
         }
     })
+    refetch()
 }
 
-export async function LeaveCommunity(obj, mutation) {//Remove users from community
+export async function LeaveCommunity(obj, mutation, refetch) {//Remove users from community
     const communityuserrole = {
         community_id: obj.community_id,
         user_id: obj.user_id,
@@ -22,4 +23,5 @@ export async function LeaveCommunity(obj, mutation) {//Remove users from communi
             communityuserrole
         }
     })
+    refetch()
 }

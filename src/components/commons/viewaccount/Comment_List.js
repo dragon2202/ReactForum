@@ -40,7 +40,7 @@ const ListContent = ({ item, user, id }) => {
                 <Comment
                     key={item.parent.id}
                     author={item.parent.user.username}
-                    content={item.parent.comment}
+                    content={(item.parent.comment === null) ? "This post is unavailable or deleted": item.parent.comment}
                     datetime={
                         <Tooltip placement="top" title={moment(parseInt(item.parent.created_at)).format('MMMM Do YYYY, h:mm:ss a')}>
                             {moment(moment(parseInt(item.parent.created_at)).format('MMMM Do YYYY, h:mm a'), 'MMMM Do YYYY, h:mm:ss a').fromNow()}
@@ -49,7 +49,7 @@ const ListContent = ({ item, user, id }) => {
                 >
                     <Comment
                         author={item.user.username}
-                        content={item.comment}
+                        content={(item.comment === null) ? "This post is unavailable or deleted": item.comment}
                         style={{ backgroundColor: "rgba(0, 121, 211, 0.05)", fill: 'rgb(135, 138, 140)' }}
                         datetime={
                             <Tooltip placement="top" title={moment(parseInt(item.created_at)).format('MMMM Do YYYY, h:mm:ss a')}>
@@ -65,7 +65,7 @@ const ListContent = ({ item, user, id }) => {
             <Card className="list-content" title={<StandAloneCommentTitle item={item} user={user} id={id} />}>
                 <Comment
                     author={item.user.username}
-                    content={item.comment}
+                    content={(item.comment === null) ? "This post is unavailable or deleted": item.comment}
                     style={{ backgroundColor: "rgba(0, 121, 211, 0.05)", fill: 'rgb(135, 138, 140)' }}
                     datetime={
                         <Tooltip placement="top" title={moment(parseInt(item.created_at)).format('MMMM Do YYYY, h:mm:ss a')}>

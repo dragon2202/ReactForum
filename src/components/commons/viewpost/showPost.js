@@ -29,7 +29,7 @@ const Header = ({ item }) => {
     )
 }
 
-const ShowPost = ({ post, id, cookies, isEditable, triggerEditable, deletePostMutation, lockPostMutation, refetch, history }) => {
+const ShowPost = ({ post, id, cookies, isEditable, triggerEditable, deletePostMutation, lockPostMutation, refetch }) => {
     return (
         <Card
             title={<Header item={post}/>}
@@ -63,7 +63,7 @@ const ShowPost = ({ post, id, cookies, isEditable, triggerEditable, deletePostMu
                     :
                     [
                         <EditOutlined key="edit" onClick={() => triggerEditable(!isEditable)} />,
-                        <DeleteOutlined onClick={() => showConfirmDelete(post, cookies, id, deletePostMutation, refetch, history)} />,
+                        <DeleteOutlined onClick={() => showConfirmDelete(post, cookies, id, deletePostMutation)} />,
                         <UnlockOutlined onClick={() => showConfirmLock(post, cookies, id, lockPostMutation, refetch)} />
                     ]
                     :

@@ -199,6 +199,8 @@
     .viewAccount {
         .overview_tabpane {
             .post_comment_personal {
+                min-width: 400px;
+                overflow:hidden;
                 .personal{
                     display: none;
                 }
